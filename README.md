@@ -111,7 +111,7 @@ in order to use the adapter
 
 ## Examples
 
-### A simle connect check  
+### A simple connect check  
 
 ```
 using FS = MSFSAdapter_20_24;
