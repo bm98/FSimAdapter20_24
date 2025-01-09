@@ -1,81 +1,114 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+
 using FS = MSFSAdapter20_24;
 
-using MSFSAdapter20_24;
+using SimConnectToolkit;
+
+using static SimConnectToolkit.SysStateHandler; // event IDs for the SystemStateHandler
 
 namespace z_TEST_MinCompliance
 {
   public partial class Form1 : Form
   {
     // static only because it's easier...
-    private static SimConnect _SC = null;
+    private static FS.SimConnect _SC = null;
 
-    private FSVersion _version = FSVersion.Unknown;
+    private FS.FSVersion _version = FS.FSVersion.Unknown;
+
+    // define and Init RequestIDs for planned Requests
+    private REQUEST RQ_InputEvents = SimConnectIDs.GetREQUEST( );
+    private REQUEST RQ_AptList = SimConnectIDs.GetREQUEST( );
+    private REQUEST RQ_WypList = SimConnectIDs.GetREQUEST( );
+    private REQUEST RQ_VorList = SimConnectIDs.GetREQUEST( );
+    private REQUEST RQ_NdbList = SimConnectIDs.GetREQUEST( );
 
     // Catalog of supported Event Subscriptions and Requests
-    private Dictionary<EventID, EventHelper> _eventCat;
+    private SysStateHandlerCat _eventCat;
+
 
     // primitive connect and dispose
-    private void ConnectAndDispose( )
+    private bool ConnectAndDispose( )
     {
+      bool ret = true; // set false on error !!
+
       _SC?.Dispose( );
       // create an instance without using callbacks
       RTB.Text = "Create SimConnectX without Callbacks\n";
 
-      _SC = new SimConnect( "ADAPTER_TEST_APP", IntPtr.Zero, SimConnect.WM_USER_NONE, null, 0 );
+      _SC = new FS.SimConnect( "ADAPTER_TEST_APP", IntPtr.Zero, FS.SimConnect.WM_USER_NONE, null, 0 );
 
       RTB.Text += "Init Adapter\n";
       _version = _SC.Init( ); // Init default
       RTB.Text += $"Detected: {_version}\n";
 
-      if (_version == FSVersion.Unknown) {
+      if (_version == FS.FSVersion.Unknown) {
         RTB.Text += $"No MSFS App seems running\n";
+        ret = false; // could not connect...
       }
 
+      // Dispose
       RTB.Text += $"Adapter Shutdown\n";
       _SC?.Dispose( );
       _SC = null;
       RTB.Text += $"Done...\n";
+
+      return ret;
     }
+
 
     // Connect for use with Callbacks
-    private void Connect( )
+    // Note: true only means that a running FSim was found and a new SimConnect(2020 or 2024) instance was created
+    //       monitor the Open Callback and further events to see if it is really up and running correctly
+    private bool Connect( )
     {
-      _SC?.Dispose( );
-      // create an instance without using callbacks
-      RTB.Text = "Create SimConnectX with Callbacks\n";
-      // using this Form as WIN MSG receiver and the provided Message ID
-      _SC = new SimConnect( "ADAPTER_TEST_APP", this.Handle, SimConnect.WM_USER_SIMCONNECT, null, 0 );
-      AttachHandlers( );
+      bool ret = true; // set false on error !!
 
-      RTB.Text += "Init Adapter\n";
-      _version = _SC.Init( ); // Init default
-      RTB.Text += $"Detected: {_version}\n";
-
-      if (_version == FSVersion.Unknown) {
-        RTB.Text += $"No MSFS App seems running\n";
-        RTB.Text += $"Adapter Shutdown\n";
+      try {
         _SC?.Dispose( );
-        _SC = null;
-        RTB.Text += $"Done...\n";
-        return;
+        // create an instance without using callbacks
+        RTB.Text = "Create SimConnectX with Callbacks\n";
+        // using this Form as WIN MSG receiver and the provided Message ID
+        _SC = new FS.SimConnect( "ADAPTER_TEST_APP", this.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
+
+        RTB.Text += "Attach Eventhandlers\n";
+        AttachHandlers( ); // may throw Exceptions
+
+        RTB.Text += "Init Adapter\n";
+        _version = _SC.Init( ); // Init default
+        RTB.Text += $"Detected: {_version}\n";
+
+        if (_version == FS.FSVersion.Unknown) {
+          RTB.Text += $"No MSFS App seems running\n";
+          RTB.Text += $"Adapter Shutdown\n";
+          _SC?.Dispose( );
+          _SC = null;
+          RTB.Text += $"Done...\n";
+          ret = false;
+        }
+        else {
+          RTB.Text += $"Adapter is alive\n";
+        }
+      }
+      catch (Exception ex) {
+        RTB.Text += $"Connect: Failed with Exception\n{ex.Message}";
+        ret = false;
       }
 
-      RTB.Text += $"Adapter is alive\n";
+      return ret;
     }
 
+    // may throw on unexpected errors
     private void AttachHandlers( )
     {
       // sanity
-      if (_SC == null) return;
+      if (_SC == null) throw new InvalidOperationException( "_SC is null" );
 
       try {
         // must be safe to connect even before the SC replied with Open
@@ -93,44 +126,22 @@ namespace z_TEST_MinCompliance
         _SC.OnRecvClientData += new FS.SimConnect.RecvClientDataEventHandler( _simConnect_OnRecvClientData );
 
         _SC.OnRecvEnumerateInputEvents += new FS.SimConnect.RecvEnumerateInputEventsEventHandler( _simConnect_OnRecvEnumerateInputEvents ); // enum B events
+        _SC.OnRecvEnumerateInputEventParams += new FS.SimConnect.RecvEnumerateInputEventParamsEventHandler( _simConnect_OnRecvEnumerateInputEventParams );
+        _SC.OnRecvGetInputEvent += new FS.SimConnect.RecvGetInputEventEventHandler( _simConnect_OnRecvGetInputEvent );
         _SC.OnRecvSubscribeInputEvent += new FS.SimConnect.RecvSubscribeInputEventEventHandler( _simConnect_OnRecvSubscribeInputEvent );// monitor B Events
+
+        _SC.OnRecvAirportList += new FS.SimConnect.RecvAirportListEventHandler( _simConnect_OnRecvAirportList );
+        _SC.OnRecvVorList += new FS.SimConnect.RecvVorListEventHandler( _simConnect_OnRecvVorList );
+        _SC.OnRecvNdbList += new FS.SimConnect.RecvNdbListEventHandler( _simConnect_OnRecvNdbList );
+        _SC.OnRecvWaypointList += new FS.SimConnect.RecvWaypointListEventHandler( _simConnect_OnRecvWaypointList );
       }
       catch (Exception ex) {
         RTB.Text += "AttachSimEvents_Base: Failed\n" + ex.Message;
+        throw ex;
       }
 
       // Init the Subscription and Request Catalog
-      _eventCat = new Dictionary<EventID, EventHelper>( ) {
-        // SystemState Subscriptions
-        {EVENT_SIM_FRAME, new EventHelper( EVENT_SIM_FRAME, "Frame", true, false ) },
-        {EVENT_SIM_6HZ, new EventHelper( EVENT_SIM_6HZ, "6Hz", true, false )},
-        { EVENT_SIM_1SEC, new EventHelper( EVENT_SIM_1SEC, "1sec", true, false )},
-        { EVENT_SIM_4SEC, new EventHelper( EVENT_SIM_4SEC, "4sec", true, false )},
-        // immediately returns current state (1= running, 0= not running), else in dwData the same
-        { EVENT_SIM_STATE, new EventHelper( EVENT_SIM_STATE, "Sim", true, false ) },
-        { EVENT_SIM_START, new EventHelper( EVENT_SIM_START, "SimStart", true, false ) }, // multiple SimStart, SimStop sequ are usual before entering a flight
-        { EVENT_SIM_STOP, new EventHelper( EVENT_SIM_STOP, "SimStop", true, false ) },
-
-        { EVENT_SIM_PAUSE, new EventHelper( EVENT_SIM_PAUSE, "Pause", true, false )}, // state in dwData (1=paused, 0=not paused)
-        { EVENT_SIM_PAUSE_EX1, new EventHelper( EVENT_SIM_PAUSE_EX1, "Pause_EX1", true, false ) }, // detailed state in dwData
-        { EVENT_SIM_PAUSED, new EventHelper( EVENT_SIM_PAUSED, "Paused", true, false ) },
-        { EVENT_SIM_UNPAUSED, new EventHelper( EVENT_SIM_UNPAUSED, "Unpaused", true, false ) },
-
-        { EVENT_ACFT_LOAD, new EventHelper( EVENT_ACFT_LOAD, "AircraftLoaded", true, false ) }, // reply FILENAME
-
-        { EVENT_FLIGHT_LOAD, new EventHelper( EVENT_FLIGHT_LOAD, "FlightLoaded", true, false ) }, // reply FILENAME
-        { EVENT_FLIGHT_SAVE, new EventHelper( EVENT_FLIGHT_SAVE, "FlightSaved", true, false )},  // reply FILENAME
-
-        { EVENT_FPLAN_ACTIVATE, new EventHelper( EVENT_FPLAN_ACTIVATE, "FlightPlanActivated", true, false ) },     // reply FILENAME
-        { EVENT_FPLAN_DEACTIVATE, new EventHelper( EVENT_FPLAN_DEACTIVATE, "FlightPlanDeactivated", true, false ) }, // reply FILENAME
-
-        // SystemState Requests
-        { REQUEST_ACFT_LOADED, new EventHelper( REQUEST_ACFT_LOADED, "AircraftLoaded", false, true ) }, // reply FILENAME
-        { REQUEST_SIM_DIALOG, new EventHelper( REQUEST_SIM_DIALOG, "DialogMode", false, true ) },
-        { REQUEST_FLIGHT_LOADED, new EventHelper( REQUEST_FLIGHT_LOADED, "FlightLoaded", false, true ) }, // reply FILENAME
-        { REQUEST_FLIGHT_PLAN, new EventHelper( REQUEST_FLIGHT_PLAN, "FlightPlan", false, true ) }, // reply FILENAME
-        { REQUEST_SIM_STATE, new EventHelper( REQUEST_SIM_STATE, "Sim", false, true ) },
-      };
+      _eventCat = SysStateHandler.DefaultSysStateCatalog( _SC );
     }
 
     public Form1( )
@@ -157,193 +168,84 @@ namespace z_TEST_MinCompliance
       _eventCat[REQUEST_FLIGHT_PLAN].Request( );
     }
 
-    #region SimConnect IDs
-
-    // Create System Event IDs
-    // pacer Events
-    private static readonly EventID EVENT_SIM_FRAME = SimConnectIDs.GetEventID( );           // subscription text: Frame
-    private static readonly EventID EVENT_SIM_1SEC = SimConnectIDs.GetEventID( );           // subscription text: 1sec
-    private static readonly EventID EVENT_SIM_4SEC = SimConnectIDs.GetEventID( );           // subscription text: 4sec
-    private static readonly EventID EVENT_SIM_6HZ = SimConnectIDs.GetEventID( );           // subscription text: 6Hz
-
-
-    /*
-     * Request a notification when a flight is loaded. 
-     * Note that when a flight is ended, a default flight is typically loaded, so these events will occur when flights 
-     * and missions are started and finished. 
-     * The filename of the flight loaded is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
-     */
-    private static readonly EventID EVENT_FLIGHT_LOAD = SimConnectIDs.GetEventID( );        // subscription text: FlightFileLoaded
-    /*
-     * Request a notification when a flight is saved correctly. 
-     * The filename of the flight saved is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
-     * 
-     * NOTE: Having this subscribed while the Sim Loads a new flight causes Issued (the sim does not get the new Plane and Plan it seems)
-     */
-    private static readonly EventID EVENT_FLIGHT_SAVE = SimConnectIDs.GetEventID( );        // subscription text: FlightFileSaved
-    /*
-     * Request a notification when the aircraft flight dynamics file is changed. 
-     * These files have a .AIR extension. 
-     * The filename is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
-     */
-    private static readonly EventID EVENT_ACFT_LOAD = SimConnectIDs.GetEventID( );          // subscription text: AircraftFileLoaded
-
-    /*
-     * Request a notification when a new flight plan is activated. 
-     * The filename of the activated flight plan is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
-     */
-    private static readonly EventID EVENT_FPLAN_ACTIVATE = SimConnectIDs.GetEventID( );     // subscription text: FlightPlanActivated
-    /*
-     * Request a notification when the active flight plan is de-activated.
-     */
-    private static readonly EventID EVENT_FPLAN_DEACTIVATE = SimConnectIDs.GetEventID( );   // subscription text: FlightPlanDeactivated
-    /*
-     * Request notifications when the flight is running or not, 
-     * and also immediately returns the current state (1 = running or 0 = not running). 
-     * The state is returned in the dwData parameter.
-     */
-    private static readonly EventID EVENT_SIM_STATE = SimConnectIDs.GetEventID( );          // subscription text: Sim
-    /*
-     * The simulator is running. Typically the user is actively controlling the aircraft on the ground or in the air. 
-     * However, in some cases additional pairs of SimStart/SimStop events are sent. For example, when a flight is reset 
-     * the events that are sent are SimStop, SimStart, SimStop, SimStart. 
-     * Also when a flight is started with the SHOW_OPENING_SCREEN value set to zero, 
-     * then an additional SimStart/SimStop pair are sent before a second SimStart event is sent when the scenery is fully loaded. 
-     * The opening screen provides the options to change aircraft, departure airport, and so on.
-     */
-    private static readonly EventID EVENT_SIM_START = SimConnectIDs.GetEventID( );          // subscription text: SimStart
-    /*
-     * The simulator is not running. Typically the user is loading a flight, navigating the shell or in a dialog.
-     */
-    private static readonly EventID EVENT_SIM_STOP = SimConnectIDs.GetEventID( );           // subscription text: SimStop
-
-    /*
-     * Request a notification when paused
-     */
-    // Request notifications when the flight is paused or unpaused,
-    // and also immediately returns the current pause state (1 = paused or 0 = unpaused).
-    // The state is returned in the dwData parameter.
-    private static readonly EventID EVENT_SIM_PAUSE = SimConnectIDs.GetEventID( );           // subscription text: Pause
-
-    // Request notifications when the flight is paused or unpaused,
-    // and also immediately returns the current pause state with more detail than the regular Pause system event.
-    // The state is returned in the dwData parameter, and will be one of the following defines:
-    /*
-        #define PAUSE_STATE_FLAG_OFF 0 // No Pause 
-        #define PAUSE_STATE_FLAG_PAUSE 1 // "full" Pause (sim + traffic + etc...) 
-        #define PAUSE_STATE_FLAG_PAUSE_WITH_SOUND 2 // FSX Legacy Pause (not used anymore) 
-        #define PAUSE_STATE_FLAG_ACTIVE_PAUSE 4 // Pause was activated using the "Active Pause" Button 
-        #define PAUSE_STATE_FLAG_SIM_PAUSE 8 // Pause the player sim but traffic, multi, etc... will still run     
-    */
-    private static readonly EventID EVENT_SIM_PAUSE_EX1 = SimConnectIDs.GetEventID( );
-
-    // Request a notification when the flight is paused.
-    private static readonly EventID EVENT_SIM_PAUSED = SimConnectIDs.GetEventID( );
-    // Request a notification when the flight is unpaused.
-    private static readonly EventID EVENT_SIM_UNPAUSED = SimConnectIDs.GetEventID( );
-
-
-    // Request IDs
-    private static readonly EventID REQUEST_ACFT_LOADED = SimConnectIDs.GetEventID( );
-    private static readonly EventID REQUEST_FLIGHT_LOADED = SimConnectIDs.GetEventID( );
-    private static readonly EventID REQUEST_FLIGHT_PLAN = SimConnectIDs.GetEventID( );
-    private static readonly EventID REQUEST_SIM_STATE = SimConnectIDs.GetEventID( );
-    private static readonly EventID REQUEST_SIM_DIALOG = SimConnectIDs.GetEventID( );
-
-    #endregion
-
-    #region EventHelper Class
-
-    // Helper Class supporting SimConnect Events and Requests
-    private class EventHelper
+    private bool mustSubSome = true;
+    private bool mustSub1_4Sec = true;
+    private void btSubSome_Click( object sender, EventArgs e )
     {
-      // Workaround Asobo bug when having a Flight /Plan Subscription and not in a Flight
-      //  has crashed or not loaded the correct aircraft in the past (still ???)
-
-      // set true to use SimConnect_SetSystemEventState
-      // set false to use Sub, Unsub
-      private readonly bool c_useDisable = false; // Use Sub and Unsub (worked so far...)
-
-      // The Event ID
-      public EventID EId { get; private set; } = EventID.Dummy;
-
-      // name to be used with SimConnect Subscription / Request
-      public string EventName { get; private set; } = "";
-
-      // Subscription Supported Flag 
-      public bool CanSubscribe { get; private set; } = false;
-      // Request Supported Flag 
-      public bool CanRequest { get; private set; } = false;
-
-      // Subscribed Flag 
-      public bool Subscribed { get; private set; } = false;
-
-      // cTor:
-      public EventHelper( EventID eId, string name, bool canSub, bool canReq )
-      {
-        this.EId = eId;
-        this.EventName = name;
-        this.CanSubscribe = canSub;
-        this.CanRequest = canReq;
+      if (mustSubSome) {
+        _eventCat[EVENT_SIM_STATE].Sub( );
+        _eventCat[EVENT_ACFT_LOAD].Sub( );
+        _eventCat[EVENT_FLIGHT_LOAD].Sub( );
+        _eventCat[EVENT_FPLAN_ACTIVATE].Sub( );
+        _eventCat[EVENT_FPLAN_DEACTIVATE].Sub( );
+        _eventCat[EVENT_SIM_PAUSE].Sub( );
+        _eventCat[EVENT_SIM_PAUSE_EX1].Sub( );
       }
-
-      // Subscribe
-      public void Sub( )
-      {
-        //  
-        if (!this.CanSubscribe) return;
-
-        try {
-          if (c_useDisable) {
-            if (!Subscribed) { _SC?.SetSystemEventState( EId, FS.SIMCONNECT_STATE.ON ); }
-          }
-          else {
-            if (!Subscribed) { _SC?.SubscribeToSystemEvent( EId, EventName ); }
-          }
-          Subscribed = true;
-        }
-        catch (Exception ex) {
-          _ = ex; // to read it when debugging
-          Subscribed = false;
-        }
+      else {
+        _eventCat[EVENT_SIM_STATE].UnSub( );
+        _eventCat[EVENT_ACFT_LOAD].UnSub( );
+        _eventCat[EVENT_FLIGHT_LOAD].UnSub( );
+        _eventCat[EVENT_FPLAN_ACTIVATE].UnSub( );
+        _eventCat[EVENT_FPLAN_DEACTIVATE].UnSub( );
+        _eventCat[EVENT_SIM_PAUSE].UnSub( );
+        _eventCat[EVENT_SIM_PAUSE_EX1].UnSub( );
       }
-      // UnSubscribe
-      public void UnSub( )
-      {
-        //  
-        if (!this.CanSubscribe) return;
+      mustSubSome = !mustSubSome; // toggle
+    }
 
-        try {
-          if (c_useDisable) {
-            if (Subscribed) { _SC?.SetSystemEventState( EId, FS.SIMCONNECT_STATE.OFF ); }
-          }
-          else {
-            if (Subscribed) { _SC?.UnsubscribeFromSystemEvent( EId ); }
-          }
-          Subscribed = false;
-        }
-        catch (Exception ex) {
-          _ = ex; // to read it when debugging
-          Subscribed = false;
-        }
+    private void btSub1Hz_Click( object sender, EventArgs e )
+    {
+      if (mustSub1_4Sec) {
+        _eventCat[EVENT_SIM_1SEC].Sub( );
+        _eventCat[EVENT_SIM_4SEC].Sub( );
       }
-      // Request 
-      public void Request( )
-      {
-        //  
-        if (!this.CanRequest) return;
-
-        try {
-          _SC?.RequestSystemState( EId, EventName );
-        }
-        catch (Exception ex) {
-          _ = ex; // to read it when debugging
-        }
+      else {
+        _eventCat[EVENT_SIM_1SEC].UnSub( );
+        _eventCat[EVENT_SIM_4SEC].UnSub( );
       }
+      mustSub1_4Sec = !mustSub1_4Sec; // toggle
+    }
 
-    }// EventHelper
+    private void btReqInpEvents_Click( object sender, EventArgs e )
+    {
+      RQ_InputEvents = SimConnectIDs.GetREQUEST( );
+      txLastReqID.Text = $"{RQ_InputEvents}";
+      _sb.AppendLine( "Sent request for InputEvents ID:" + txLastReqID.Text );
+      _SC.EnumerateInputEvents( RQ_InputEvents );
+    }
 
-    #endregion
+    // Facilities
+    private void btReqAptList_Click( object sender, EventArgs e )
+    {
+      RQ_AptList = SimConnectIDs.GetREQUEST( );
+      txLastReqID.Text = $"{RQ_AptList}";
+      _sb.AppendLine( "Sent request for APT ID:" + txLastReqID.Text );
+      _SC.RequestFacilitiesList_EX1( FS.SIMCONNECT_FACILITY_LIST_TYPE.AIRPORT, RQ_AptList );
+    }
+
+    private void btRequFacWYP_Click( object sender, EventArgs e )
+    {
+      RQ_WypList = SimConnectIDs.GetREQUEST( );
+      txLastReqID.Text = $"{RQ_WypList}";
+      _sb.AppendLine( "Sent request for WYP ID:" + txLastReqID.Text );
+      _SC.RequestFacilitiesList( FS.SIMCONNECT_FACILITY_LIST_TYPE.WAYPOINT, RQ_WypList );
+    }
+
+    private void btRequFacVOR_Click( object sender, EventArgs e )
+    {
+      RQ_VorList = SimConnectIDs.GetREQUEST( );
+      txLastReqID.Text = $"{RQ_VorList}";
+      _sb.AppendLine( "Sent request for VOR ID:" + txLastReqID.Text );
+      _SC.RequestFacilitiesList( FS.SIMCONNECT_FACILITY_LIST_TYPE.VOR, RQ_VorList );
+    }
+
+    private void btRequFacNDB_Click( object sender, EventArgs e )
+    {
+      RQ_NdbList = SimConnectIDs.GetREQUEST( );
+      txLastReqID.Text = $"{RQ_NdbList}";
+      _sb.AppendLine( "Sent request for NDB ID:" + txLastReqID.Text );
+      _SC.RequestFacilitiesList( FS.SIMCONNECT_FACILITY_LIST_TYPE.NDB, RQ_NdbList );
+    }
 
     #region SimConnect Event Handlers
 
@@ -355,7 +257,6 @@ namespace z_TEST_MinCompliance
     // Handle SimConnect Open Reply
     private void _simConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvOpen" );
       _sb.AppendLine( data.szApplicationName );
       _sb.AppendLine( $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}" );
@@ -363,31 +264,31 @@ namespace z_TEST_MinCompliance
 
       _scOpen = true;
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // Handle SimConnect Quit Event
     private void _simConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvQuit" );
       _scOpen = true;
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // Handle SimConnect Exception
     private void _simConnect_OnRecvException( FS.SimConnect sender, FS.SIMCONNECT_RECV_EXCEPTION data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvException" );
       FS.SIMCONNECT_EXCEPTION eException = (FS.SIMCONNECT_EXCEPTION)data.dwException;
       _sb.AppendLine( $"{eException.ToString( )}" );
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // Handle SimConnect Reply for System State Requests
     private void _simConnect_OnRecvSystemState( FS.SimConnect sender, FS.SIMCONNECT_RECV_SYSTEM_STATE data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvSystemState" );
 
       // this is the Sim reply to a SystemState Request
@@ -412,12 +313,12 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"Other Request with ID:{data.dwRequestID} " );
       }
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect Reply for System State Event Subscription
     private void _simConnect_OnRecvEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvEvent" );
 
       if (data.uEventID == (uint)EVENT_SIM_6HZ) {
@@ -437,35 +338,51 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"EVENT_SIM_STOP" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_PAUSE_EX1) {
-        _sb.AppendLine( $"EVENT_SIM_PAUSE_EX1 {data.dwData}" );
+        _sb.AppendLine( $"EVENT_SIM_PAUSE_EX1 data<{data.dwData}>" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_STATE) {
-        _sb.AppendLine( $"EVENT_SIM_STATE {data.dwData}" );
+        _sb.AppendLine( $"EVENT_SIM_STATE data<{data.dwData}>" );
       }
 
       else if (data.uEventID == (uint)EVENT_SIM_PAUSED) {
-        _sb.AppendLine( $"EVENT_SIM_PAUSED " );
+        _sb.AppendLine( $"EVENT_SIM_PAUSED" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_UNPAUSED) {
-        _sb.AppendLine( $"EVENT_SIM_UNPAUSED " );
+        _sb.AppendLine( $"EVENT_SIM_UNPAUSED" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_PAUSE) {
         // DOES NOT WORK - never called  -- TODO CHEK IN CURRENT SIM
-        _sb.AppendLine( $"EVENT_SIM_PAUSE {data.dwData}" );
+        _sb.AppendLine( $"EVENT_SIM_PAUSE data<{data.dwData}>" );
+      }
+
+      else if (data.uEventID == (uint)EVENT_AI_ADDED) {
+        _sb.AppendLine( $"EVENT_AI_ADDED data<{data.dwData}>" );
+      }
+      else if (data.uEventID == (uint)EVENT_AI_REMOVED) {
+        _sb.AppendLine( $"EVENT_AI_ADDED data<{data.dwData}>" );
+      }
+      else if (data.uEventID == (uint)EVENT_POS_CHANGED) {
+        _sb.AppendLine( $"EVENT_POS_CHANGED data<{data.dwData}>" );
+      }
+      else if (data.uEventID == (uint)EVENT_ACFT_CRASH) {
+        _sb.AppendLine( $"EVENT_ACFT_CRASH data<{data.dwData}>" );
+      }
+      else if (data.uEventID == (uint)EVENT_FPLAN_DEACTIVATE) {
+        _sb.AppendLine( $"EVENT_FPLAN_DEACTIVATE data<{data.dwData}>" );
       }
 
       else {
         // everything else not handled here
-        _sb.AppendLine( $"Other Event with ID: {data.uEventID}" );
+        _sb.AppendLine( $"Other Event with ID: evtId<{data.uEventID}> data<{data.dwData}>" );
       }
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect Reply for FileName Subscriptions or Requests
     private void _simConnectRef_OnRecvEventFilename( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT_FILENAME data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnectRef_OnRecvEventFilename" );
 
       if (data.uEventID == (uint)EVENT_ACFT_LOAD) {
@@ -483,16 +400,17 @@ namespace z_TEST_MinCompliance
       else if (data.uEventID == (uint)EVENT_FPLAN_ACTIVATE) {
         _sb.AppendLine( $"EVENT_FPLAN_ACTIVATE {data.szFileName}" );
       }
-      // PLN discarded (not seen this working)
+      // PLN discarded (not seen this working with a filename - reports only the fact in_simConnect_OnRecvEvent???)
       else if (data.uEventID == (uint)EVENT_FPLAN_DEACTIVATE) {
         _sb.AppendLine( $"EVENT_FPLAN_DEACTIVATE {data.szFileName}" );
       }
       else {
         // not handled here
-        _sb.AppendLine( $"Other Event with ID: {data.uEventID}" );
+        _sb.AppendLine( $"Other Event with ID: evtId<{data.uEventID}>" );
       }
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect Frame event arrived
@@ -507,53 +425,55 @@ namespace z_TEST_MinCompliance
     // SimConnect reply for request obj by type
     private void _simConnect_OnRecvSimobjectDataBytype( FS.SimConnect sender, FS.SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvSimobjectDataBytype" );
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect Client data arrived
     private void _simConnect_OnRecvClientData( FS.SimConnect sender, FS.SIMCONNECT_RECV_CLIENT_DATA data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvClientData" );
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect Enum InputEvents Data arrived
     private void _simConnect_OnRecvEnumerateInputEvents( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
     {
-      _sb.Clear( );
-      _sb.AppendLine( "_simConnect_OnRecvEnumerateInputEvents" );
-      _sb.AppendLine( $"RequestID: {data.dwRequestID} Entry: {data.dwEntryNumber} OutOf: {data.dwOutOf} Got {data.dwArraySize} items" );
+      _sb.AppendLine( $"_simConnect_OnRecvEnumerateInputEvents: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
+      for (int i = 0; i < data.dwArraySize; i++) {
+        var item = (FS.SIMCONNECT_INPUT_EVENT_DESCRIPTOR)data.rgData[i];
+        _sb.AppendLine( $"<{i:##0}>:  (0x{item.Hash,-20:X}) \ttype({item.eType}) \t{item.Name} " );
+      }
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect returns data 
     private void _simConnect_OnRecvEnumerateInputEventParams( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENT_PARAMS data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvEnumerateInputEventParams" );
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect returns data for a single InputEvent 
     private void _simConnect_OnRecvGetInputEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_GET_INPUT_EVENT data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvGetInputEvent" );
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     // SimConnect returns data for an InputEvent subscription
     private void _simConnect_OnRecvSubscribeInputEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_SUBSCRIBE_INPUT_EVENT data )
     {
-      _sb.Clear( );
       _sb.AppendLine( "_simConnect_OnRecvSubscribeInputEvent" );
 
       switch (data.eType) {
@@ -566,6 +486,7 @@ namespace z_TEST_MinCompliance
       }
 
       RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
 
@@ -584,55 +505,71 @@ namespace z_TEST_MinCompliance
         }
       }
     }
-
+*/
     /// <summary>
     /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received  Airport Lists
     /// </summary>
-    private   void _simConnect_OnRecvAirportList( SimConnect sender, SIMCONNECT_RECV_AIRPORT_LIST data )
+    private void _simConnect_OnRecvAirportList( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data )
     {
-      Log( $"_OnRecvAirportList: ID {data.dwID} - {data.dwRequestID} - {data.dwArraySize}" );
+      _sb.AppendLine( $"_OnRecvAirportList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
+
+      for (int i = 0; i < data.dwArraySize; i++) {
+        var item = (FS.SIMCONNECT_DATA_FACILITY_AIRPORT)data.rgData[i];
+        _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0})" );
+      }
+      RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     /// <summary>
-    /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received VOR/LOC Lists
     /// </summary>
-    private   void _simConnect_OnRecvVorList( SimConnect sender, SIMCONNECT_RECV_VOR_LIST data )
+    private void _simConnect_OnRecvVorList( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data )
     {
-      Log( $"_OnRecvVorList: ID {data.dwID} - {data.dwRequestID} - {data.dwArraySize}" );
+      _sb.AppendLine( $"_OnRecvVorList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
+
+      for (int i = 0; i < data.dwArraySize; i++) {
+        var item = (FS.SIMCONNECT_DATA_FACILITY_VOR)data.rgData[i];
+        _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0}) mv({item.fMagVar:0#.00})" );
+        _sb.AppendLine( $"            f({item.fFrequency})" );
+        _sb.AppendLine( $"            flags({item.Flags}), LOC({item.fLocalizer}), GsLLA({item.GlideLat:00.0000},{item.GlideLon:000.0000}, {item.GlideAlt:##,##0}), GsAng({item.fGlideSlopeAngle})" );
+      }
+      RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     /// <summary>
-    /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received NDB Lists
     /// </summary>
-    private   void _simConnect_OnRecvNdbList( SimConnect sender, SIMCONNECT_RECV_NDB_LIST data )
+    private void _simConnect_OnRecvNdbList( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data )
     {
-      Log( $"_OnRecvNdbList(: ID {data.dwID} - {data.dwRequestID} - {data.dwArraySize}" );
+      _sb.AppendLine( $"_OnRecvNdbList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
+
+      for (int i = 0; i < data.dwArraySize; i++) {
+        var item = (FS.SIMCONNECT_DATA_FACILITY_NDB)data.rgData[i];
+        _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0}) mv({item.fMagVar:0#.00})" );
+        _sb.AppendLine( $"            f({item.fFrequency})" );
+      }
+      RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
 
     /// <summary>
     /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received Waypoint Lists
     /// </summary>
-    private   void _simConnect_OnRecvWaypointList( SimConnect sender, SIMCONNECT_RECV_WAYPOINT_LIST data )
+    private void _simConnect_OnRecvWaypointList( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data )
     {
-      Log( $"_OnRecvWaypointList: ID {data.dwID} - {data.dwRequestID} - {data.dwArraySize}" );
+      _sb.AppendLine( $"_OnRecvWaypointList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
+
+      for (int i = 0; i < data.dwArraySize; i++) {
+        var item = (FS.SIMCONNECT_DATA_FACILITY_WAYPOINT)data.rgData[i];
+        _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0}) mv({item.fMagVar:0#.00})" );
+      }
+      RTB.Text += _sb.ToString( );
+      _sb.Clear( );
     }
-
-
-    /// <summary>
-    /// NOT SUPPORTED BY NOW
-    /// Asynch call by FS having received WeatherObservation Events
-    /// </summary>
-    private   void SimConnect_OnRecvEventWeatherObs( SimConnect sender, SIMCONNECT_RECV_WEATHER_OBSERVATION data )
-    {
-      Log( $"_OnRecvEventWeatherObs: ID {data.dwID} - {data.szMetar}" );
-
-      //if (WeatherHandler.HandleWeatherObservationEvent( data, sender )) return; // handled 
-    }
-    */
 
     #endregion
 
@@ -646,7 +583,7 @@ namespace z_TEST_MinCompliance
     /// </summary>
     protected override void DefWndProc( ref Message m )
     {
-      if ((_SC != null) && (_version != FSVersion.Unknown)) {
+      if ((_SC != null) && (_version != FS.FSVersion.Unknown)) {
         try {
           // catch MSFS exits in the worst moment
           if (_SC.WinMessageHandled( m.Msg )) return; // Event was handled

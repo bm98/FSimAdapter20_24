@@ -11,18 +11,17 @@ using CX = MSFSAdapter20_24;
 
 using MSFSAdapter20_24;
 using System.Diagnostics;
-using System.Runtime.Remoting.Messaging;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+
+using static MSFSPlug2024.ListConverters;
 
 namespace MSFSPlug2024
 {
-
   /// <summary>
   /// Adapter Plugin for SimConnect 2024
   /// </summary>
   public class ScPlug2024 : ISimConnectA
   {
+
     // SimConnect handle
     private FS.SimConnect _simConnect;
 
@@ -109,6 +108,27 @@ namespace MSFSPlug2024
       // the structs and classes are exactly the same in the FS2024 case, however Type conversion for those items does not work in c# -
       // as the Assing version is about 10x faster than generic CastCopy we copy all items in this section - lot of writing...
       // despite CastCopy does not work with FS LIST items, as they don't expose the Size properly (well...)
+      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data )
+        => { OnRecvAirportList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data )
+        => { OnRecvWaypointList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data )
+        => { OnRecvNdbList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data )
+        => { OnRecvVorList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data )
+        => { OnRecvFacilityMinimalList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvEnumerateInputEvents += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
+        => { OnRecvEnumerateInputEvents?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvControllersList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CONTROLLERS_LIST data )
+        => { OnRecvControllersList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvJetwayData += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_JETWAY_DATA data )
+        => { OnRecvJetwayData?.Invoke( null, GetFrom( data ) ); };
+      // added in 2024 SDK 1.1.2
+      _simConnect.OnRecvEnumerateSimobjectAndLiveryList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data )
+        => { OnRecvEnumerateSimobjectAndLiveryList?.Invoke( null, GetFrom( data ) ); };
+
+
       _simConnect.OnRecvActionCallback += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ACTION_CALLBACK data )
         => {
           var dataX = new SIMCONNECT_RECV_ACTION_CALLBACK( ) {
@@ -119,21 +139,6 @@ namespace MSFSPlug2024
             szActionID = data.szActionID
           };
           OnRecvActionCallback?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_AIRPORT_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwArraySize = data.dwArraySize,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwRequestID = data.dwRequestID,
-            rgData = data.rgData,
-          };
-          OnRecvAirportList?.Invoke( null, dataX );
         };
 
       _simConnect.OnRecvAssignedObjectId += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ASSIGNED_OBJECT_ID data )
@@ -179,21 +184,6 @@ namespace MSFSPlug2024
           OnRecvCloudState?.Invoke( null, dataX );
         };
 
-      _simConnect.OnRecvControllersList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CONTROLLERS_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_CONTROLLERS_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwArraySize = data.dwArraySize,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            rgData = data.rgData,
-          };
-          OnRecvControllersList?.Invoke( null, dataX );
-        };
-
       _simConnect.OnRecvCustomAction += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CUSTOM_ACTION data )
         => {
           var dataX = new SIMCONNECT_RECV_CUSTOM_ACTION( ) {
@@ -220,21 +210,6 @@ namespace MSFSPlug2024
             Value = data.Value,
           };
           OnRecvEnumerateInputEventParams?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvEnumerateInputEvents += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
-        => {
-          var dataX = new SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvEnumerateInputEvents?.Invoke( null, dataX );
         };
 
       _simConnect.OnRecvEvent += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT data )
@@ -454,21 +429,6 @@ namespace MSFSPlug2024
           OnRecvFacilityDataEnd?.Invoke( null, dataX );
         };
 
-      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_FACILITY_MINIMAL_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvFacilityMinimalList?.Invoke( null, dataX );
-        };
-
       _simConnect.OnRecvGetInputEvent += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_GET_INPUT_EVENT data )
         => {
           var dataX = new SIMCONNECT_RECV_GET_INPUT_EVENT( ) {
@@ -480,36 +440,6 @@ namespace MSFSPlug2024
             Value = data.Value,
           };
           OnRecvGetInputEvent?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvJetwayData += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_JETWAY_DATA data )
-        => {
-          var dataX = new SIMCONNECT_RECV_JETWAY_DATA( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvJetwayData?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_NDB_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvNdbList?.Invoke( null, dataX );
         };
 
       _simConnect.OnRecvNull += ( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
@@ -628,36 +558,6 @@ namespace MSFSPlug2024
           OnRecvSystemState?.Invoke( null, dataX );
         };
 
-      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_VOR_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvVorList?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_WAYPOINT_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvWaypointList?.Invoke( null, dataX );
-        };
-
       _simConnect.OnRecvWeatherObservation += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WEATHER_OBSERVATION data )
         => {
           var dataX = new SIMCONNECT_RECV_WEATHER_OBSERVATION( ) {
@@ -670,21 +570,6 @@ namespace MSFSPlug2024
           OnRecvWeatherObservation?.Invoke( null, dataX );
         };
 
-      // added in 2024 SDK 1.1.2
-      _simConnect.OnRecvEnumerateSimobjectAndLiveryList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data )
-        => {
-          var dataX = new SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvEnumerateSimobjectAndLiveryList?.Invoke( null, dataX );
-        };
     }
 
 

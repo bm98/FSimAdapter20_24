@@ -104,6 +104,10 @@
       <Project>{628e3918-c16d-4d5a-a68d-6960fbb28d1e}</Project>
       <Name>MSFSAdapter20_24</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimConnectToolkit\SimConnectToolkit.csproj">
+      <Project>{478989d4-bb73-4b80-9e1e-c74b79cca1a3}</Project>
+      <Name>SimConnectToolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

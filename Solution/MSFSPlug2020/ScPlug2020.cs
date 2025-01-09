@@ -11,7 +11,7 @@ using CX = MSFSAdapter20_24;
 
 using MSFSAdapter20_24;
 
-using static MSFSPlug2020.TypeConverters;
+using static MSFSPlug2020.ListConverters;
 
 namespace MSFSPlug2020
 {
@@ -141,11 +141,22 @@ namespace MSFSPlug2020
       // events reply null as sender, the original simConnect obj cannot be used outside of this module anyway
 
       // record length does not match for the ones below using the new Ident string length - results need to be converted rather than casted
-      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data ) => { OnRecvAirportList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data ) => { OnRecvWaypointList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data ) => { OnRecvNdbList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data ) => { OnRecvVorList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data ) => { OnRecvFacilityMinimalList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data ) 
+        => { OnRecvAirportList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data ) 
+        => { OnRecvWaypointList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data ) 
+        => { OnRecvNdbList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data ) 
+        => { OnRecvVorList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data ) 
+        => { OnRecvFacilityMinimalList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvEnumerateInputEvents += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
+        => { OnRecvEnumerateInputEvents?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvControllersList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CONTROLLERS_LIST data )
+        => { OnRecvControllersList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvJetwayData += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_JETWAY_DATA data )
+        => { OnRecvJetwayData?.Invoke( null, GetFrom( data ) ); };
 
       // the structs and classes are exactly the same in the FS2024 case, however Type conversion for those items does not work in c# -
       // as the Assing version is about 10x faster than generic CastCopy we copy all items in this section - lot of writing...
@@ -246,21 +257,6 @@ namespace MSFSPlug2020
             Value = data.Value,
           };
           OnRecvEnumerateInputEventParams?.Invoke( null, dataX );
-        };
-
-      _simConnect.OnRecvEnumerateInputEvents += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
-        => {
-          var dataX = new SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS( ) {
-            dwSize = data.dwSize,
-            dwID = data.dwID,
-            dwVersion = data.dwVersion,
-            dwRequestID = data.dwRequestID,
-            dwEntryNumber = data.dwEntryNumber,
-            dwOutOf = data.dwOutOf,
-            dwArraySize = data.dwArraySize,
-            rgData = data.rgData,
-          };
-          OnRecvEnumerateInputEvents?.Invoke( null, dataX );
         };
 
       _simConnect.OnRecvEvent += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT data )

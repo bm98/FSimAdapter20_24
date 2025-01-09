@@ -1,12 +1,12 @@
-# MSFS SimConnect Adapter for 2020 and 2024
+# MSFS SimConnect Adapter for 2020 and 2024 (c# .Net)
 
 # ALPHA VERSION - WORK IN PROGRESS
 
-for the time beeing it must be considered as 'Proof of Concept'
+for the time beeing it must be considered as 'Proof of Concept'   
 
 ---
 
-### Adapter to seamlessly use MSFS 2020 and/or 2024 SimConnect
+### c# .Net Adapter to seamlessly use MSFS 2020 and/or 2024 SimConnect
 
 * Hides the two versions of SimConnect behind an Adapter  
 * Exposes the MSFS2024 interface of SimConnect  
@@ -20,42 +20,32 @@ Methods not available in MSFS2020 will raise an Exception callback but should ot
 
 ### Performance
 
-The adapter maps objects between namespaces when calling or receiving data. .Net does not support type casting for foreign objects. The adapter copies the sent or received item into it's needed form.  
+The adapter maps objects between namespaces when calling or receiving data. 
+As .Net does not support type casting for foreign objects. The adapter copies the sent or received item into it's needed form.  
 Serializing is not an option as the FS records are not tagged for it. Also copy via Marshalling is about 10x slower than this trivial approach.  
 
 When measuring the mapping time I found the following results  
 
-Copy of SIMCONNECT_RECV_EVENT_FRAME  (no change between 2020 and 2024)
+Copy of SIMCONNECT_RECV_EVENT_FRAME  
 
 ```
 Perf_AssignItemFrame Summary: 
-  Slowest time:  op # 20 230 in 10 000 000 =  4 932 ticks
-  Fastest time:  op #  1 in 10 000 000 =    ticks
+  Slowest time:  op # 20'230 in 10'000'000 =  4'932 ticks
+  Fastest time:  op #  1 in 10'000'000 =    ticks
   Average time:  0.3 ticks =  33.4 nanoseconds  <<<<<<------
-  Total time looping through 10 000 000 operations:   866 milliseconds
+  Total time looping through 10'000'000 operations:   866 milliseconds
 Environment: CPU Intel(R) Core(TM) i7-14700KF @3.400GHz
 ```
 
-Copy of SIMCONNECT_RECV_AIRPORT_LIST with 200 entries for 2024  
-Note: the list copy op only copies the main part of the list, the array is assigned as ref and does not need conversion.
-
-```
-Perf_AssignItemList Summary:
-  Slowest time:  op # 519 487 in 1 000 000 =   107 ticks
-  Fastest time:  op #  1 in 1 000 000 =    ticks
-  Average time:  0.4 ticks =  36.9 nanoseconds  <<<<<<------
-  Total time looping through 1 000 000 operations:  1 156 milliseconds
-Environment: CPU Intel(R) Core(TM) i7-14700KF @3.400GHz
-```
-
-Same copy for 2020 where the Ident of each record changed from 6 to 9 chars and each record needs to be copied into the 2024 form  
+Copy of SIMCONNECT_RECV_AIRPORT_LIST with 200 entries  
+Due to namespaces there is no cast for list items either - so we need to copy the whole packet each time  
 
 ```
 Perf_AssignItemList2020 Summary:
-  Slowest time:  op # 9 741 in 1 000 000 =  5 239 ticks
-  Fastest time:  op # 17 976 in 1 000 000 =   25 ticks
-  Average time:  29.3 ticks = 2 929.6 nanoseconds  <<<<<<------
-  Total time looping through 1 000 000 operations:  4 068 milliseconds
+  Slowest time:  op # 9'741 in 1'000'000 =  5 239 ticks
+  Fastest time:  op # 17'976 in 1'000'000 =   25 ticks
+  Average time:  29.3 ticks = 2'929.6 nanoseconds (~3ms) <<<<<<------
+  Total time looping through 1'000'000 operations:  4'068 milliseconds
 Environment: CPU Intel(R) Core(TM) i7-14700KF @3.400GHz
 ```
 
