@@ -40,6 +40,14 @@
       this.btRequFacNDB = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.txLastReqID = new System.Windows.Forms.TextBox();
+      this.btReqData = new System.Windows.Forms.Button();
+      this.btClearRTB = new System.Windows.Forms.Button();
+      this.label2 = new System.Windows.Forms.Label();
+      this.txFPS = new System.Windows.Forms.TextBox();
+      this.btSubFrame = new System.Windows.Forms.Button();
+      this.btReqSendData = new System.Windows.Forms.Button();
+      this.btSendKey = new System.Windows.Forms.Button();
+      this.btReqCamData = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // btConnect
@@ -59,7 +67,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.RTB.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.RTB.Location = new System.Drawing.Point(12, 157);
+      this.RTB.Location = new System.Drawing.Point(15, 159);
       this.RTB.Name = "RTB";
       this.RTB.Size = new System.Drawing.Size(909, 350);
       this.RTB.TabIndex = 1;
@@ -70,7 +78,7 @@
       this.btConDiscon.Location = new System.Drawing.Point(12, 12);
       this.btConDiscon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btConDiscon.Name = "btConDiscon";
-      this.btConDiscon.Size = new System.Drawing.Size(124, 43);
+      this.btConDiscon.Size = new System.Drawing.Size(124, 27);
       this.btConDiscon.TabIndex = 2;
       this.btConDiscon.Text = "Minimum Connect";
       this.btConDiscon.UseVisualStyleBackColor = true;
@@ -81,7 +89,7 @@
       this.btReqSome.Location = new System.Drawing.Point(144, 12);
       this.btReqSome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqSome.Name = "btReqSome";
-      this.btReqSome.Size = new System.Drawing.Size(124, 43);
+      this.btReqSome.Size = new System.Drawing.Size(124, 27);
       this.btReqSome.TabIndex = 3;
       this.btReqSome.Text = "Request Some";
       this.btReqSome.UseVisualStyleBackColor = true;
@@ -92,7 +100,7 @@
       this.btSubSome.Location = new System.Drawing.Point(276, 12);
       this.btSubSome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSubSome.Name = "btSubSome";
-      this.btSubSome.Size = new System.Drawing.Size(124, 43);
+      this.btSubSome.Size = new System.Drawing.Size(124, 27);
       this.btSubSome.TabIndex = 4;
       this.btSubSome.Text = "Subscribe Some";
       this.btSubSome.UseVisualStyleBackColor = true;
@@ -100,10 +108,10 @@
       // 
       // btSub1Hz
       // 
-      this.btSub1Hz.Location = new System.Drawing.Point(276, 61);
+      this.btSub1Hz.Location = new System.Drawing.Point(276, 45);
       this.btSub1Hz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSub1Hz.Name = "btSub1Hz";
-      this.btSub1Hz.Size = new System.Drawing.Size(124, 43);
+      this.btSub1Hz.Size = new System.Drawing.Size(124, 27);
       this.btSub1Hz.TabIndex = 5;
       this.btSub1Hz.Text = "Subscribe 1&&4Sec";
       this.btSub1Hz.UseVisualStyleBackColor = true;
@@ -114,7 +122,7 @@
       this.btReqInpEvents.Location = new System.Drawing.Point(408, 12);
       this.btReqInpEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqInpEvents.Name = "btReqInpEvents";
-      this.btReqInpEvents.Size = new System.Drawing.Size(124, 43);
+      this.btReqInpEvents.Size = new System.Drawing.Size(124, 27);
       this.btReqInpEvents.TabIndex = 6;
       this.btReqInpEvents.Text = "Request InpEvents";
       this.btReqInpEvents.UseVisualStyleBackColor = true;
@@ -180,11 +188,103 @@
       this.txLastReqID.Size = new System.Drawing.Size(100, 23);
       this.txLastReqID.TabIndex = 12;
       // 
+      // btReqData
+      // 
+      this.btReqData.Location = new System.Drawing.Point(757, 45);
+      this.btReqData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btReqData.Name = "btReqData";
+      this.btReqData.Size = new System.Drawing.Size(124, 27);
+      this.btReqData.TabIndex = 13;
+      this.btReqData.Text = "Request Data";
+      this.btReqData.UseVisualStyleBackColor = true;
+      this.btReqData.Click += new System.EventHandler(this.btReqData_Click);
+      // 
+      // btClearRTB
+      // 
+      this.btClearRTB.BackColor = System.Drawing.Color.Gray;
+      this.btClearRTB.ForeColor = System.Drawing.Color.WhiteSmoke;
+      this.btClearRTB.Location = new System.Drawing.Point(321, 124);
+      this.btClearRTB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btClearRTB.Name = "btClearRTB";
+      this.btClearRTB.Size = new System.Drawing.Size(124, 29);
+      this.btClearRTB.TabIndex = 14;
+      this.btClearRTB.Text = "Clear ScratchPad";
+      this.btClearRTB.UseVisualStyleBackColor = false;
+      this.btClearRTB.Click += new System.EventHandler(this.btClearRTB_Click);
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(214, 131);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(26, 15);
+      this.label2.TabIndex = 15;
+      this.label2.Text = "FPS";
+      // 
+      // txFPS
+      // 
+      this.txFPS.Location = new System.Drawing.Point(246, 128);
+      this.txFPS.Name = "txFPS";
+      this.txFPS.Size = new System.Drawing.Size(68, 23);
+      this.txFPS.TabIndex = 16;
+      // 
+      // btSubFrame
+      // 
+      this.btSubFrame.Location = new System.Drawing.Point(276, 78);
+      this.btSubFrame.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btSubFrame.Name = "btSubFrame";
+      this.btSubFrame.Size = new System.Drawing.Size(124, 27);
+      this.btSubFrame.TabIndex = 17;
+      this.btSubFrame.Text = "Subscribe Frame";
+      this.btSubFrame.UseVisualStyleBackColor = true;
+      this.btSubFrame.Click += new System.EventHandler(this.btSubFrame_Click);
+      // 
+      // btReqSendData
+      // 
+      this.btReqSendData.Location = new System.Drawing.Point(757, 78);
+      this.btReqSendData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btReqSendData.Name = "btReqSendData";
+      this.btReqSendData.Size = new System.Drawing.Size(124, 27);
+      this.btReqSendData.TabIndex = 18;
+      this.btReqSendData.Text = "Send Data";
+      this.btReqSendData.UseVisualStyleBackColor = true;
+      this.btReqSendData.Click += new System.EventHandler(this.btReqSendData_Click);
+      // 
+      // btSendKey
+      // 
+      this.btSendKey.Location = new System.Drawing.Point(757, 110);
+      this.btSendKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btSendKey.Name = "btSendKey";
+      this.btSendKey.Size = new System.Drawing.Size(124, 27);
+      this.btSendKey.TabIndex = 19;
+      this.btSendKey.Text = "Send Key (PBrake)";
+      this.btSendKey.UseVisualStyleBackColor = true;
+      this.btSendKey.Click += new System.EventHandler(this.btSendKey_Click);
+      // 
+      // btReqCamData
+      // 
+      this.btReqCamData.Location = new System.Drawing.Point(757, 12);
+      this.btReqCamData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btReqCamData.Name = "btReqCamData";
+      this.btReqCamData.Size = new System.Drawing.Size(124, 27);
+      this.btReqCamData.TabIndex = 20;
+      this.btReqCamData.Text = "Subscribe Cam Data";
+      this.btReqCamData.UseVisualStyleBackColor = true;
+      this.btReqCamData.Click += new System.EventHandler(this.btReqCamData_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(933, 519);
+      this.Controls.Add(this.btReqCamData);
+      this.Controls.Add(this.btSendKey);
+      this.Controls.Add(this.btReqSendData);
+      this.Controls.Add(this.btSubFrame);
+      this.Controls.Add(this.txFPS);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.btClearRTB);
+      this.Controls.Add(this.btReqData);
       this.Controls.Add(this.txLastReqID);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.btRequFacNDB);
@@ -222,6 +322,14 @@
     private System.Windows.Forms.Button btRequFacNDB;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox txLastReqID;
+    private System.Windows.Forms.Button btReqData;
+    private System.Windows.Forms.Button btClearRTB;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.TextBox txFPS;
+    private System.Windows.Forms.Button btSubFrame;
+    private System.Windows.Forms.Button btReqSendData;
+    private System.Windows.Forms.Button btSendKey;
+    private System.Windows.Forms.Button btReqCamData;
   }
 }
 

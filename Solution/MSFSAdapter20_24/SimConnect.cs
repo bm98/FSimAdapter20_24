@@ -69,6 +69,8 @@ namespace MSFSAdapter20_24
 
     private AppDomain currentDomain = null;
     private FSVersion _fsVersion = FSVersion.Unknown;
+    private string _fsWindowTitle = "";
+
     private ISimConnectA _plug;
 
     // debug helper
@@ -426,6 +428,11 @@ namespace MSFSAdapter20_24
     public FSVersion FSimVersion => _fsVersion;
 
     /// <summary>
+    /// The detected WindowTitle (incl version info)
+    /// </summary>
+    public string FSimWindowTitle => _fsWindowTitle;
+
+    /// <summary>
     /// cTor: Same as SimConnect
     ///   Use Init() to start
     ///   
@@ -620,6 +627,7 @@ namespace MSFSAdapter20_24
       if (CheckExeRunning( c_2024ExeName, c_2024WindowName )) return FSVersion.V2024;
       if (CheckExeRunning( c_2020ExeName, c_2020WindowName )) return FSVersion.V2020;
       // none
+      _fsWindowTitle = "<FS App not found>";
       return FSVersion.Unknown;
     }
 
@@ -627,6 +635,7 @@ namespace MSFSAdapter20_24
     private bool CheckExeRunning( string exeName, string windowName )
     {
       bool exeRunning = false;
+      _fsWindowTitle = "";
 
       // check if it is running
       IEnumerable<Process> processes = Process.GetProcesses( ).Where( p => p.MainWindowHandle != IntPtr.Zero ); // only processes with WindowHandles
@@ -635,6 +644,7 @@ namespace MSFSAdapter20_24
           // may trigger access violation on certain modules
           if (!string.IsNullOrEmpty( p.MainModule.ModuleName )) {
             if ((p.MainModule.ModuleName == exeName) && p.MainWindowTitle.StartsWith( windowName )) {
+              _fsWindowTitle = p.MainWindowTitle;
               exeRunning = true;
               break;
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SimConnectToolkit
+namespace SimConnectToolkit.SystemState
 {
   /// <summary>
   /// A Catalog of SysStateHandler items

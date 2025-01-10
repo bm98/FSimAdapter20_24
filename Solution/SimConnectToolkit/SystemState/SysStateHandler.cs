@@ -2,7 +2,7 @@
 
 using FS = MSFSAdapter20_24;
 
-namespace SimConnectToolkit
+namespace SimConnectToolkit.SystemState
 {
   /// <summary>
   /// Event and Request Helper
@@ -17,19 +17,19 @@ namespace SimConnectToolkit
     /// <summary>
     /// Per Frame Event
     /// </summary>
-    public static readonly EventID EVENT_SIM_FRAME = SimConnectIDs.GetPrivateEventID( );         // subscription text: Frame
+    public static EventID EVENT_SIM_FRAME { get; } = SimConnectIDs.GetPrivateEventID( );         // subscription text: Frame
     /// <summary>
     /// 1 Sec Event
     /// </summary>
-    public static readonly EventID EVENT_SIM_1SEC = SimConnectIDs.GetPrivateEventID( );          // subscription text: 1sec
+    public static EventID EVENT_SIM_1SEC { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: 1sec
     /// <summary>
     /// 4 Sec Event
     /// </summary>
-    public static readonly EventID EVENT_SIM_4SEC = SimConnectIDs.GetPrivateEventID( );          // subscription text: 4sec
+    public static EventID EVENT_SIM_4SEC { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: 4sec
     /// <summary>
     /// 6Hz Event
     /// </summary>
-    public static readonly EventID EVENT_SIM_6HZ = SimConnectIDs.GetPrivateEventID( );           // subscription text: 6Hz
+    public static EventID EVENT_SIM_6HZ { get; } = SimConnectIDs.GetPrivateEventID( );           // subscription text: 6Hz
 
 
     /// <summary>
@@ -37,11 +37,11 @@ namespace SimConnectToolkit
     /// These files have a.AIR extension.
     /// The filename is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID EVENT_ACFT_LOAD = SimConnectIDs.GetPrivateEventID( );          // subscription text: AircraftFileLoaded
+    public static EventID EVENT_ACFT_LOAD { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: AircraftFileLoaded
     /// <summary>
     /// Request a notification if the user aircraft crashes.
     /// </summary>
-    public static readonly EventID EVENT_ACFT_CRASH = SimConnectIDs.GetPrivateEventID( );          // subscription text: Crashed
+    public static EventID EVENT_ACFT_CRASH { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: Crashed
 
     /// <summary>
     /// Request a notification when a flight is loaded. 
@@ -49,43 +49,43 @@ namespace SimConnectToolkit
     /// and missions are started and finished.
     /// The filename of the flight loaded is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID EVENT_FLIGHT_LOAD = SimConnectIDs.GetPrivateEventID( );        // subscription text: FlightFileLoaded
+    public static EventID EVENT_FLIGHT_LOAD { get; } = SimConnectIDs.GetPrivateEventID( );        // subscription text: FlightFileLoaded
     /// <summary>
     /// Request a notification when a flight is saved correctly. 
     /// The filename of the flight saved is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// NOTE: Having this subscribed while the Sim Loads a new flight causes Issued( the sim does not get the new Plane and Plan it seems)
     /// </summary>
-    public static readonly EventID EVENT_FLIGHT_SAVE = SimConnectIDs.GetPrivateEventID( );        // subscription text: FlightFileSaved
+    public static EventID EVENT_FLIGHT_SAVE { get; } = SimConnectIDs.GetPrivateEventID( );        // subscription text: FlightFileSaved
     /// <summary>
     /// Request a notification when a new flight plan is activated. 
     /// The filename of the activated flight plan is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID EVENT_FPLAN_ACTIVATE = SimConnectIDs.GetPrivateEventID( );     // subscription text: FlightPlanActivated
+    public static EventID EVENT_FPLAN_ACTIVATE { get; } = SimConnectIDs.GetPrivateEventID( );     // subscription text: FlightPlanActivated
     /// <summary>
     /// Request a notification when the active flight plan is de-activated.
     /// </summary>
-    public static readonly EventID EVENT_FPLAN_DEACTIVATE = SimConnectIDs.GetPrivateEventID( );   // subscription text: FlightPlanDeactivated
+    public static EventID EVENT_FPLAN_DEACTIVATE { get; } = SimConnectIDs.GetPrivateEventID( );   // subscription text: FlightPlanDeactivated
 
     /// <summary>
     /// Request a notification when an AI object is added to the simulation. 
     ///   Refer also to the SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE structure.
     /// </summary>
-    public static readonly EventID EVENT_AI_ADDED = SimConnectIDs.GetPrivateEventID( );          // subscription text: ObjectAdded
+    public static EventID EVENT_AI_ADDED { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: ObjectAdded
     /// <summary>
     /// Request a notification when an AI object is removed from the simulation. 
     ///   Refer also to the SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE structure.
     /// </summary>
-    public static readonly EventID EVENT_AI_REMOVED = SimConnectIDs.GetPrivateEventID( );          // subscription text: ObjectRemoved
+    public static EventID EVENT_AI_REMOVED { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: ObjectRemoved
 
     /// <summary>
     /// Request a notification when the user changes the position of their aircraft through a dialog.
     /// </summary>
-    public static readonly EventID EVENT_POS_CHANGED = SimConnectIDs.GetPrivateEventID( );          // subscription text: PositionChanged
+    public static EventID EVENT_POS_CHANGED { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: PositionChanged
 
     /// <summary>
     /// Request notifications when the flight is running or not, 
     /// </summary>
-    public static readonly EventID EVENT_SIM_STATE = SimConnectIDs.GetPrivateEventID( );          // subscription text: Sim
+    public static EventID EVENT_SIM_STATE { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: Sim
 
     /// <summary>
     /// The simulator is running. Typically the user is actively controlling the aircraft on the ground or in the air. 
@@ -95,16 +95,16 @@ namespace SimConnectToolkit
     /// then an additional SimStart/SimStop pair are sent before a second SimStart event is sent when the scenery is fully loaded. 
     /// The opening screen provides the options to change aircraft, departure airport, and so on.
     /// </summary>
-    public static readonly EventID EVENT_SIM_START = SimConnectIDs.GetPrivateEventID( );          // subscription text: SimStart
+    public static EventID EVENT_SIM_START { get; } = SimConnectIDs.GetPrivateEventID( );          // subscription text: SimStart
     /// <summary>
     /// The simulator is not running. Typically the user is loading a flight, navigating the shell or in a dialog.
     /// </summary>
-    public static readonly EventID EVENT_SIM_STOP = SimConnectIDs.GetPrivateEventID( );           // subscription text: SimStop
+    public static EventID EVENT_SIM_STOP { get; } = SimConnectIDs.GetPrivateEventID( );           // subscription text: SimStop
 
     /// <summary>
     /// Request notifications when the flight is paused or unpaused,
     /// </summary>
-    public static readonly EventID EVENT_SIM_PAUSE = SimConnectIDs.GetPrivateEventID( );           // subscription text: Pause
+    public static EventID EVENT_SIM_PAUSE { get; } = SimConnectIDs.GetPrivateEventID( );           // subscription text: Pause
 
     /// <summary>
     /// Request notifications when the flight is paused or unpaused,
@@ -115,16 +115,16 @@ namespace SimConnectToolkit
     /// #define PAUSE_STATE_FLAG_ACTIVE_PAUSE     4 // Pause was activated using the "Active Pause" Button 
     /// #define PAUSE_STATE_FLAG_SIM_PAUSE        8 // Pause the player sim but traffic, multi, etc... will still run     
     /// </summary>
-    public static readonly EventID EVENT_SIM_PAUSE_EX1 = SimConnectIDs.GetPrivateEventID( );
+    public static EventID EVENT_SIM_PAUSE_EX1 { get; } = SimConnectIDs.GetPrivateEventID( );
 
     /// <summary>
     /// Request a notification when the flight is paused.
     /// </summary>
-    public static readonly EventID EVENT_SIM_PAUSED = SimConnectIDs.GetPrivateEventID( );
+    public static EventID EVENT_SIM_PAUSED { get; } = SimConnectIDs.GetPrivateEventID( );
     /// <summary>
     /// Request a notification when the flight is unpaused.
     /// </summary>
-    public static readonly EventID EVENT_SIM_UNPAUSED = SimConnectIDs.GetPrivateEventID( );
+    public static EventID EVENT_SIM_UNPAUSED { get; } = SimConnectIDs.GetPrivateEventID( );
 
 
     // Request IDs
@@ -132,25 +132,25 @@ namespace SimConnectToolkit
     /// Request the current Aircraft loaded
     /// The filename is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID REQUEST_ACFT_LOADED = SimConnectIDs.GetPrivateEventID( );
+    public static EventID REQUEST_ACFT_LOADED { get; } = SimConnectIDs.GetPrivateEventID( );
     /// <summary>
     /// Request the current Flight File (FLT) loaded
     /// The filename is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID REQUEST_FLIGHT_LOADED = SimConnectIDs.GetPrivateEventID( );
+    public static EventID REQUEST_FLIGHT_LOADED { get; } = SimConnectIDs.GetPrivateEventID( );
     /// <summary>
     /// Request the current Flight Plan (PLN) loaded
     /// The filename is returned in a SIMCONNECT_RECV_EVENT_FILENAME structure.
     /// </summary>
-    public static readonly EventID REQUEST_FLIGHT_PLAN = SimConnectIDs.GetPrivateEventID( );
+    public static EventID REQUEST_FLIGHT_PLAN { get; } = SimConnectIDs.GetPrivateEventID( );
     /// <summary>
     /// Request the current SimState (On or Off)
     /// </summary>
-    public static readonly EventID REQUEST_SIM_STATE = SimConnectIDs.GetPrivateEventID( );
+    public static EventID REQUEST_SIM_STATE { get; } = SimConnectIDs.GetPrivateEventID( );
     /// <summary>
     /// Request the current state of the Dialog (In Dialog or not)
     /// </summary>
-    public static readonly EventID REQUEST_SIM_DIALOG = SimConnectIDs.GetPrivateEventID( );
+    public static EventID REQUEST_SIM_DIALOG { get; } = SimConnectIDs.GetPrivateEventID( );
 
 
     /// <summary>

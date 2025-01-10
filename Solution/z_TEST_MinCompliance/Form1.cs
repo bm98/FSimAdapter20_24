@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using System.Drawing;
 
 using FS = MSFSAdapter20_24;
 
 using SimConnectToolkit;
+using SimConnectToolkit.SystemState;
 
-using static SimConnectToolkit.SysStateHandler; // event IDs for the SystemStateHandler
+using static SimConnectToolkit.SystemState.SysStateHandler;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace z_TEST_MinCompliance
 {
@@ -21,6 +19,8 @@ namespace z_TEST_MinCompliance
     private static FS.SimConnect _SC = null;
 
     private FS.FSVersion _version = FS.FSVersion.Unknown;
+
+    private bool _connected = false;
 
     // define and Init RequestIDs for planned Requests
     private REQUEST RQ_InputEvents = SimConnectIDs.GetREQUEST( );
@@ -32,6 +32,13 @@ namespace z_TEST_MinCompliance
     // Catalog of supported Event Subscriptions and Requests
     private SysStateHandlerCat _eventCat;
 
+    // SimVar Get/Set Data Test Module
+    private CamVarGetModule _camVarGetData = null;
+    private SimVarGetModule _sVarGetData = null;
+    private SimVarSetModule _sVarSetData = null;
+    private SetKeyEventModule _sSetKeyEvent = null;
+
+    private WinFormInvoker _invoker;
 
     // primitive connect and dispose
     private bool ConnectAndDispose( )
@@ -52,6 +59,7 @@ namespace z_TEST_MinCompliance
         RTB.Text += $"No MSFS App seems running\n";
         ret = false; // could not connect...
       }
+      RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
 
       // Dispose
       RTB.Text += $"Adapter Shutdown\n";
@@ -86,6 +94,7 @@ namespace z_TEST_MinCompliance
 
         if (_version == FS.FSVersion.Unknown) {
           RTB.Text += $"No MSFS App seems running\n";
+          RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
           RTB.Text += $"Adapter Shutdown\n";
           _SC?.Dispose( );
           _SC = null;
@@ -93,6 +102,7 @@ namespace z_TEST_MinCompliance
           ret = false;
         }
         else {
+          RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
           RTB.Text += $"Adapter is alive\n";
         }
       }
@@ -123,6 +133,7 @@ namespace z_TEST_MinCompliance
 
         _SC.OnRecvEventFrame += new FS.SimConnect.RecvEventFrameEventHandler( _simConnect_OnRecvEventFrame );
         _SC.OnRecvSimobjectDataBytype += new FS.SimConnect.RecvSimobjectDataBytypeEventHandler( _simConnect_OnRecvSimobjectDataBytype );
+        _SC.OnRecvSimobjectData += new FS.SimConnect.RecvSimobjectDataEventHandler( _simConnect_OnRecvSimobjectData );
         _SC.OnRecvClientData += new FS.SimConnect.RecvClientDataEventHandler( _simConnect_OnRecvClientData );
 
         _SC.OnRecvEnumerateInputEvents += new FS.SimConnect.RecvEnumerateInputEventsEventHandler( _simConnect_OnRecvEnumerateInputEvents ); // enum B events
@@ -144,9 +155,28 @@ namespace z_TEST_MinCompliance
       _eventCat = SysStateHandler.DefaultSysStateCatalog( _SC );
     }
 
+    // change button forecol based on flag
+    private void MarkButton( Button button, bool on )
+    {
+      // sanity
+      if (button == null) return;
+
+      button.ForeColor = on ? Color.Green : Color.Black;
+    }
+
+
+    #region FORM
+
     public Form1( )
     {
       InitializeComponent( );
+
+      _invoker = new WinFormInvoker( this );
+    }
+
+    private void btClearRTB_Click( object sender, EventArgs e )
+    {
+      RTB.Text = "";
     }
 
     private void btConnect_Click( object sender, EventArgs e )
@@ -161,6 +191,9 @@ namespace z_TEST_MinCompliance
 
     private void btReqSome_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       _eventCat[REQUEST_SIM_STATE].Request( );
       _eventCat[REQUEST_SIM_DIALOG].Request( );
       _eventCat[REQUEST_ACFT_LOADED].Request( );
@@ -170,44 +203,77 @@ namespace z_TEST_MinCompliance
 
     private bool mustSubSome = true;
     private bool mustSub1_4Sec = true;
+    private bool mustSubFrame = true;
+    private bool mustSubCam = true;
+
+
     private void btSubSome_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       if (mustSubSome) {
         _eventCat[EVENT_SIM_STATE].Sub( );
+        _eventCat[EVENT_SIM_PAUSE].Sub( );
+        _eventCat[EVENT_SIM_PAUSE_EX1].Sub( );
         _eventCat[EVENT_ACFT_LOAD].Sub( );
         _eventCat[EVENT_FLIGHT_LOAD].Sub( );
         _eventCat[EVENT_FPLAN_ACTIVATE].Sub( );
         _eventCat[EVENT_FPLAN_DEACTIVATE].Sub( );
-        _eventCat[EVENT_SIM_PAUSE].Sub( );
-        _eventCat[EVENT_SIM_PAUSE_EX1].Sub( );
+        MarkButton( sender as Button, true );
       }
       else {
         _eventCat[EVENT_SIM_STATE].UnSub( );
+        _eventCat[EVENT_SIM_PAUSE].UnSub( );
+        _eventCat[EVENT_SIM_PAUSE_EX1].UnSub( );
         _eventCat[EVENT_ACFT_LOAD].UnSub( );
         _eventCat[EVENT_FLIGHT_LOAD].UnSub( );
         _eventCat[EVENT_FPLAN_ACTIVATE].UnSub( );
         _eventCat[EVENT_FPLAN_DEACTIVATE].UnSub( );
-        _eventCat[EVENT_SIM_PAUSE].UnSub( );
-        _eventCat[EVENT_SIM_PAUSE_EX1].UnSub( );
+        MarkButton( sender as Button, false );
       }
       mustSubSome = !mustSubSome; // toggle
     }
 
     private void btSub1Hz_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       if (mustSub1_4Sec) {
         _eventCat[EVENT_SIM_1SEC].Sub( );
         _eventCat[EVENT_SIM_4SEC].Sub( );
+        MarkButton( sender as Button, true );
       }
       else {
         _eventCat[EVENT_SIM_1SEC].UnSub( );
         _eventCat[EVENT_SIM_4SEC].UnSub( );
+        MarkButton( sender as Button, false );
       }
       mustSub1_4Sec = !mustSub1_4Sec; // toggle
     }
 
+    private void btSubFrame_Click( object sender, EventArgs e )
+    {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
+      if (mustSubFrame) {
+        _eventCat[EVENT_SIM_FRAME].Sub( );
+        MarkButton( sender as Button, true );
+      }
+      else {
+        _eventCat[EVENT_SIM_FRAME].UnSub( );
+        MarkButton( sender as Button, false );
+      }
+      mustSubFrame = !mustSubFrame;
+    }
+
     private void btReqInpEvents_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       RQ_InputEvents = SimConnectIDs.GetREQUEST( );
       txLastReqID.Text = $"{RQ_InputEvents}";
       _sb.AppendLine( "Sent request for InputEvents ID:" + txLastReqID.Text );
@@ -217,6 +283,9 @@ namespace z_TEST_MinCompliance
     // Facilities
     private void btReqAptList_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       RQ_AptList = SimConnectIDs.GetREQUEST( );
       txLastReqID.Text = $"{RQ_AptList}";
       _sb.AppendLine( "Sent request for APT ID:" + txLastReqID.Text );
@@ -225,6 +294,9 @@ namespace z_TEST_MinCompliance
 
     private void btRequFacWYP_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       RQ_WypList = SimConnectIDs.GetREQUEST( );
       txLastReqID.Text = $"{RQ_WypList}";
       _sb.AppendLine( "Sent request for WYP ID:" + txLastReqID.Text );
@@ -233,6 +305,9 @@ namespace z_TEST_MinCompliance
 
     private void btRequFacVOR_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       RQ_VorList = SimConnectIDs.GetREQUEST( );
       txLastReqID.Text = $"{RQ_VorList}";
       _sb.AppendLine( "Sent request for VOR ID:" + txLastReqID.Text );
@@ -241,28 +316,101 @@ namespace z_TEST_MinCompliance
 
     private void btRequFacNDB_Click( object sender, EventArgs e )
     {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
       RQ_NdbList = SimConnectIDs.GetREQUEST( );
       txLastReqID.Text = $"{RQ_NdbList}";
       _sb.AppendLine( "Sent request for NDB ID:" + txLastReqID.Text );
       _SC.RequestFacilitiesList( FS.SIMCONNECT_FACILITY_LIST_TYPE.NDB, RQ_NdbList );
     }
 
+    private void btReqCamData_Click( object sender, EventArgs e )
+    {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
+      if (_camVarGetData == null) {
+        _camVarGetData = new CamVarGetModule( );
+        _camVarGetData.RegisterWithSimConnect( _SC );
+        return; // first call registers only
+      }
+
+      _camVarGetData.SubscribeFromSimConnect( _SC, mustSubCam );
+      MarkButton( sender as Button, mustSubCam );
+      mustSubCam = !mustSubCam;
+    }
+
+    private void btReqData_Click( object sender, EventArgs e )
+    {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
+      if (_sVarGetData == null) {
+        _sVarGetData = new SimVarGetModule( );
+        _sVarGetData.RegisterWithSimConnect( _SC );
+        MarkButton( sender as Button, true );
+        return; // first call registers only
+      }
+      if (_sVarSetData == null) {
+        _sVarSetData = new SimVarSetModule( );
+        _sVarSetData.RegisterWithSimConnect( _SC );
+        MarkButton( sender as Button, true );
+        return; // first call registers only
+      }
+      // further calls try to retrieve data
+      _sVarGetData.RequestFromSimConnect( _SC );
+      _sVarSetData.RequestFromSimConnect( _SC );
+    }
+
+    private void btReqSendData_Click( object sender, EventArgs e )
+    {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
+      if (_sVarSetData == null) {
+        _sVarSetData = new SimVarSetModule( );
+        _sVarSetData.RegisterWithSimConnect( _SC );
+        MarkButton( sender as Button, true );
+        return; // first call registers only
+      }
+      _sVarSetData.ChangeVarsABit( ); // change vars
+      // further calls try to send data
+      _sVarSetData.RequestToSimConnect( _SC );
+    }
+
+    private void btSendKey_Click( object sender, EventArgs e )
+    {
+      // sanity
+      if (!_connected || (_SC == null)) return;
+
+      if (_sSetKeyEvent == null) {
+        _sSetKeyEvent = new SetKeyEventModule( "PARKING_BRAKES" );
+        _sSetKeyEvent.RegisterWithSimConnect( _SC );
+        MarkButton( sender as Button, true );
+        return; // first call registers only
+      }
+      // further calls try to send data
+      _sSetKeyEvent.RequestToSimConnect( _SC, 0 ); // no arg, toggles always 
+    }
+
+    #endregion
+
     #region SimConnect Event Handlers
 
     // usually just forward the callback to internal subscribers
 
-    private bool _scOpen = false;
     private StringBuilder _sb = new StringBuilder( );
 
     // Handle SimConnect Open Reply
     private void _simConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvOpen" );
       _sb.AppendLine( data.szApplicationName );
       _sb.AppendLine( $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}" );
       _sb.AppendLine( $"SimConV{data.dwSimConnectVersionMajor}.{data.dwSimConnectVersionMinor}.{data.dwSimConnectBuildMajor}.{data.dwSimConnectBuildMinor}" );
-
-      _scOpen = true;
+      _connected = true;
       RTB.Text += _sb.ToString( );
       _sb.Clear( );
     }
@@ -270,8 +418,19 @@ namespace z_TEST_MinCompliance
     // Handle SimConnect Quit Event
     private void _simConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvQuit" );
-      _scOpen = true;
+      _connected = false;
+
+      _sb.AppendLine( "Disposing SimConnect object" );
+
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        _SC?.Dispose( ); // should?? unwire handlers
+        _SC = null;
+        RTB.Text += "SimConnect object is now Disposed\n";
+      } );
+
       RTB.Text += _sb.ToString( );
       _sb.Clear( );
     }
@@ -279,6 +438,7 @@ namespace z_TEST_MinCompliance
     // Handle SimConnect Exception
     private void _simConnect_OnRecvException( FS.SimConnect sender, FS.SIMCONNECT_RECV_EXCEPTION data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvException" );
       FS.SIMCONNECT_EXCEPTION eException = (FS.SIMCONNECT_EXCEPTION)data.dwException;
       _sb.AppendLine( $"{eException.ToString( )}" );
@@ -289,6 +449,7 @@ namespace z_TEST_MinCompliance
     // Handle SimConnect Reply for System State Requests
     private void _simConnect_OnRecvSystemState( FS.SimConnect sender, FS.SIMCONNECT_RECV_SYSTEM_STATE data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvSystemState" );
 
       // this is the Sim reply to a SystemState Request
@@ -319,6 +480,7 @@ namespace z_TEST_MinCompliance
     // SimConnect Reply for System State Event Subscription
     private void _simConnect_OnRecvEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvEvent" );
 
       if (data.uEventID == (uint)EVENT_SIM_6HZ) {
@@ -338,10 +500,16 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"EVENT_SIM_STOP" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_PAUSE_EX1) {
-        _sb.AppendLine( $"EVENT_SIM_PAUSE_EX1 data<{data.dwData}>" );
+        bool isOff = data.dwData == 0;
+        bool isFull = (data.dwData & 1) > 0;
+        bool isFSX = (data.dwData & 2) > 0;
+        bool isActive = (data.dwData & 4) > 0;
+        bool isSimPause = (data.dwData & 8) > 0;
+        _sb.AppendLine( $"EVENT_SIM_PAUSE_EX1 data<{data.dwData}> off:{isOff}, full:{isFull}, active:{isActive}, sim:{isSimPause}" );
       }
       else if (data.uEventID == (uint)EVENT_SIM_STATE) {
-        _sb.AppendLine( $"EVENT_SIM_STATE data<{data.dwData}>" );
+        bool isOn = data.dwData == (uint)FS.SIMCONNECT_STATE.ON;
+        _sb.AppendLine( $"EVENT_SIM_STATE data<{data.dwData}> on:{isOn}" );
       }
 
       else if (data.uEventID == (uint)EVENT_SIM_PAUSED) {
@@ -352,7 +520,8 @@ namespace z_TEST_MinCompliance
       }
       else if (data.uEventID == (uint)EVENT_SIM_PAUSE) {
         // DOES NOT WORK - never called  -- TODO CHEK IN CURRENT SIM
-        _sb.AppendLine( $"EVENT_SIM_PAUSE data<{data.dwData}>" );
+        bool isOn = data.dwData == (uint)FS.SIMCONNECT_STATE.ON;
+        _sb.AppendLine( $"EVENT_SIM_PAUSE data<{data.dwData}> paused:{isOn}" );
       }
 
       else if (data.uEventID == (uint)EVENT_AI_ADDED) {
@@ -383,6 +552,7 @@ namespace z_TEST_MinCompliance
     // SimConnect Reply for FileName Subscriptions or Requests
     private void _simConnectRef_OnRecvEventFilename( FS.SimConnect sender, FS.SIMCONNECT_RECV_EVENT_FILENAME data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnectRef_OnRecvEventFilename" );
 
       if (data.uEventID == (uint)EVENT_ACFT_LOAD) {
@@ -418,14 +588,82 @@ namespace z_TEST_MinCompliance
     {
       // cannot monitor in RTB - too fast...
       _ = data.fFrameRate;
+      txFPS.Text = $"{data.fFrameRate:##0}";
       _ = data.fSimSpeed;
     }
 
 
     // SimConnect reply for request obj by type
+    private void _simConnect_OnRecvSimobjectData( FS.SimConnect sender, FS.SIMCONNECT_RECV_SIMOBJECT_DATA data )
+    {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
+      _sb.AppendLine( "_simConnect_OnRecvSimobjectData" );
+
+      var handled = _sVarGetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a SimVar Get Data Update:" );
+        _sb.Append( _sVarGetData.GetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+      // next try
+      handled = _sVarSetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a SimVar Set Data Update:" );
+        _sb.Append( _sVarSetData.SetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+      // next try
+      handled = _camVarGetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a CamVar Get Data Update:" );
+        _sb.Append( _camVarGetData.GetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+
+
+      RTB.Text += _sb.ToString( );
+      _sb.Clear( );
+    }
+
+    // SimConnect reply for request obj by type
     private void _simConnect_OnRecvSimobjectDataBytype( FS.SimConnect sender, FS.SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvSimobjectDataBytype" );
+
+      var handled = _sVarGetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a SimVar Get Data Update:" );
+        _sb.Append( _sVarGetData.GetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+      // next try
+      handled = _sVarSetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a SimVar Set Data Update:" );
+        _sb.Append( _sVarSetData.SetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+      // next try
+      handled = _camVarGetData?.HandleSimObjectType( data );
+      if (handled.HasValue && handled.Value) {
+        _sb.AppendLine( " Got a CamVar Get Data Update:" );
+        _sb.Append( _camVarGetData.GetStruct.ToString( ) );
+        RTB.Text += _sb.ToString( );
+        _sb.Clear( );
+        return;
+      }
+
 
       RTB.Text += _sb.ToString( );
       _sb.Clear( );
@@ -434,7 +672,8 @@ namespace z_TEST_MinCompliance
     // SimConnect Client data arrived
     private void _simConnect_OnRecvClientData( FS.SimConnect sender, FS.SIMCONNECT_RECV_CLIENT_DATA data )
     {
-      _sb.AppendLine( "_simConnect_OnRecvClientData" );
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
+      _sb.AppendLine( $"_simConnect_OnRecvClientData: RqID<{data.dwRequestID}> DID<{data.dwDefineID}> msgIndex:{data.dwentrynumber} #msgs:{data.dwoutof} #DWORDs:{data.dwDefineCount}" );
 
       RTB.Text += _sb.ToString( );
       _sb.Clear( );
@@ -443,6 +682,7 @@ namespace z_TEST_MinCompliance
     // SimConnect Enum InputEvents Data arrived
     private void _simConnect_OnRecvEnumerateInputEvents( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_simConnect_OnRecvEnumerateInputEvents: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
       for (int i = 0; i < data.dwArraySize; i++) {
@@ -456,6 +696,7 @@ namespace z_TEST_MinCompliance
     // SimConnect returns data 
     private void _simConnect_OnRecvEnumerateInputEventParams( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENT_PARAMS data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvEnumerateInputEventParams" );
 
       RTB.Text += _sb.ToString( );
@@ -465,6 +706,7 @@ namespace z_TEST_MinCompliance
     // SimConnect returns data for a single InputEvent 
     private void _simConnect_OnRecvGetInputEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_GET_INPUT_EVENT data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvGetInputEvent" );
 
       RTB.Text += _sb.ToString( );
@@ -474,6 +716,7 @@ namespace z_TEST_MinCompliance
     // SimConnect returns data for an InputEvent subscription
     private void _simConnect_OnRecvSubscribeInputEvent( FS.SimConnect sender, FS.SIMCONNECT_RECV_SUBSCRIBE_INPUT_EVENT data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvSubscribeInputEvent" );
 
       switch (data.eType) {
@@ -507,11 +750,11 @@ namespace z_TEST_MinCompliance
     }
 */
     /// <summary>
-    /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received  Airport Lists
     /// </summary>
     private void _simConnect_OnRecvAirportList( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_OnRecvAirportList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
       for (int i = 0; i < data.dwArraySize; i++) {
@@ -527,6 +770,7 @@ namespace z_TEST_MinCompliance
     /// </summary>
     private void _simConnect_OnRecvVorList( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_OnRecvVorList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
       for (int i = 0; i < data.dwArraySize; i++) {
@@ -544,6 +788,7 @@ namespace z_TEST_MinCompliance
     /// </summary>
     private void _simConnect_OnRecvNdbList( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_OnRecvNdbList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
       for (int i = 0; i < data.dwArraySize; i++) {
@@ -556,11 +801,11 @@ namespace z_TEST_MinCompliance
     }
 
     /// <summary>
-    /// NOT SUPPORTED BY NOW
     /// Asynch call by FS having received Waypoint Lists
     /// </summary>
     private void _simConnect_OnRecvWaypointList( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data )
     {
+      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_OnRecvWaypointList: RqID<{data.dwRequestID}> msgIndex:{data.dwEntryNumber} #msgs:{data.dwOutOf} #records:{data.dwArraySize}" );
 
       for (int i = 0; i < data.dwArraySize; i++) {
@@ -572,7 +817,6 @@ namespace z_TEST_MinCompliance
     }
 
     #endregion
-
 
     #region WinProc 
 
@@ -593,6 +837,9 @@ namespace z_TEST_MinCompliance
       // everything else goes here
       base.DefWndProc( ref m ); // default handling for this Window
     }
+
+
+
 
     #endregion
 
