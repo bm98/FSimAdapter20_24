@@ -1,8 +1,7 @@
 # MSFS SimConnect Adapter for 2020 and 2024 (c# .Net)
 
-# ALPHA VERSION - WORK IN PROGRESS
+# BETA VERSION - TESTS IN PROGRESS
 
-for the time beeing it must be considered as 'Proof of Concept'   
 
 ---
 
@@ -11,9 +10,11 @@ for the time beeing it must be considered as 'Proof of Concept'
 * Hides the two versions of SimConnect behind an Adapter  
 * Exposes the MSFS2024 interface of SimConnect  
 * Attaches the respective versions DLLs dynamically when either version of the Sim is in use  
-* Adds a Helper class for SimConnectID management
+* Adds a Helper class for SimConnectID management (SimConnectToolkit)
+* Adds a Helper class for Event Request and Subscription (SimConnectToolkit.SystemState)
+* Adds a Helper class to wrap the connecting procedure and callback details (SimConnector)
+* Adds a Helper method for message handling when using WinForms
 * Adds a Helper class for dissecting the managed SimConnect DLL (finding differences)
-* Adds a Helper method for message handling
 
 MSFS2020 breaking changes are taken care of and it should work seamlessly  
 Methods not available in MSFS2020 will raise an Exception callback but should otherwise not cause harm  

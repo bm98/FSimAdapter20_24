@@ -58,7 +58,6 @@ namespace MSFSPlug2020
 
     #endregion
 
-
     #region SIMCONNECT_RECV_FACILITY_MINIMAL_LIST
 
     // needs Ident adjustment

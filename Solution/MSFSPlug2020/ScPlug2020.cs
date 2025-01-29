@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -12,6 +9,7 @@ using CX = MSFSAdapter20_24;
 using MSFSAdapter20_24;
 
 using static MSFSPlug2020.ListConverters;
+using System.Diagnostics;
 
 namespace MSFSPlug2020
 {
@@ -52,13 +50,47 @@ namespace MSFSPlug2020
   /// </summary>
   public class ScPlug2020 : ISimConnectA
   {
-
-
-
     // SimConnect handle
     private FS.SimConnect _simConnect;
 
-    #region Events
+    /// <summary>
+    /// Open an SC connection
+    /// </summary>
+    /// <param name="szName">Connector Name</param>
+    /// <param name="hWnd">Window Handle</param>
+    /// <param name="UserEventWin32">EventID</param>
+    /// <param name="hEventHandle">WaitHandle (not used here)</param>
+    /// <param name="ConfigIndex">Index in SimConnect.cfg</param>
+    /// <returns>True when successfull</returns>
+    public bool Open( string szName, IntPtr hWnd, uint UserEventWin32, WaitHandle hEventHandle, uint ConfigIndex )
+    {
+      try {
+        // if no sim is running this bails out with a COM exception
+        _simConnect = new FS.SimConnect( szName, hWnd, UserEventWin32, hEventHandle, ConfigIndex );
+        if (_simConnect != null) AttachHandlers( );
+      }
+      catch (COMException ex) {
+        _ = ex;
+        return false;
+      }
+
+      if (_simConnect != null) {
+        Debug.WriteLine( $"Plug2020 Created SimConnect " );
+        return true;
+      }
+
+      Debug.WriteLine( $"Plug2020 FAILED to create SimConnect " );
+      return false;
+    }
+
+    public void Dispose( )
+    {
+      _simConnect?.Dispose( );
+      _simConnect = null;
+    }
+
+
+    #region Published Events
 
     public event SimConnect.RecvEnumerateInputEventParamsEventHandler OnRecvEnumerateInputEventParams;
     public event SimConnect.RecvSubscribeInputEventEventHandler OnRecvSubscribeInputEvent;
@@ -105,32 +137,7 @@ namespace MSFSPlug2020
 
     #endregion
 
-    public bool Open( string szName, IntPtr hWnd, uint UserEventWin32, WaitHandle hEventHandle, uint ConfigIndex )
-    {
-      try {
-        // if no sim is running this bails out with a COM exception
-        _simConnect = new FS.SimConnect( szName, hWnd, UserEventWin32, hEventHandle, ConfigIndex );
-        if (_simConnect != null) AttachHandlers( );
-      }
-#pragma warning disable CS0168 // Variable is declared but never used
-      catch (COMException _) {
-#pragma warning restore CS0168 // Variable is declared but never used
-        return false;
-      }
-
-      if (_simConnect != null) {
-        return true;
-      }
-
-      return false;
-    }
-
-    public void Dispose( )
-    {
-      _simConnect?.Dispose( );
-      _simConnect = null;
-    }
-
+    #region Event Handlers
 
     // attach all Plug handlers when possible
     private void AttachHandlers( )
@@ -141,15 +148,15 @@ namespace MSFSPlug2020
       // events reply null as sender, the original simConnect obj cannot be used outside of this module anyway
 
       // record length does not match for the ones below using the new Ident string length - results need to be converted rather than casted
-      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data ) 
+      _simConnect.OnRecvAirportList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_AIRPORT_LIST data )
         => { OnRecvAirportList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data ) 
+      _simConnect.OnRecvWaypointList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_WAYPOINT_LIST data )
         => { OnRecvWaypointList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data ) 
+      _simConnect.OnRecvNdbList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_NDB_LIST data )
         => { OnRecvNdbList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data ) 
+      _simConnect.OnRecvVorList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_VOR_LIST data )
         => { OnRecvVorList?.Invoke( null, GetFrom( data ) ); };
-      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data ) 
+      _simConnect.OnRecvFacilityMinimalList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST data )
         => { OnRecvFacilityMinimalList?.Invoke( null, GetFrom( data ) ); };
       _simConnect.OnRecvEnumerateInputEvents += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS data )
         => { OnRecvEnumerateInputEvents?.Invoke( null, GetFrom( data ) ); };
@@ -634,7 +641,7 @@ namespace MSFSPlug2020
 
     }
 
-
+    #endregion
 
     #region Call forwarder
 

@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z_TEST_Various", "z_TEST_Va
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConnectToolkit", "SimConnectToolkit\SimConnectToolkit.csproj", "{478989D4-BB73-4B80-9E1E-C74B79CCA1A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConnector", "SimConnector\SimConnector.csproj", "{632EA581-5937-4EC9-8B83-09082D50EC32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,14 @@ Global
 		{478989D4-BB73-4B80-9E1E-C74B79CCA1A3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{478989D4-BB73-4B80-9E1E-C74B79CCA1A3}.Release|x64.ActiveCfg = Release|x64
 		{478989D4-BB73-4B80-9E1E-C74B79CCA1A3}.Release|x64.Build.0 = Release|x64
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Debug|x64.ActiveCfg = Debug|x64
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Debug|x64.Build.0 = Debug|x64
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|x64.ActiveCfg = Release|x64
+		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

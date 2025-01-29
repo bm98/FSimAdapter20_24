@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 using FS = Microsoft.FlightSimulator.SimConnect;
@@ -21,11 +18,46 @@ namespace MSFSPlug2024
   /// </summary>
   public class ScPlug2024 : ISimConnectA
   {
-
     // SimConnect handle
     private FS.SimConnect _simConnect;
 
-    #region Events
+    /// <summary>
+    /// Open an SC connection
+    /// </summary>
+    /// <param name="szName">Connector Name</param>
+    /// <param name="hWnd">Window Handle</param>
+    /// <param name="UserEventWin32">EventID</param>
+    /// <param name="hEventHandle">WaitHandle (not used here)</param>
+    /// <param name="ConfigIndex">Index in SimConnect.cfg</param>
+    /// <returns>True when successfull</returns>
+    public bool Open( string szName, IntPtr hWnd, uint UserEventWin32, WaitHandle hEventHandle, uint ConfigIndex )
+    {
+      try {
+        // if no sim is running this bails out with a COM exception
+        _simConnect = new FS.SimConnect( szName, hWnd, UserEventWin32, hEventHandle, ConfigIndex );
+        if (_simConnect != null) AttachHandlers( );
+      }
+      catch (COMException ex) {
+        _ = ex;
+        return false;
+      }
+
+      if (_simConnect != null) {
+        Debug.WriteLine( $"Plug2024 Created SimConnect " );
+        return true;
+      }
+
+      Debug.WriteLine( $"Plug2024 FAILED to create SimConnect " );
+      return false;
+    }
+
+    public void Dispose( )
+    {
+      _simConnect?.Dispose( );
+      _simConnect = null;
+    }
+
+    #region Published Events
 
     public event SimConnect.RecvEnumerateInputEventParamsEventHandler OnRecvEnumerateInputEventParams;
     public event SimConnect.RecvSubscribeInputEventEventHandler OnRecvSubscribeInputEvent;
@@ -70,34 +102,7 @@ namespace MSFSPlug2024
 
     #endregion
 
-    public bool Open( string szName, IntPtr hWnd, uint UserEventWin32, WaitHandle hEventHandle, uint ConfigIndex )
-    {
-      try {
-        // if no sim is running this bails out with a COM exception
-        _simConnect = new FS.SimConnect( szName, hWnd, UserEventWin32, hEventHandle, ConfigIndex );
-        if (_simConnect != null) AttachHandlers( );
-      }
-#pragma warning disable CS0168 // Variable is declared but never used
-      catch (COMException _) {
-#pragma warning restore CS0168 // Variable is declared but never used
-        return false;
-      }
-
-      if (_simConnect != null) {
-        Debug.WriteLine( $"Plug2024 Created SimConnect " );
-        return true;
-      }
-
-      Debug.WriteLine( $"Plug2024 FAILED to create SimConnect " );
-      return false;
-    }
-
-    public void Dispose( )
-    {
-      _simConnect?.Dispose( );
-      _simConnect = null;
-    }
-
+    #region Event Handlers
 
     // attach all Plug handlers when possible
     private void AttachHandlers( )
@@ -572,7 +577,7 @@ namespace MSFSPlug2024
 
     }
 
-
+    #endregion
 
     #region Call forwarder
 

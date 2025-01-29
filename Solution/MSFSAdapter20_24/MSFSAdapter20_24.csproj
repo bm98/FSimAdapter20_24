@@ -66,7 +66,21 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>REM copy from Release to Deployment
+if $(ConfigurationName) == Release copy $(TargetPath) $(SolutionDir)SimConnectDepl\
+
+REM also copy from Debug build to Deployment for now
+if $(ConfigurationName) == Debug copy $(TargetPath) $(SolutionDir)SimConnectDepl\
+
+
+REM copy from Release to Redist (my FSim Redist)
+if $(ConfigurationName) == Release copy $(TargetDir)*.* $(SolutionDir)..\..\Redist\
+if $(ConfigurationName) == Release del $(SolutionDir)..\..\Redist\*.tmp
+
+REM also copy from Debug build for now  (my FSim Redist)
+if $(ConfigurationName) == Debug copy $(TargetDir)*.* $(SolutionDir)..\..\Redist\
+if $(ConfigurationName) == Debug del $(SolutionDir)..\..\Redist\*.tmp
+
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

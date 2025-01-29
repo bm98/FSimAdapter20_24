@@ -3,24 +3,27 @@ namespace SimConnectToolkit
 {
   /// <summary>
   /// Handles SimConnect IDs at one place 
+  ///  Get Methods are taking all IDs from the same static pool
   /// 
   /// Those mostly need to be unique - so make all unique for tracking and debugging
   /// 
   /// ID Groups are:
   /// 
-  ///   DEFINITION     1..   independent num space
+  ///   DEFINITION      1..30_999   independent num space
   ///   
-  ///   REQUEST    20'001..25'999
-  ///   EventID    16'001..19'999
-  ///   InputID    13'001..15'999
-  ///   GroupID    10'001..12'999
+  /// The following IDs are expected to be unique by SimConnect
+  /// 
+  ///   GroupID    00'001..01'999
+  ///   InputID    02'001..05'999
+  ///   EventID    06'001..15'999
+  ///   REQUEST    17'001..26'999
   ///   
-  ///   PrivateID  26'001..29'999 (internal ID range)
+  ///   User assigned : use range 30_000..30_999
   ///   
-  ///   User assigned and special purpose: use range 30_000..
+  ///   PrivateDEF 31'001..... special purposes (e.g. enum facility data)
+  ///   PrivateID  31'001..... special purposes (e.g. enum facility data)
   ///   
   /// </summary>
-
 
   /// <summary>
   /// DEFINITION ID for SimConnect interaction (unique ID as Enum required)
@@ -35,64 +38,94 @@ namespace SimConnectToolkit
   };
 
   /// <summary>
-  /// REQUEST IDs for SimConnect interaction (unique ID as Enum required)
-  /// 9_999 InputIDs supported (no check for overflow...)
-  /// </summary>
-  public enum REQUEST : uint
-  {
-    /// <summary>
-    /// SimConnect REQUEST prototype
-    /// </summary>
-    Dummy = 0
-  };
-
-  /// <summary>
-  /// EVENT ID for SimConnect interaction (unique ID as Enum required)
-  /// 9_899 EventIDs supported (no check for overflow...)
-  /// </summary>
-  public enum EventID : uint // have to set this to uint else the managed interface throws an overflow error when converting SIMCONNECT_UNSUSED (-1) to Uint 
-  {
-    /// <summary>
-    /// SimConnect EventID prototype
-    ///  Reserved range 10_000..10_099 for predefined keys
-    /// </summary>
-    KeyUp = 10_001, // preset ID for a KeyUp event
-    // other preset EventIDs here up to 10_099 only
-    // distributed Event IDs now
-    Dummy = 10_100,
-  }
-
-  /// <summary>
-  /// EVENT ID for SimConnect interaction (unique ID as Enum required)
-  /// 9_999 InputIDs supported (no check for overflow...)
-  /// </summary>
-  public enum InputID : uint
-  {
-    /// <summary>
-    /// SimConnect InputID prototype
-    /// </summary>
-    Dummy = 20_000,
-  }
-
-  /// <summary>
   /// GROUP ID for SimConnect interaction (unique ID as Enum required) 
-  /// 999 GroupIDs supported (no check for overflow...)
+  /// 1..1_999 GroupIDs supported (no check for overflow...)
+  /// Range 1..1_999
   /// </summary>
   public enum GroupID : uint
   {
     /// <summary>
     /// SimConnect GroupID prototype
     /// </summary>
-    Dummy = 30_000,
+    Dummy = 0,
   }
+
+  /// <summary>
+  /// EVENT ID for SimConnect interaction (unique ID as Enum required)
+  /// 3_998 InputIDs supported (no check for overflow...)
+  /// Range 2_001..5_999
+  /// </summary>
+  public enum InputID : uint
+  {
+    /// <summary>
+    /// SimConnect InputID prototype
+    /// </summary>
+    Dummy = 2_000,
+  }
+
+  /// <summary>
+  /// EVENT ID for SimConnect interaction (unique ID as Enum required)
+  /// 9_899 EventIDs supported (no check for overflow...)
+  /// Range 6_001..6_099 fixed key events
+  /// Range 6_101..15_999
+  /// </summary>
+  public enum EventID : uint // have to set this to uint else the managed interface throws an overflow error when converting SIMCONNECT_UNSUSED (-1) to Uint 
+  {
+    /// <summary>
+    /// SimConnect EventID prototype
+    ///  Reserved range 6_000..6_099 for predefined keys
+    /// </summary>
+    KeyUp = 6_001, // preset ID for a KeyUp event
+    // other preset EventIDs here up to 10_099 only
+    // distributed Event IDs now
+    Dummy = 6_100,
+  }
+
+  /// <summary>
+  /// REQUEST IDs for SimConnect interaction (unique ID as Enum required)
+  /// 9_999 RequestIDs supported (no check for overflow...)
+  /// Range 17_001..26_999
+  /// </summary>
+  public enum REQUEST : uint
+  {
+    /// <summary>
+    /// SimConnect REQUEST prototype
+    /// </summary>
+    Dummy = 17_000
+  };
+
+  /// <summary>
+  /// USER IDs for SimConnect interaction (unique ID as Enum required)
+  /// 9_999 RequestIDs supported (no check for overflow...)
+  /// Range 30_001..30_999
+  /// </summary>
+  public enum UserID : uint
+  {
+    /// <summary>
+    /// SimConnect UserID prototype
+    /// </summary>
+    Dummy = 30_000
+  };
+
 
   // reserve 31_000+ for internal and special purposes
 
   /// <summary>
   /// Generic Private ID for SimConnect interaction (unique ID as Enum required)
-  /// 10_000+ PrivateID supported (no check for overflow...)
+  /// 100_000+ PrivateID supported (no check for overflow...)
   /// </summary>
-  internal enum PrivateID : uint // have to set this to uint else the managed interface throws an overflow error when converting SIMCONNECT_UNSUSED (-1) to Uint 
+  internal enum PrivateDEF : uint
+  {
+    /// <summary>
+    /// SimConnect PrivateDEF prototype
+    /// </summary>
+    Dummy = 31_000,
+  }
+  /// <summary>
+  /// Generic Private ID for SimConnect interaction (unique ID as Enum required)
+  /// 100_000+ PrivateID supported (no check for overflow...)
+  /// </summary>
+  internal enum PrivateID : uint
   {
     /// <summary>
     /// SimConnect PrivateID prototype
@@ -110,7 +143,9 @@ namespace SimConnectToolkit
     private static EventID s_eventID = EventID.Dummy;
     private static InputID s_inputID = InputID.Dummy;
     private static REQUEST s_requestID = REQUEST.Dummy;
+    private static UserID s_userID = UserID.Dummy;
 
+    private static PrivateDEF s_privateDEF = PrivateDEF.Dummy;
     private static PrivateID s_privateID = PrivateID.Dummy;
 
     #region Public IDs
@@ -156,15 +191,35 @@ namespace SimConnectToolkit
       return ++s_eventID;
     }
 
+    /// <summary>
+    /// Returns a new UserID 
+    /// </summary>
+    /// <returns>A new UserID</returns>
+    public static UserID GetUserID( )
+    {
+      return ++s_userID;
+    }
+
     #endregion
 
-    #region Private (internal) IDs
+    #region Special IDs (31_000 ...)
+
+    // take all from the Private Pool and cast to common type
+
+    /// <summary>
+    /// Returns a new internal DEFINITION 
+    /// </summary>
+    /// <returns>A new EventID</returns>
+    public static DEFINITION GetPrivateDEFINITION( )
+    {
+      return (DEFINITION)(++s_privateDEF);
+    }
 
     /// <summary>
     /// Returns a new internal EventID 
     /// </summary>
     /// <returns>A new EventID</returns>
-    internal static EventID GetPrivateEventID( )
+    public static EventID GetPrivateEventID( )
     {
       return (EventID)(++s_privateID);
     }
@@ -172,7 +227,7 @@ namespace SimConnectToolkit
     /// Returns a new internal GroupID 
     /// </summary>
     /// <returns>A new EventID</returns>
-    internal static GroupID GetPrivateGroupID( )
+    public static GroupID GetPrivateGroupID( )
     {
       return (GroupID)(++s_privateID);
     }
@@ -180,23 +235,15 @@ namespace SimConnectToolkit
     /// Returns a new internal InputID 
     /// </summary>
     /// <returns>A new EventID</returns>
-    internal static InputID GetPrivateInputID( )
+    public static InputID GetPrivateInputID( )
     {
       return (InputID)(++s_privateID);
-    }
-    /// <summary>
-    /// Returns a new internal DEFINITION 
-    /// </summary>
-    /// <returns>A new EventID</returns>
-    internal static DEFINITION GetPrivateDEFINITION( )
-    {
-      return (DEFINITION)(++s_privateID);
     }
     /// <summary>
     /// Returns a new internal REQUEST 
     /// </summary>
     /// <returns>A new EventID</returns>
-    internal static REQUEST GetPrivateREQUEST( )
+    public static REQUEST GetPrivateREQUEST( )
     {
       return (REQUEST)(++s_privateID);
     }

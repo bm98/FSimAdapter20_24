@@ -136,7 +136,7 @@ namespace z_TEST_MinCompliance
       CState26 = 26,
       CState27 = 27,
       CState28 = 28,
-      CState29 = 29,
+      Transition24 = 29,
       StartFlApt24 = 30,
       CState31 = 31,
       MainMenu24 = 32,

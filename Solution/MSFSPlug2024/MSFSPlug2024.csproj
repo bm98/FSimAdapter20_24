@@ -51,7 +51,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect, Version=12.1.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SimConnectDepl\V2024\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <HintPath>..\..\..\Redist\MS2024\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,6 +75,14 @@
   <PropertyGroup>
     <PostBuildEvent>REM copy plug to Deployment V2024
 xcopy $(TargetPath) $(SolutionDir)SimConnectDepl\V2024\ /C /Y /I
+
+REM copy plug to Redist V2024 (my FSim Redist)
+xcopy $(TargetPath) $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
+
+
+REM copy the used MSFS Dlls to Redist V2024 (my FSim Redist)
+xcopy $(TargetDir)Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
+xcopy $(SolutionDir)..\..\Redist\MS2024\SimConnect.dll $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

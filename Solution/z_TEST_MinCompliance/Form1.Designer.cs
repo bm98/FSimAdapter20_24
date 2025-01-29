@@ -48,16 +48,18 @@
       this.btReqSendData = new System.Windows.Forms.Button();
       this.btSendKey = new System.Windows.Forms.Button();
       this.btReqCamData = new System.Windows.Forms.Button();
+      this.btSubSimEvents = new System.Windows.Forms.Button();
+      this.btConnectSimCon = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // btConnect
       // 
-      this.btConnect.Location = new System.Drawing.Point(12, 61);
+      this.btConnect.Location = new System.Drawing.Point(12, 45);
       this.btConnect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btConnect.Name = "btConnect";
-      this.btConnect.Size = new System.Drawing.Size(124, 43);
+      this.btConnect.Size = new System.Drawing.Size(124, 27);
       this.btConnect.TabIndex = 0;
-      this.btConnect.Text = "Connect";
+      this.btConnect.Text = "Connect Adapter";
       this.btConnect.UseVisualStyleBackColor = true;
       this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
       // 
@@ -119,7 +121,7 @@
       // 
       // btReqInpEvents
       // 
-      this.btReqInpEvents.Location = new System.Drawing.Point(408, 12);
+      this.btReqInpEvents.Location = new System.Drawing.Point(408, 45);
       this.btReqInpEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqInpEvents.Name = "btReqInpEvents";
       this.btReqInpEvents.Size = new System.Drawing.Size(124, 27);
@@ -272,11 +274,35 @@
       this.btReqCamData.UseVisualStyleBackColor = true;
       this.btReqCamData.Click += new System.EventHandler(this.btReqCamData_Click);
       // 
+      // btSubSimEvents
+      // 
+      this.btSubSimEvents.Location = new System.Drawing.Point(408, 12);
+      this.btSubSimEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btSubSimEvents.Name = "btSubSimEvents";
+      this.btSubSimEvents.Size = new System.Drawing.Size(124, 27);
+      this.btSubSimEvents.TabIndex = 21;
+      this.btSubSimEvents.Text = "Sub SimEvents";
+      this.btSubSimEvents.UseVisualStyleBackColor = true;
+      this.btSubSimEvents.Click += new System.EventHandler(this.btSubSimEvents_Click);
+      // 
+      // btConnectSimCon
+      // 
+      this.btConnectSimCon.Location = new System.Drawing.Point(13, 78);
+      this.btConnectSimCon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btConnectSimCon.Name = "btConnectSimCon";
+      this.btConnectSimCon.Size = new System.Drawing.Size(124, 27);
+      this.btConnectSimCon.TabIndex = 22;
+      this.btConnectSimCon.Text = "Connect SimCon";
+      this.btConnectSimCon.UseVisualStyleBackColor = true;
+      this.btConnectSimCon.Click += new System.EventHandler(this.btConnectSimCon_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(933, 519);
+      this.Controls.Add(this.btConnectSimCon);
+      this.Controls.Add(this.btSubSimEvents);
       this.Controls.Add(this.btReqCamData);
       this.Controls.Add(this.btSendKey);
       this.Controls.Add(this.btReqSendData);
@@ -302,6 +328,7 @@
       this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.Name = "Form1";
       this.Text = "Form1";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -330,6 +357,8 @@
     private System.Windows.Forms.Button btReqSendData;
     private System.Windows.Forms.Button btSendKey;
     private System.Windows.Forms.Button btReqCamData;
+    private System.Windows.Forms.Button btSubSimEvents;
+    private System.Windows.Forms.Button btConnectSimCon;
   }
 }
 

@@ -43,7 +43,7 @@ namespace MSFSAdapter20_24
   public class SimConnect : IDisposable
   {
     /*
-     * Base is FS2020 latest as of Dec 2024
+     * Base is FS2024 latest as of Dec 2024
      * 
       Updates:
 
@@ -713,10 +713,8 @@ namespace MSFSAdapter20_24
           return true;
         }
       }
-#pragma warning disable CS0168 // Variable is declared but never used
-      catch (Exception e) {
-#pragma warning restore CS0168 // Variable is declared but never used
-        ; // DEBUG
+      catch (Exception ex) {
+        _ = ex; // DEBUG
       }
 
       return false;

@@ -2,8 +2,6 @@
 
 using FS = Microsoft.FlightSimulator.SimConnect;
 using CX = MSFSAdapter20_24;
-using System.Security.Cryptography;
-
 
 namespace MSFSPlug2024
 {
@@ -388,7 +386,6 @@ namespace MSFSPlug2024
     }
 
     #endregion
-
 
   }
 }

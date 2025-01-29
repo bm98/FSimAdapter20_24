@@ -15,7 +15,7 @@ namespace z_TEST_MinCompliance
   internal class SimVarGetModule
   {
     public readonly DEFINITION _structDefID = SimConnectIDs.GetDEFINITION( );
-    public REQUEST _requestID = SimConnectIDs.GetREQUEST( );
+    public  readonly REQUEST _requestID = SimConnectIDs.GetREQUEST( );
 
     /// <summary>
     /// Live Data
