@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="EnumsA.cs" />
     <Compile Include="ISimConnectA.cs" />
+    <Compile Include="MSFS.cs" />
     <Compile Include="NetDecomposer.cs" />
     <Compile Include="SimConnect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

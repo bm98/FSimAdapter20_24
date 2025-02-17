@@ -1,5 +1,5 @@
-FSimAdapter20_24 V 0.2 - Build 6
-(c) M. Burri - 29-Jan-2025
+FSimAdapter20_24 V 0.3 - Build 7
+(c) M. Burri - 17-Feb-2025
 
 
 BETA: Testing
@@ -17,6 +17,8 @@ Changelog:
 ... see Github commit log
 
 ...
+V 0.3 Beta Testing 
+- Add Detect MSFSxy Running as tool
 
 V 0.2 Beta Testing 
 - Fix SimConnectToolkit

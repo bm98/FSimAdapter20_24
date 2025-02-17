@@ -62,11 +62,6 @@ namespace MSFSAdapter20_24
     private const string c_2020PlugName = "MSFSPlug2020.ScPlug2020";
     private const string c_2024PlugName = "MSFSPlug2024.ScPlug2024";
 
-    private const string c_2020ExeName = "FlightSimulator.exe";
-    private const string c_2020WindowName = "Microsoft Flight Simulator"; // starts with
-    private const string c_2024ExeName = "FlightSimulator2024.exe";
-    private const string c_2024WindowName = "Microsoft Flight Simulator 2024"; // starts with
-
     private AppDomain currentDomain = null;
     private FSVersion _fsVersion = FSVersion.Unknown;
     private string _fsWindowTitle = "";
@@ -624,35 +619,15 @@ namespace MSFSAdapter20_24
     private FSVersion DetectVersion( )
     {
       // get running processes and find the one of either MSFS Sim Exe
-      if (CheckExeRunning( c_2024ExeName, c_2024WindowName )) return FSVersion.V2024;
-      if (CheckExeRunning( c_2020ExeName, c_2020WindowName )) return FSVersion.V2020;
+      _fsWindowTitle = MSFS.MSFS2024running( );
+      if (!string.IsNullOrEmpty( _fsWindowTitle )) return FSVersion.V2024;
+
+      _fsWindowTitle = MSFS.MSFS2020running( );
+      if (!string.IsNullOrEmpty( _fsWindowTitle )) return FSVersion.V2020;
+
       // none
       _fsWindowTitle = "<FS App not found>";
       return FSVersion.Unknown;
-    }
-
-    // true when an exe having a window with title is running
-    private bool CheckExeRunning( string exeName, string windowName )
-    {
-      bool exeRunning = false;
-      _fsWindowTitle = "";
-
-      // check if it is running
-      IEnumerable<Process> processes = Process.GetProcesses( ).Where( p => p.MainWindowHandle != IntPtr.Zero ); // only processes with WindowHandles
-      foreach (Process p in processes) {
-        try {
-          // may trigger access violation on certain modules
-          if (!string.IsNullOrEmpty( p.MainModule.ModuleName )) {
-            if ((p.MainModule.ModuleName == exeName) && p.MainWindowTitle.StartsWith( windowName )) {
-              _fsWindowTitle = p.MainWindowTitle;
-              exeRunning = true;
-              break;
-            }
-          }
-        }
-        catch { continue; }
-      }
-      return exeRunning;
     }
 
     #region DISPOSE

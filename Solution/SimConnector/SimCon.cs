@@ -151,8 +151,6 @@ namespace SimConnector
 
     // number of periods to wait for data arrival after connect
     private const int c_scGracePeriodSet = 10; // N * 5 sec
-    // used grace period (can be set in cTor)
-    private int _usedGracePeriodSet = c_scGracePeriodSet; // N * 5 sec
 
     // Monitor the Sim Event Handler after Connection
     private int _scGracePeriod = -1;    // grace period count down
