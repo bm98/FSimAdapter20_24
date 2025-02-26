@@ -24,6 +24,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{00E2567C-C373-45D0-A31F-7A1AC0FF4B7E}"
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
+		..\Documents\ProjSetupFolders.pdf = ..\Documents\ProjSetupFolders.pdf
+		..\Documents\ProjSetupFolders.pptx = ..\Documents\ProjSetupFolders.pptx
 		..\README.md = ..\README.md
 		..\ReadMe.txt = ..\ReadMe.txt
 		SolutionInfo.cs = SolutionInfo.cs
