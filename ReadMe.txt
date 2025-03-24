@@ -1,5 +1,5 @@
-FSimAdapter20_24 V 0.3 - Build 7
-(c) M. Burri - 17-Feb-2025
+FSimAdapter20_24 V 0.4 - Build 8
+(c) M. Burri - 24-Mar-2025
 
 
 BETA: Testing
@@ -17,6 +17,8 @@ Changelog:
 ... see Github commit log
 
 ...
+V 0.4 Beta Rel for HudBar - FacilityDataLoader
+
 V 0.3 Beta Testing 
 - Add Detect MSFSxy Running as tool
 

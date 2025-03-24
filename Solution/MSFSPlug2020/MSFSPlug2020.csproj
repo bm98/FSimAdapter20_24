@@ -76,13 +76,17 @@
     <PostBuildEvent>REM copy plug to Deployment V2020
 xcopy $(TargetPath) $(SolutionDir)SimConnectDepl\V2020\ /C /Y /I
 
+REM copy the used MSFS Dlls to SolutionDir V2020
+xcopy $(TargetDir)Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)SimConnectDepl\V2020\  /C /Y /I
+xcopy $(SolutionDir)..\..\Redist\MS2020\SimConnect.dll $(SolutionDir)SimConnectDepl\V2020\  /C /Y /I
+
 
 REM copy plug to Redist V2020 (my FSim Redist)
 xcopy $(TargetPath) $(SolutionDir)..\..\Redist\V2020\  /C /Y /I
 
 REM copy the used MSFS Dlls to Redist V2020 (my FSim Redist)
 xcopy $(TargetDir)Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)..\..\Redist\V2020\  /C /Y /I
-xcopy $(SolutionDir)..\..\Redist\MS2020\SimConnect.dll $(SolutionDir)..\..\Redist\V2020\  /C /Y /I
+xcopy $(SolutionDir)..\..\Redist\MS2024\SimConnect.dll $(SolutionDir)..\..\Redist\V2020\  /C /Y /I
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
