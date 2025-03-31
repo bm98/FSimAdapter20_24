@@ -67,6 +67,7 @@ namespace MSFSAdapter20_24
     WAYPOINT,
     LATLONALT,
     XYZ,
+    INT8, // added from SU1 SDK 1.2.4 dump
     MAX
   }
 
@@ -157,7 +158,8 @@ namespace MSFSAdapter20_24
     APPROACH_LIGHTS,
     VASI,
     VDGS,  // added in 2024 SDK 1.1.2
-    HOLDING_PATTERN  // added in 2024 SDK 1.1.2
+    HOLDING_PATTERN,  // added in 2024 SDK 1.1.2
+    TAXI_PARKING_AIRLINE, // added from SU01 SDK 1.2.4
   }
 
   public enum SIMCONNECT_FACILITY_LIST_TYPE
@@ -237,13 +239,16 @@ namespace MSFSAdapter20_24
   public enum SIMCONNECT_SIMOBJECT_TYPE
   {
     USER,
+    USER_AIRCRAFT = 0, // added from SU01 SDK 1.2.4
     ALL,
     AIRCRAFT,
     HELICOPTER,
     BOAT,
     GROUND,
     HOT_AIR_BALLOON,  // added in 2024 SDK 1.1.2
-    ANIMAL // added in 2024 SDK 1.1.2
+    ANIMAL, // added in 2024 SDK 1.1.2
+    USER_AVATAR,    // added from SU01 SDK 1.2.4
+    USER_CURRENT,   // added from SU01 SDK 1.2.4
   }
 
   public enum SIMCONNECT_SOUND_SYSTEM_EVENT_DATA

@@ -51,7 +51,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect, Version=12.1.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Redist\MS2024\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <HintPath>..\SimConnect_ImportLoc\MS2024\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,20 +73,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM copy plug to Deployment V2024
-xcopy $(TargetPath) $(SolutionDir)SimConnectDepl\V2024\ /C /Y /I
+    <PostBuildEvent>REM copy Plug to Deployment V2024
+xcopy $(TargetPath) $(SolutionDir)SimConnect_ExportLoc\V2024\ /C /Y /I
 
 REM copy the used MSFS Dlls to SolutionDir V2024
-xcopy $(TargetDir)Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)SimConnectDepl\V2024\  /C /Y /I
-xcopy $(SolutionDir)..\..\Redist\MS2024\SimConnect.dll $(SolutionDir)SimConnectDepl\V2024\  /C /Y /I
-
-
-REM copy plug to Redist V2024 (my FSim Redist)
-xcopy $(TargetPath) $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
-
-REM copy the used MSFS Dlls to Redist V2024 (my FSim Redist)
-xcopy $(TargetDir)Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
-xcopy $(SolutionDir)..\..\Redist\MS2024\SimConnect.dll $(SolutionDir)..\..\Redist\V2024\  /C /Y /I
+xcopy $(SolutionDir)SimConnect_ImportLoc\MS2024\Microsoft.FlightSimulator.SimConnect.dll $(SolutionDir)SimConnect_ExportLoc\V2024\  /C /Y /I
+xcopy $(SolutionDir)SimConnect_ImportLoc\MS2024\SimConnect.dll $(SolutionDir)SimConnect_ExportLoc\V2024\  /C /Y /I
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -102,14 +102,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM copy plug Target V2020
-xcopy $(SolutionDir)SimConnectDepl\V2020\*.*  $(TargetDir)V2020\  /C /Y /I
-REM copy plug Target V2024
-xcopy $(SolutionDir)SimConnectDepl\V2024\*.*  $(TargetDir)V2024\  /C /Y /I
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>REM copy plug Target V2020
+xcopy $(SolutionDir)SimConnect_ExportLoc\V2020\*.*  $(TargetDir)V2020\  /C /Y /I
+REM copy plug Target V2024
+xcopy $(SolutionDir)SimConnect_ExportLoc\V2024\*.*  $(TargetDir)V2024\  /C /Y /I
+</PreBuildEvent>
   </PropertyGroup>
 </Project>

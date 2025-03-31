@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
@@ -88,7 +83,7 @@ namespace SimConnector
     /// <summary>
     /// cTor: may provide a monitor pace interval 2..20 sec (default=5)
     /// </summary>
-    /// <param name="paceInterval_sec">Monito Pace interval in seconds (default=5)</param>
+    /// <param name="paceInterval_sec">Monitor Pace interval in seconds (default=5)</param>
     public SimCon( uint paceInterval_sec = 5 )
     {
       // sanity limit 2..20 sec
@@ -154,7 +149,6 @@ namespace SimConnector
 
     // Monitor the Sim Event Handler after Connection
     private int _scGracePeriod = -1;    // grace period count down
-    private int _observer = -1;
 
     private string instanceGUID = "";
 

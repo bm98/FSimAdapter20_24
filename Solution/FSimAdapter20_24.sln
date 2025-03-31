@@ -24,8 +24,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{00E2567C-C373-45D0-A31F-7A1AC0FF4B7E}"
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
-		..\Documents\ProjSetupFolders.pdf = ..\Documents\ProjSetupFolders.pdf
-		..\Documents\ProjSetupFolders.pptx = ..\Documents\ProjSetupFolders.pptx
+		..\Documents\ProjSetupFolders-V2.pdf = ..\Documents\ProjSetupFolders-V2.pdf
+		..\Documents\ProjSetupFolders-V2.pptx = ..\Documents\ProjSetupFolders-V2.pptx
 		..\README.md = ..\README.md
 		..\ReadMe.txt = ..\ReadMe.txt
 		SolutionInfo.cs = SolutionInfo.cs
@@ -116,5 +116,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85609916-0E74-4A59-A5C8-4918D5A37196}
 	EndGlobalSection
 EndGlobal

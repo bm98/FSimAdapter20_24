@@ -9,7 +9,7 @@ Contains files:
 
 
 For Updates and information visit:
-https://github.com/bm98/dNetBm98
+https://github.com/bm98/FSimAdapter20_24
 
 
 Changelog:
