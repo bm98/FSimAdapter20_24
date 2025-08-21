@@ -5,7 +5,7 @@ namespace MSFSAdapter20_24
   ///Contains only SimConnect Enums in the main namespace
   ///
   /// copy from SDK V1.1.2 Microsoft.FlightSimulator.SimConnect.dll
-  /// 
+  ///  updated for SDK V1.4.4 SU3 MSFS2024 Microsoft.FlightSimulator.SimConnect.dll
   ///</remarks>
 
   public enum SIMCONNECT_CLIENT_DATA_PERIOD
@@ -233,7 +233,9 @@ namespace MSFSAdapter20_24
     GET_INPUT_EVENT,
     SUBSCRIBE_INPUT_EVENT,
     ENUMERATE_INPUT_EVENT_PARAMS,
-    ENUMERATE_SIMOBJECT_AND_LIVERY_LIST // added in 2024 SDK 1.1.2
+    ENUMERATE_SIMOBJECT_AND_LIVERY_LIST, // added in 2024 SDK 1.1.2
+    FLOW_EVENT = 39 // added in 2024 SDK 1.4.4
+
   }
 
   public enum SIMCONNECT_SIMOBJECT_TYPE
@@ -333,6 +335,28 @@ namespace MSFSAdapter20_24
     RWW,
     CUSTOM,
     GLOBAL
+  }
+
+  // added 2024 SU3 SDK 1.4.4
+  public enum SIMCONNECT_FLOW_EVENT
+  {
+    NONE = 0,
+    FLT_LOAD = 1,
+    FLT_LOADED = 2,
+    TELEPORT_START = 3,
+    TELEPORT_DONE = 4,
+    BACK_ON_TRACK_START = 5,
+    BACK_ON_TRACK_DONE = 6,
+    SKIP_START = 7,
+    SKIP_DONE = 8,
+    BACK_TO_MAIN_MENU = 9,
+    RTC_START = 10,
+    RTC_END = 11,
+    REPLAY_START = 12,
+    REPLAY_END = 13,
+    FLIGHT_START = 14,
+    FLIGHT_END = 15,
+    PLANE_CRASH = 16
   }
 
 }

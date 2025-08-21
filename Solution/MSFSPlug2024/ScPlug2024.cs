@@ -99,6 +99,8 @@ namespace MSFSPlug2024
     public event SimConnect.RecvNullEventHandler OnRecvNull;
     // added in 2024 SDK 1.1.2
     public event SimConnect.RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
+    // added in 2024 SDK 1.4.4 SU3
+    public event SimConnect.RecvFlowEventEventHandler OnRecvFlowEvent;
 
     #endregion
 
@@ -575,6 +577,18 @@ namespace MSFSPlug2024
           OnRecvWeatherObservation?.Invoke( null, dataX );
         };
 
+      // added in 2024 SDK 1.4.4 SU3
+      _simConnect.OnRecvFlowEvent += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_FLOW_EVENT data )
+        => {
+          var dataX = new SIMCONNECT_RECV_FLOW_EVENT( ) {
+            dwSize = data.dwSize,
+            dwID = data.dwID,
+            dwVersion = data.dwVersion,
+            FlowEvent = (SIMCONNECT_FLOW_EVENT)data.FlowEvent,
+            FltPath = data.FltPath,
+          };
+          OnRecvFlowEvent?.Invoke( null, dataX );
+        };
     }
 
     #endregion

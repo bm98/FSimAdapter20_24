@@ -63,6 +63,8 @@ namespace MSFSAdapter20_24
     event RecvNullEventHandler OnRecvNull;
     // added in 2024 SDK 1.1.2
     event RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
+    // added in 2024 SDK 1.4.4 SU3
+    event RecvFlowEventEventHandler OnRecvFlowEvent;
 
     #endregion
 

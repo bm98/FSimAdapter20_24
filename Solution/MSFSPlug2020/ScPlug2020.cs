@@ -130,9 +130,12 @@ namespace MSFSPlug2020
     public event SimConnect.RecvOpenEventHandler OnRecvOpen;
     public event SimConnect.RecvExceptionEventHandler OnRecvException;
     public event SimConnect.RecvNullEventHandler OnRecvNull;
-    // added in 2024 SDK 1.1.2 not supported in FS2020 but here to complete
+
 #pragma warning disable CS0067 // Variable is declared but never used
+    // added in 2024 SDK 1.1.2 not supported in FS2020 but here to complete
     public event SimConnect.RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
+    // added in 2024 SDK 1.4.4 SU3 not supported in FS2020 but here to complete
+    public event SimConnect.RecvFlowEventEventHandler OnRecvFlowEvent;
 #pragma warning restore CS0067 // Variable is declared but never used
 
     #endregion

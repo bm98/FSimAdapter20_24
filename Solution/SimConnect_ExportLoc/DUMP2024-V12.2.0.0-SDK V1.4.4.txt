@@ -1,0 +1,1899 @@
+ASSEMBLY: Microsoft.FlightSimulator.SimConnect, Version=12.2.0.0, Culture=neutral, PublicKeyToken=null
+	LOC: G:\AA_DEVELOP\GitHub\bm98\FSim\FSimAdapter20_24\Solution\z_TEST_Decomposer\bin\x64\Debug\V2024\Microsoft.FlightSimulator.SimConnect.dll
+
+NAME: Microsoft.FlightSimulator.SimConnect.VariableSizeAttribute
+	CLASS: Object
+
+		CLASS: Attribute
+
+		CLASS: VariableSizeAttribute
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_RACE_RESULT
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_RACE_RESULT
+			                        dwNumberOfRacers 	UInt32
+			                             MissionGUID 	Guid
+			                            szPlayerName 	String  SizeConst=260
+			                           szSessionType 	String  SizeConst=260
+			                              szAircraft 	String  SizeConst=260
+			                            szPlayerRole 	String  SizeConst=260
+			                              fTotalTime 	Double
+			                            fPenaltyTime 	Double
+			                        dwIsDisqualified 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_ICAO
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_ICAO
+			                                    Type 	SByte
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                 Airport 	String  SizeConst=5
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_LATLONALT
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_LATLONALT
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_PBH
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_PBH
+			                                   Pitch 	Single
+			                                    Bank 	Single
+			                                 Heading 	Single
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_INITPOSITION
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_INITPOSITION
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+			                                   Pitch 	Double
+			                                    Bank 	Double
+			                                 Heading 	Double
+			                                OnGround 	UInt32
+			                                Airspeed 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_MARKERSTATE
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_MARKERSTATE
+			                            szMarkerName 	String  SizeConst=64
+			                           dwMarkerState 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_WAYPOINT
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_WAYPOINT
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+			                                   Flags 	UInt32
+			                                ktsSpeed 	Double
+			                         percentThrottle 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_XYZ
+	CLASS: Object
+
+		CLASS: ValueType
+
+		VTYPE: SIMCONNECT_DATA_XYZ
+			                                       x 	Double
+			                                       y 	Double
+			                                       z 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EXCEPTION
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EXCEPTION
+			                             dwException 	UInt32
+			                                dwSendID 	UInt32
+			                                 dwIndex 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_OPEN
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_OPEN
+			                       szApplicationName 	String  SizeConst=256
+			               dwApplicationVersionMajor 	UInt32
+			               dwApplicationVersionMinor 	UInt32
+			                 dwApplicationBuildMajor 	UInt32
+			                 dwApplicationBuildMinor 	UInt32
+			                dwSimConnectVersionMajor 	UInt32
+			                dwSimConnectVersionMinor 	UInt32
+			                  dwSimConnectBuildMajor 	UInt32
+			                  dwSimConnectBuildMinor 	UInt32
+			                             dwReserved1 	UInt32
+			                             dwReserved2 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_QUIT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_QUIT
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_FILENAME
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_FILENAME
+			                              szFileName 	String  SizeConst=260
+			                                 dwFlags 	UInt32
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE
+			                                eObjType 	SIMCONNECT_SIMOBJECT_TYPE
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_FRAME
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_FRAME
+			                              fFrameRate 	Single
+			                               fSimSpeed 	Single
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_MULTIPLAYER_SERVER_STARTED
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_MULTIPLAYER_SERVER_STARTED
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_MULTIPLAYER_CLIENT_STARTED
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_MULTIPLAYER_CLIENT_STARTED
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_MULTIPLAYER_SESSION_ENDED
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_MULTIPLAYER_SESSION_ENDED
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_EX1
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_EX1
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                 dwData0 	UInt32
+			                                 dwData1 	UInt32
+			                                 dwData2 	UInt32
+			                                 dwData3 	UInt32
+			                                 dwData4 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_RACE_END
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_RACE_END
+			                           dwRacerNumber 	UInt32
+			                               RacerData 	SIMCONNECT_DATA_RACE_RESULT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_RACE_LAP
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_RACE_LAP
+			                              dwLapIndex 	UInt32
+			                               RacerData 	SIMCONNECT_DATA_RACE_RESULT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_SIMOBJECT_DATA
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SIMOBJECT_DATA
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                              dwDefineID 	UInt32
+			                                 dwFlags 	UInt32
+			                           dwentrynumber 	UInt32
+			                                 dwoutof 	UInt32
+			                           dwDefineCount 	UInt32
+			                                  dwData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SIMOBJECT_DATA
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                              dwDefineID 	UInt32
+			                                 dwFlags 	UInt32
+			                           dwentrynumber 	UInt32
+			                                 dwoutof 	UInt32
+			                           dwDefineCount 	UInt32
+			                                  dwData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                              dwDefineID 	UInt32
+			                                 dwFlags 	UInt32
+			                           dwentrynumber 	UInt32
+			                                 dwoutof 	UInt32
+			                           dwDefineCount 	UInt32
+			                                  dwData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_CLIENT_DATA
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SIMOBJECT_DATA
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                              dwDefineID 	UInt32
+			                                 dwFlags 	UInt32
+			                           dwentrynumber 	UInt32
+			                                 dwoutof 	UInt32
+			                           dwDefineCount 	UInt32
+			                                  dwData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_CLIENT_DATA
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                              dwDefineID 	UInt32
+			                                 dwFlags 	UInt32
+			                           dwentrynumber 	UInt32
+			                                 dwoutof 	UInt32
+			                           dwDefineCount 	UInt32
+			                                  dwData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_WEATHER_OBSERVATION
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_WEATHER_OBSERVATION
+			                             dwRequestID 	UInt32
+			                                 szMetar 	String  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_CLOUD_STATE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_CLOUD_STATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                                 rgbData 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ASSIGNED_OBJECT_ID
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_ASSIGNED_OBJECT_ID
+			                             dwRequestID 	UInt32
+			                              dwObjectID 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_RESERVED_KEY
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_RESERVED_KEY
+			                        szChoiceReserved 	String  SizeConst=30
+			                           szReservedKey 	String  SizeConst=50
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_SYSTEM_STATE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SYSTEM_STATE
+			                             dwRequestID 	UInt32
+			                               dwInteger 	UInt32
+			                                  fFloat 	Single
+			                                szString 	String  SizeConst=260
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_CUSTOM_ACTION
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_CUSTOM_ACTION
+			                          guidInstanceId 	Guid
+			                     dwWaitForCompletion 	UInt32
+			                               szPayLoad 	String  SizeConst=1
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_EVENT_WEATHER_MODE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_EVENT_WEATHER_MODE
+			                                uGroupID 	UInt32
+			                                uEventID 	UInt32
+			                                  dwData 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_FACILITIES_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITIES_LIST
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_LIST_TEMPLATE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_FACILITY_AIRPORT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_DATA_FACILITY_AIRPORT
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_AIRPORT_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITIES_LIST
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_AIRPORT_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_FACILITY_WAYPOINT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_DATA_FACILITY_AIRPORT
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_WAYPOINT
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_WAYPOINT_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITIES_LIST
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_WAYPOINT_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_FACILITY_NDB
+	CLASS: Object
+
+		CLASS: SIMCONNECT_DATA_FACILITY_AIRPORT
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_WAYPOINT
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_NDB
+			                              fFrequency 	UInt32
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_NDB_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITIES_LIST
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_NDB_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_FACILITY_VOR
+	CLASS: Object
+
+		CLASS: SIMCONNECT_DATA_FACILITY_AIRPORT
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_WAYPOINT
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_NDB
+			                              fFrequency 	UInt32
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+		CLASS: SIMCONNECT_DATA_FACILITY_VOR
+			                                   Flags 	UInt32
+			                              fLocalizer 	Single
+			                                GlideLat 	Double
+			                                GlideLon 	Double
+			                                GlideAlt 	Double
+			                        fGlideSlopeAngle 	Single
+			                              fFrequency 	UInt32
+			                                 fMagVar 	Single
+			                                   Ident 	String  SizeConst=9
+			                                  Region 	String  SizeConst=3
+			                                Latitude 	Double
+			                               Longitude 	Double
+			                                Altitude 	Double
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_VOR_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITIES_LIST
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_VOR_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_FACILITY_DATA
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITY_DATA
+			                           UserRequestId 	UInt32
+			                         UniqueRequestId 	UInt32
+			                   ParentUniqueRequestId 	UInt32
+			                                    Type 	UInt32
+			                              IsListItem 	UInt32
+			                               ItemIndex 	UInt32
+			                                ListSize 	UInt32
+			                                    Data 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_FACILITY_DATA_END
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITY_DATA_END
+			                               RequestId 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_FACILITY_MINIMAL
+	CLASS: Object
+
+		CLASS: SIMCONNECT_FACILITY_MINIMAL
+			                                    icao 	SIMCONNECT_ICAO
+			                                     lla 	SIMCONNECT_DATA_LATLONALT
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_FACILITY_MINIMAL_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FACILITY_MINIMAL_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_JETWAY_DATA
+	CLASS: Object
+
+		CLASS: SIMCONNECT_JETWAY_DATA
+			                             AirportIcao 	String  SizeConst=8
+			                            ParkingIndex 	Int32
+			                                     Lla 	SIMCONNECT_DATA_LATLONALT
+			                                     Pbh 	SIMCONNECT_DATA_PBH
+			                                  Status 	Int32
+			                                    Door 	Int32
+			                     ExitDoorRelativePos 	SIMCONNECT_DATA_XYZ
+			                           MainHandlePos 	SIMCONNECT_DATA_XYZ
+			                         SecondaryHandle 	SIMCONNECT_DATA_XYZ
+			                         WheelGroundLock 	SIMCONNECT_DATA_XYZ
+			                          JetwayObjectId 	UInt32
+			                        AttachedObjectId 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_JETWAY_DATA
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_JETWAY_DATA
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ACTION_CALLBACK
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_ACTION_CALLBACK
+			                              szActionID 	String  SizeConst=260
+			                             cbRequestId 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_INPUT_EVENT_DESCRIPTOR
+	CLASS: Object
+
+		CLASS: SIMCONNECT_INPUT_EVENT_DESCRIPTOR
+			                                    Name 	String  SizeConst=64
+			                                    Hash 	UInt64
+			                                   eType 	SIMCONNECT_INPUT_EVENT_TYPE
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_GET_INPUT_EVENT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_GET_INPUT_EVENT
+			                             dwRequestID 	UInt32
+			                                   eType 	SIMCONNECT_INPUT_EVENT_TYPE
+			                                   Value 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_SUBSCRIBE_INPUT_EVENT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_SUBSCRIBE_INPUT_EVENT
+			                                    Hash 	UInt64
+			                                   eType 	SIMCONNECT_INPUT_EVENT_TYPE
+			                                   Value 	Object[]  SizeConst=1
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ENUMERATE_INPUT_EVENT_PARAMS
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_ENUMERATE_INPUT_EVENT_PARAMS
+			                                    Hash 	UInt64
+			                                   Value 	String  SizeConst=260
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_VERSION_BASE_TYPE
+	CLASS: Object
+
+		CLASS: SIMCONNECT_VERSION_BASE_TYPE
+			                                   Major 	UInt16
+			                                   Minor 	UInt16
+			                                Revision 	UInt16
+			                                   Build 	UInt16
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_CONTROLLER_ITEM
+	CLASS: Object
+
+		CLASS: SIMCONNECT_CONTROLLER_ITEM
+			                              DeviceName 	String  SizeConst=256
+			                                DeviceId 	UInt32
+			                               ProductId 	UInt32
+			                             CompositeID 	UInt32
+			                         HardwareVersion 	SIMCONNECT_VERSION_BASE_TYPE
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_CONTROLLERS_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_CONTROLLERS_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_ENUMERATE_SIMOBJECT_LIVERY
+	CLASS: Object
+
+		CLASS: SIMCONNECT_ENUMERATE_SIMOBJECT_LIVERY
+			                           AircraftTitle 	String  SizeConst=256
+			                              LiveryName 	String  SizeConst=256
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_LIST_TEMPLATE
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST
+			                                  rgData 	Object[]  SizeConst=1
+			                             dwRequestID 	UInt32
+			                             dwArraySize 	UInt32
+			                           dwEntryNumber 	UInt32
+			                                 dwOutOf 	UInt32
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_FLOW_EVENT
+	CLASS: Object
+
+		CLASS: SIMCONNECT_RECV
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+		CLASS: SIMCONNECT_RECV_FLOW_EVENT
+			                               FlowEvent 	SIMCONNECT_FLOW_EVENT
+			                                 FltPath 	String  SizeConst=256
+			                                  dwSize 	UInt32
+			                               dwVersion 	UInt32
+			                                    dwID 	UInt32
+
+NAME: Microsoft.FlightSimulator.SimConnect.SignalProcDelegate
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: SignalProcDelegate
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect
+	CLASS: Object
+
+		CLASS: SimConnect
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+InputEventString
+	CLASS: Object
+
+		CLASS: InputEventString
+			                                   value 	String  SizeConst=256
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvNullEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvNullEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvExceptionEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvExceptionEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvOpenEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvOpenEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvQuitEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvQuitEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventObjectAddremoveEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventObjectAddremoveEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventFilenameEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventFilenameEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventFrameEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventFrameEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvSimobjectDataEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvSimobjectDataEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvSimobjectDataBytypeEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvSimobjectDataBytypeEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvWeatherObservationEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvWeatherObservationEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvCloudStateEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvCloudStateEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvAssignedObjectIdEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvAssignedObjectIdEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvReservedKeyEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvReservedKeyEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvCustomActionEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvCustomActionEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvSystemStateEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvSystemStateEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvClientDataEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvClientDataEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventWeatherModeEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventWeatherModeEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvAirportListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvAirportListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvVorListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvVorListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvNdbListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvNdbListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvWaypointListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvWaypointListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventMultiplayerServerStartedEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventMultiplayerServerStartedEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventMultiplayerClientStartedEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventMultiplayerClientStartedEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventMultiplayerSessionEndedEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventMultiplayerSessionEndedEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventRaceEndEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventRaceEndEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventRaceLapEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventRaceLapEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEventEx1EventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEventEx1EventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvFacilityDataEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvFacilityDataEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvFacilityDataEndEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvFacilityDataEndEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvFacilityMinimalListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvFacilityMinimalListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvJetwayDataEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvJetwayDataEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvControllersListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvControllersListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvActionCallbackEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvActionCallbackEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEnumerateInputEventsEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEnumerateInputEventsEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvGetInputEventEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvGetInputEventEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvSubscribeInputEventEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvSubscribeInputEventEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEnumerateInputEventParamsEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEnumerateInputEventParamsEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvEnumerateSimobjectAndLiveryListEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvEnumerateSimobjectAndLiveryListEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SimConnect+RecvFlowEventEventHandler
+	CLASS: Object
+
+		CLASS: Delegate
+
+		CLASS: MulticastDelegate
+
+		CLASS: RecvFlowEventEventHandler
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_RECV_ID
+	ENUM: SIMCONNECT_RECV_ID
+		         value__ 	Int32
+			                                    NULL = 0
+			                               EXCEPTION = 1
+			                                    OPEN = 2
+			                                    QUIT = 3
+			                                   EVENT = 4
+			                  EVENT_OBJECT_ADDREMOVE = 5
+			                          EVENT_FILENAME = 6
+			                             EVENT_FRAME = 7
+			                          SIMOBJECT_DATA = 8
+			                   SIMOBJECT_DATA_BYTYPE = 9
+			                     WEATHER_OBSERVATION = 10
+			                             CLOUD_STATE = 11
+			                      ASSIGNED_OBJECT_ID = 12
+			                            RESERVED_KEY = 13
+			                           CUSTOM_ACTION = 14
+			                            SYSTEM_STATE = 15
+			                             CLIENT_DATA = 16
+			                      EVENT_WEATHER_MODE = 17
+			                            AIRPORT_LIST = 18
+			                                VOR_LIST = 19
+			                                NDB_LIST = 20
+			                           WAYPOINT_LIST = 21
+			        EVENT_MULTIPLAYER_SERVER_STARTED = 22
+			        EVENT_MULTIPLAYER_CLIENT_STARTED = 23
+			         EVENT_MULTIPLAYER_SESSION_ENDED = 24
+			                          EVENT_RACE_END = 25
+			                          EVENT_RACE_LAP = 26
+			                               EVENT_EX1 = 27
+			                           FACILITY_DATA = 28
+			                       FACILITY_DATA_END = 29
+			                   FACILITY_MINIMAL_LIST = 30
+			                             JETWAY_DATA = 31
+			                        CONTROLLERS_LIST = 32
+			                         ACTION_CALLBACK = 33
+			                  ENUMERATE_INPUT_EVENTS = 34
+			                         GET_INPUT_EVENT = 35
+			                   SUBSCRIBE_INPUT_EVENT = 36
+			            ENUMERATE_INPUT_EVENT_PARAMS = 37
+			     ENUMERATE_SIMOBJECT_AND_LIVERY_LIST = 38
+			                              FLOW_EVENT = 39
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATATYPE
+	ENUM: SIMCONNECT_DATATYPE
+		         value__ 	Int32
+			                                 INVALID = 0
+			                                   INT32 = 1
+			                                   INT64 = 2
+			                                 FLOAT32 = 3
+			                                 FLOAT64 = 4
+			                                 STRING8 = 5
+			                                STRING32 = 6
+			                                STRING64 = 7
+			                               STRING128 = 8
+			                               STRING256 = 9
+			                               STRING260 = 10
+			                                 STRINGV = 11
+			                            INITPOSITION = 12
+			                             MARKERSTATE = 13
+			                                WAYPOINT = 14
+			                               LATLONALT = 15
+			                                     XYZ = 16
+			                                    INT8 = 17
+			                                     MAX = 18
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_EXCEPTION
+	ENUM: SIMCONNECT_EXCEPTION
+		         value__ 	Int32
+			                                    NONE = 0
+			                                   ERROR = 1
+			                           SIZE_MISMATCH = 2
+			                         UNRECOGNIZED_ID = 3
+			                                UNOPENED = 4
+			                        VERSION_MISMATCH = 5
+			                         TOO_MANY_GROUPS = 6
+			                       NAME_UNRECOGNIZED = 7
+			                    TOO_MANY_EVENT_NAMES = 8
+			                      EVENT_ID_DUPLICATE = 9
+			                           TOO_MANY_MAPS = 10
+			                        TOO_MANY_OBJECTS = 11
+			                       TOO_MANY_REQUESTS = 12
+			                    WEATHER_INVALID_PORT = 13
+			                   WEATHER_INVALID_METAR = 14
+			       WEATHER_UNABLE_TO_GET_OBSERVATION = 15
+			        WEATHER_UNABLE_TO_CREATE_STATION = 16
+			        WEATHER_UNABLE_TO_REMOVE_STATION = 17
+			                       INVALID_DATA_TYPE = 18
+			                       INVALID_DATA_SIZE = 19
+			                              DATA_ERROR = 20
+			                           INVALID_ARRAY = 21
+			                    CREATE_OBJECT_FAILED = 22
+			                  LOAD_FLIGHTPLAN_FAILED = 23
+			       OPERATION_INVALID_FOR_OBJECT_TYPE = 24
+			                       ILLEGAL_OPERATION = 25
+			                      ALREADY_SUBSCRIBED = 26
+			                            INVALID_ENUM = 27
+			                        DEFINITION_ERROR = 28
+			                            DUPLICATE_ID = 29
+			                                DATUM_ID = 30
+			                           OUT_OF_BOUNDS = 31
+			                         ALREADY_CREATED = 32
+			           OBJECT_OUTSIDE_REALITY_BUBBLE = 33
+			                        OBJECT_CONTAINER = 34
+			                               OBJECT_AI = 35
+			                              OBJECT_ATC = 36
+			                         OBJECT_SCHEDULE = 37
+			                             JETWAY_DATA = 38
+			                        ACTION_NOT_FOUND = 39
+			                           NOT_AN_ACTION = 40
+			                 INCORRECT_ACTION_PARAMS = 41
+			                  GET_INPUT_EVENT_FAILED = 42
+			                  SET_INPUT_EVENT_FAILED = 43
+			                                INTERNAL = 44
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_SIMOBJECT_TYPE
+	ENUM: SIMCONNECT_SIMOBJECT_TYPE
+		         value__ 	Int32
+			                                    USER = 0
+			                           USER_AIRCRAFT = 0
+			                                     ALL = 1
+			                                AIRCRAFT = 2
+			                              HELICOPTER = 3
+			                                    BOAT = 4
+			                                  GROUND = 5
+			                         HOT_AIR_BALLOON = 6
+			                                  ANIMAL = 7
+			                             USER_AVATAR = 8
+			                            USER_CURRENT = 9
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_STATE
+	ENUM: SIMCONNECT_STATE
+		         value__ 	Int32
+			                                     OFF = 0
+			                                      ON = 1
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_PERIOD
+	ENUM: SIMCONNECT_PERIOD
+		         value__ 	Int32
+			                                   NEVER = 0
+			                                    ONCE = 1
+			                            VISUAL_FRAME = 2
+			                               SIM_FRAME = 3
+			                                  SECOND = 4
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_MISSION_END
+	ENUM: SIMCONNECT_MISSION_END
+		         value__ 	Int32
+			                                  FAILED = 0
+			                                 CRASHED = 1
+			                               SUCCEEDED = 2
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_CLIENT_DATA_PERIOD
+	ENUM: SIMCONNECT_CLIENT_DATA_PERIOD
+		         value__ 	Int32
+			                                   NEVER = 0
+			                                    ONCE = 1
+			                            VISUAL_FRAME = 2
+			                                  ON_SET = 3
+			                                  SECOND = 4
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_TEXT_TYPE
+	ENUM: SIMCONNECT_TEXT_TYPE
+		         value__ 	Int32
+			                            SCROLL_BLACK = 0
+			                            SCROLL_WHITE = 1
+			                              SCROLL_RED = 2
+			                            SCROLL_GREEN = 3
+			                             SCROLL_BLUE = 4
+			                           SCROLL_YELLOW = 5
+			                          SCROLL_MAGENTA = 6
+			                             SCROLL_CYAN = 7
+			                             PRINT_BLACK = 256
+			                             PRINT_WHITE = 257
+			                               PRINT_RED = 258
+			                             PRINT_GREEN = 259
+			                              PRINT_BLUE = 260
+			                            PRINT_YELLOW = 261
+			                           PRINT_MAGENTA = 262
+			                              PRINT_CYAN = 263
+			                                    MENU = 512
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_TEXT_RESULT
+	ENUM: SIMCONNECT_TEXT_RESULT
+		         value__ 	Int32
+			                           MENU_SELECT_1 = 0
+			                           MENU_SELECT_2 = 1
+			                           MENU_SELECT_3 = 2
+			                           MENU_SELECT_4 = 3
+			                           MENU_SELECT_5 = 4
+			                           MENU_SELECT_6 = 5
+			                           MENU_SELECT_7 = 6
+			                           MENU_SELECT_8 = 7
+			                           MENU_SELECT_9 = 8
+			                          MENU_SELECT_10 = 9
+			                               DISPLAYED = 65536
+			                                  QUEUED = 65537
+			                                 REMOVED = 65538
+			                                REPLACED = 65539
+			                                 TIMEOUT = 65540
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_WEATHER_MODE
+	ENUM: SIMCONNECT_WEATHER_MODE
+		         value__ 	Int32
+			                                   THEME = 0
+			                                     RWW = 1
+			                                  CUSTOM = 2
+			                                  GLOBAL = 3
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_FACILITY_LIST_TYPE
+	ENUM: SIMCONNECT_FACILITY_LIST_TYPE
+		         value__ 	Int32
+			                                 AIRPORT = 0
+			                                WAYPOINT = 1
+			                                     NDB = 2
+			                                     VOR = 3
+			                                   COUNT = 4
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_FACILITY_DATA_TYPE
+	ENUM: SIMCONNECT_FACILITY_DATA_TYPE
+		         value__ 	Int32
+			                                 AIRPORT = 0
+			                                  RUNWAY = 1
+			                                   START = 2
+			                               FREQUENCY = 3
+			                                 HELIPAD = 4
+			                                APPROACH = 5
+			                     APPROACH_TRANSITION = 6
+			                            APPROACH_LEG = 7
+			                      FINAL_APPROACH_LEG = 8
+			                     MISSED_APPROACH_LEG = 9
+			                               DEPARTURE = 10
+			                                 ARRIVAL = 11
+			                       RUNWAY_TRANSITION = 12
+			                      ENROUTE_TRANSITION = 13
+			                              TAXI_POINT = 14
+			                            TAXI_PARKING = 15
+			                               TAXI_PATH = 16
+			                               TAXI_NAME = 17
+			                                  JETWAY = 18
+			                                     VOR = 19
+			                                     NDB = 20
+			                                WAYPOINT = 21
+			                                   ROUTE = 22
+			                                PAVEMENT = 23
+			                         APPROACH_LIGHTS = 24
+			                                    VASI = 25
+			                                    VDGS = 26
+			                         HOLDING_PATTERN = 27
+			                    TAXI_PARKING_AIRLINE = 28
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_INPUT_EVENT_TYPE
+	ENUM: SIMCONNECT_INPUT_EVENT_TYPE
+		         value__ 	UInt32
+			                                  DOUBLE = 0
+			                                  STRING = 1
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_FLOW_EVENT
+	ENUM: SIMCONNECT_FLOW_EVENT
+		         value__ 	UInt32
+			                                    NONE = 0
+			                                FLT_LOAD = 1
+			                              FLT_LOADED = 2
+			                          TELEPORT_START = 3
+			                           TELEPORT_DONE = 4
+			                     BACK_ON_TRACK_START = 5
+			                      BACK_ON_TRACK_DONE = 6
+			                              SKIP_START = 7
+			                               SKIP_DONE = 8
+			                       BACK_TO_MAIN_MENU = 9
+			                               RTC_START = 10
+			                                 RTC_END = 11
+			                            REPLAY_START = 12
+			                              REPLAY_END = 13
+			                            FLIGHT_START = 14
+			                              FLIGHT_END = 15
+			                             PLANE_CRASH = 16
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_VOR_FLAGS
+	ENUM: SIMCONNECT_VOR_FLAGS
+		         value__ 	Int32
+			SIMCONNECT_RECV_ID_VOR_LIST_HAS_NAV_SIGNAL = 1
+			SIMCONNECT_RECV_ID_VOR_LIST_HAS_LOCALIZER = 2
+			SIMCONNECT_RECV_ID_VOR_LIST_HAS_GLIDE_SLOPE = 4
+			     SIMCONNECT_RECV_ID_VOR_LIST_HAS_DME = 8
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_WAYPOINT_FLAGS
+	ENUM: SIMCONNECT_WAYPOINT_FLAGS
+		         value__ 	Int32
+			                                    NONE = 0
+			                         SPEED_REQUESTED = 4
+			                      THROTTLE_REQUESTED = 8
+			                  COMPUTE_VERTICAL_SPEED = 16
+			                         ALTITUDE_IS_AGL = 32
+			                               ON_GROUND = 1048576
+			                                 REVERSE = 2097152
+			                           WRAP_TO_FIRST = 4194304
+			                           ALWAYS_BACKUP = 8388608
+			                       KEEP_LAST_HEADING = 16777216
+			                           YIELD_TO_USER = 33554432
+			                             CAN_REVERSE = 67108864
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_EVENT_FLAG
+	ENUM: SIMCONNECT_EVENT_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                       FAST_REPEAT_TIMER = 1
+			                       SLOW_REPEAT_TIMER = 2
+			                     GROUPID_IS_PRIORITY = 16
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_REQUEST_FLAG
+	ENUM: SIMCONNECT_DATA_REQUEST_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                                 CHANGED = 1
+			                                  TAGGED = 2
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_DATA_SET_FLAG
+	ENUM: SIMCONNECT_DATA_SET_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                                  TAGGED = 1
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_CREATE_CLIENT_DATA_FLAG
+	ENUM: SIMCONNECT_CREATE_CLIENT_DATA_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                               READ_ONLY = 1
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_CLIENT_DATA_REQUEST_FLAG
+	ENUM: SIMCONNECT_CLIENT_DATA_REQUEST_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                                 CHANGED = 1
+			                                  TAGGED = 2
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_CLIENT_DATA_SET_FLAG
+	ENUM: SIMCONNECT_CLIENT_DATA_SET_FLAG
+		         value__ 	Int32
+			                                 DEFAULT = 0
+			                                  TAGGED = 1
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_VIEW_SYSTEM_EVENT_DATA
+	ENUM: SIMCONNECT_VIEW_SYSTEM_EVENT_DATA
+		         value__ 	Int32
+			                              COCKPIT_2D = 1
+			                         COCKPIT_VIRTUAL = 2
+			                              ORTHOGONAL = 4
+
+NAME: Microsoft.FlightSimulator.SimConnect.SIMCONNECT_SOUND_SYSTEM_EVENT_DATA
+	ENUM: SIMCONNECT_SOUND_SYSTEM_EVENT_DATA
+		         value__ 	Int32
+			                                  MASTER = 1
+

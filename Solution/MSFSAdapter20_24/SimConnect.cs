@@ -132,6 +132,9 @@ namespace MSFSAdapter20_24
     public delegate void RecvEnumerateInputEventParamsEventHandler( SimConnect sender, SIMCONNECT_RECV_ENUMERATE_INPUT_EVENT_PARAMS data );
     // added in 2024 SDK 1.1.2
     public delegate void RecvEnumerateSimobjectAndLiveryListEventHandler( SimConnect sender, SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data );
+    // added in 2024 SDK 1.4.4 SU3
+    public delegate void RecvFlowEventEventHandler( SimConnect sender, SIMCONNECT_RECV_FLOW_EVENT data );
+
 
     public event RecvEnumerateInputEventParamsEventHandler OnRecvEnumerateInputEventParams;
     public event RecvSubscribeInputEventEventHandler OnRecvSubscribeInputEvent;
@@ -173,6 +176,8 @@ namespace MSFSAdapter20_24
     public event RecvNullEventHandler OnRecvNull;
     // added in 2024 SDK 1.1.2
     public event RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
+    // added in 2024 SDK 1.4.4 SU3
+    public event RecvFlowEventEventHandler OnRecvFlowEvent;
 
     public static uint SIMCONNECT_UNUSED = uint.MaxValue;
     public static uint SIMCONNECT_OBJECT_ID_USER = 0u;
@@ -572,6 +577,8 @@ namespace MSFSAdapter20_24
       _plug.OnRecvWeatherObservation += ( SimConnect sender, SIMCONNECT_RECV_WEATHER_OBSERVATION data ) => { OnRecvWeatherObservation?.Invoke( this, data ); };
       // added in 2024 SDK 1.1.2
       _plug.OnRecvEnumerateSimobjectAndLiveryList += ( SimConnect sender, SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data ) => { OnRecvEnumerateSimobjectAndLiveryList?.Invoke( this, data ); };
+      // added in 2024 SDK 1.4.4 SU3
+      _plug.OnRecvFlowEvent += ( SimConnect sender, SIMCONNECT_RECV_FLOW_EVENT data ) => { OnRecvFlowEvent?.Invoke( this, data ); };
     }
 
     #endregion

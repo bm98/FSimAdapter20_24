@@ -753,6 +753,15 @@ namespace MSFSAdapter20_24
     public object[] rgData;
   }
 
+  // added in 2024 SDK 1.4.4
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_FLOW_EVENT : SIMCONNECT_RECV
+  {
+    public SIMCONNECT_FLOW_EVENT FlowEvent;
+
+    [MarshalAs( UnmanagedType.ByValTStr, SizeConst = 256 )]
+    public string FltPath;
+  }
 
 
 }
