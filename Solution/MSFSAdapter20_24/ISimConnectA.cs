@@ -171,6 +171,14 @@ namespace MSFSAdapter20_24
     // added in 2024 SDK 1.1.2
     void EnumerateSimObjectsAndLiveries( Enum RequestID, SIMCONNECT_SIMOBJECT_TYPE Type );
 
+    // added in 2024 SDK 1.4.4
+    void AICreateParkedATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, string szAirportID, Enum RequestID );
+    void AICreateEnrouteATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, int iFlightNumber, string szFlightPlanPath, double dFlightPlanPosition, [MarshalAs( UnmanagedType.U1 )] bool bTouchAndGo, Enum RequestID );
+    void AICreateNonATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID );
+    void AICreateSimulatedObject_EX1( string szContainerTitle, string szLivery, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID );
+    void SubscribeToFlowEvent( );
+    void UnsubscribeToFlowEvent( );
+    void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID );
 
     void Dispose( );
 

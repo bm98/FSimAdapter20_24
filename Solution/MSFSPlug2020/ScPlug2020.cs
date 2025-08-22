@@ -887,6 +887,106 @@ namespace MSFSPlug2020
           dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
         } );
 
+    // added in 2024 SDK 1.4.4 but not supported in FS2020 - returns an Exception 
+    public void AICreateParkedATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, string szAirportID, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void AICreateEnrouteATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, int iFlightNumber, string szFlightPlanPath, double dFlightPlanPosition, [MarshalAs( UnmanagedType.U1 )] bool bTouchAndGo, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void AICreateNonATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void AICreateSimulatedObject_EX1( string szContainerTitle, string szLivery, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void SubscribeToFlowEvent( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void UnsubscribeToFlowEvent( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+
     #endregion // Call Forwarder
 
 

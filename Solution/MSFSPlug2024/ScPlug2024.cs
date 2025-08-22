@@ -754,15 +754,15 @@ namespace MSFSPlug2024
       => _simConnect?.SetSystemState( szState, dwInteger, fFloat, szString );
     public void MapClientDataNameToID( string szClientDataName, Enum ClientDataID )
       => _simConnect?.MapClientDataNameToID( szClientDataName, ClientDataID );
-    public void CreateClientData( Enum ClientDataID, uint dwSize, CX.SIMCONNECT_CREATE_CLIENT_DATA_FLAG Flags )
+    public void CreateClientData( Enum ClientDataID, uint dwSize, SIMCONNECT_CREATE_CLIENT_DATA_FLAG Flags )
       => _simConnect?.CreateClientData( ClientDataID, dwSize, (FS.SIMCONNECT_CREATE_CLIENT_DATA_FLAG)Flags );
     public void AddToClientDataDefinition( Enum DefineID, uint dwOffset, uint dwSizeOrType, float fEpsilon, uint DatumID )
       => _simConnect?.AddToClientDataDefinition( DefineID, dwOffset, dwSizeOrType, fEpsilon, DatumID );
     public void ClearClientDataDefinition( Enum DefineID )
       => _simConnect?.ClearClientDataDefinition( DefineID );
-    public void RequestClientData( Enum ClientDataID, Enum RequestID, Enum DefineID, CX.SIMCONNECT_CLIENT_DATA_PERIOD Period, MSFSAdapter20_24.SIMCONNECT_CLIENT_DATA_REQUEST_FLAG Flags, uint origin, uint interval, uint limit )
+    public void RequestClientData( Enum ClientDataID, Enum RequestID, Enum DefineID, SIMCONNECT_CLIENT_DATA_PERIOD Period, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG Flags, uint origin, uint interval, uint limit )
       => _simConnect?.RequestClientData( ClientDataID, RequestID, DefineID, (FS.SIMCONNECT_CLIENT_DATA_PERIOD)Period, (FS.SIMCONNECT_CLIENT_DATA_REQUEST_FLAG)Flags, origin, interval, limit );
-    public void SetClientData( Enum ClientDataID, Enum DefineID, CX.SIMCONNECT_CLIENT_DATA_SET_FLAG Flags, uint dwReserved, object pDataSet )
+    public void SetClientData( Enum ClientDataID, Enum DefineID, SIMCONNECT_CLIENT_DATA_SET_FLAG Flags, uint dwReserved, object pDataSet )
       => _simConnect?.SetClientData( ClientDataID, DefineID, (FS.SIMCONNECT_CLIENT_DATA_SET_FLAG)Flags, dwReserved, pDataSet );
     public void FlightLoad( string szFileName )
       => _simConnect?.FlightLoad( szFileName );
@@ -778,7 +778,7 @@ namespace MSFSPlug2024
       => _simConnect?.UnsubscribeToFacilities( (FS.SIMCONNECT_FACILITY_LIST_TYPE)type );
     public void RequestFacilitiesList( CX.SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
       => _simConnect?.RequestFacilitiesList( (FS.SIMCONNECT_FACILITY_LIST_TYPE)type, RequestID );
-    public void TransmitClientEvent_EX1( uint ObjectID, Enum EventID, Enum GroupID, MSFSAdapter20_24.SIMCONNECT_EVENT_FLAG Flags, uint dwData0, uint dwData1, uint dwData2, uint dwData3, uint dwData4 )
+    public void TransmitClientEvent_EX1( uint ObjectID, Enum EventID, Enum GroupID, SIMCONNECT_EVENT_FLAG Flags, uint dwData0, uint dwData1, uint dwData2, uint dwData3, uint dwData4 )
       => _simConnect?.TransmitClientEvent_EX1( ObjectID, EventID, GroupID, (FS.SIMCONNECT_EVENT_FLAG)Flags, dwData0, dwData1, dwData2, dwData3, dwData4 );
     public void AddToFacilityDefinition( Enum DefineID, string FieldName )
       => _simConnect?.AddToFacilityDefinition( DefineID, FieldName );
@@ -820,6 +820,46 @@ namespace MSFSPlug2024
     // added in 2024 SDK 1.1.2
     public void EnumerateSimObjectsAndLiveries( Enum RequestID, CX.SIMCONNECT_SIMOBJECT_TYPE Type )
       => _simConnect?.EnumerateSimObjectsAndLiveries( RequestID, (FS.SIMCONNECT_SIMOBJECT_TYPE)Type );
+
+    // added in 2024 SDK 1.4.4 SU3
+    public void AICreateParkedATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, string szAirportID, Enum RequestID )
+      => _simConnect?.AICreateParkedATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, szAirportID, RequestID );
+    public void AICreateEnrouteATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, int iFlightNumber, string szFlightPlanPath, double dFlightPlanPosition, [MarshalAs( UnmanagedType.U1 )] bool bTouchAndGo, Enum RequestID )
+      => _simConnect?.AICreateEnrouteATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, iFlightNumber, szFlightPlanPath, dFlightPlanPosition, bTouchAndGo, RequestID );
+    public void AICreateNonATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+    {
+      var InitPosFS = new FS.SIMCONNECT_DATA_INITPOSITION( ) {
+        Altitude = InitPos.Altitude,
+        Airspeed = InitPos.Airspeed,
+        Bank = InitPos.Bank,
+        Heading = InitPos.Heading,
+        Latitude = InitPos.Latitude,
+        Longitude = InitPos.Longitude,
+        OnGround = InitPos.OnGround,
+        Pitch = InitPos.Pitch
+      };
+      _simConnect?.AICreateNonATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, InitPosFS, RequestID );
+    }
+    public void AICreateSimulatedObject_EX1( string szContainerTitle, string szLivery, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+    {
+      var InitPosFS = new FS.SIMCONNECT_DATA_INITPOSITION( ) {
+        Altitude = InitPos.Altitude,
+        Airspeed = InitPos.Airspeed,
+        Bank = InitPos.Bank,
+        Heading = InitPos.Heading,
+        Latitude = InitPos.Latitude,
+        Longitude = InitPos.Longitude,
+        OnGround = InitPos.OnGround,
+        Pitch = InitPos.Pitch
+      };
+      _simConnect?.AICreateSimulatedObject_EX1( szContainerTitle, szLivery, InitPosFS, RequestID );
+    }
+    public void SubscribeToFlowEvent( )
+      => _simConnect?.SubscribeToFlowEvent( );
+    public void UnsubscribeToFlowEvent( )
+      => _simConnect?.UnsubscribeToFlowEvent( );
+    public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
+      => _simConnect?.RequestAllFacilities( (FS.SIMCONNECT_FACILITY_LIST_TYPE)type, RequestID );
 
     #endregion // Call Forwarder
 

@@ -403,6 +403,22 @@ namespace MSFSAdapter20_24
     public void EnumerateSimObjectsAndLiveries( Enum RequestID, SIMCONNECT_SIMOBJECT_TYPE Type )
       => _plug?.EnumerateSimObjectsAndLiveries( RequestID, Type );
 
+    // added in 2024 SDK 1.4.4 SU3
+    public void AICreateParkedATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, string szAirportID, Enum RequestID )
+      => _plug?.AICreateParkedATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, szAirportID, RequestID );
+    public void AICreateEnrouteATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, int iFlightNumber, string szFlightPlanPath, double dFlightPlanPosition, [MarshalAs( UnmanagedType.U1 )] bool bTouchAndGo, Enum RequestID )
+      => _plug?.AICreateEnrouteATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, iFlightNumber, szFlightPlanPath, dFlightPlanPosition, bTouchAndGo, RequestID );
+    public void AICreateNonATCAircraft_EX1( string szContainerTitle, string szLivery, string szTailNumber, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+      => _plug?.AICreateNonATCAircraft_EX1( szContainerTitle, szLivery, szTailNumber, InitPos, RequestID );
+    public void AICreateSimulatedObject_EX1( string szContainerTitle, string szLivery, SIMCONNECT_DATA_INITPOSITION InitPos, Enum RequestID )
+      => _plug?.AICreateSimulatedObject_EX1( szContainerTitle, szLivery, InitPos, RequestID );
+    public void SubscribeToFlowEvent( )
+      => _plug?.SubscribeToFlowEvent( );
+    public void UnsubscribeToFlowEvent( )
+      => _plug?.UnsubscribeToFlowEvent( );
+    public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
+      => _plug?.RequestAllFacilities( (SIMCONNECT_FACILITY_LIST_TYPE)type, RequestID );
+
     #endregion // Call Forwarder
 
 
