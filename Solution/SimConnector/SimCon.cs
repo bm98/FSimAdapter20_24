@@ -24,12 +24,17 @@ namespace SimConnector
   /// </summary>
   public class SimCon : ISimCon
   {
+    // used to ID Debug Out and ref to this class
+    private const string c_myName = "SimCon";
 
     // Pacer to maintain the connection state
     private readonly DispatcherTimer _timer = new DispatcherTimer( );
 
-    private readonly int m_myPID = 0;
-    private readonly string m_myPName = "";
+
+    private readonly string _myPName = "";
+    private readonly int _myPID = 0;
+    // pid as string for Debut out
+    private string _myPidName => $"{c_myName}(PID<{_myPID:#####0}>)";
 
     #region API
 
@@ -91,8 +96,8 @@ namespace SimConnector
 
       // track the PID in Console Writes to debug parallel running Libraries
       Process currentProcess = Process.GetCurrentProcess( );
-      m_myPID = currentProcess.Id;
-      m_myPName = currentProcess.ProcessName;
+      _myPID = currentProcess.Id;
+      _myPName = currentProcess.ProcessName;
 
       _timer.Stop( );
       _timer.Tick += timer1_Tick;
@@ -109,7 +114,7 @@ namespace SimConnector
     /// </summary>
     public bool Connect( )
     {
-      Debug.WriteLine( $"TRACE: {m_myPID:####0} - Connect" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: Connect" );
 
       // must be Disconnected to start a connection
       if (_state != SimConState.Disconnected) return false;
@@ -125,7 +130,7 @@ namespace SimConnector
     /// </summary>
     public bool Disconnect( )
     {
-      Debug.WriteLine( $"TRACE: {m_myPID:####0} - Disconnect" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: Disconnect" );
 
       _timer.Stop( );
 
@@ -167,10 +172,10 @@ namespace SimConnector
     // Connect to SimConnect
     private bool Connect_low( )
     {
-      Debug.WriteLine( "TRACE: Connect_low..." );
+      Debug.WriteLine( $"{_myPidName}_TRACE: Connect_low..." );
 
       if (_state == SimConState.Connected) {
-        Debug.WriteLine( "TRACE: .. already connected" );
+        Debug.WriteLine( $"{_myPidName}_TRACE: .. already connected" );
         return true;
       }
 
@@ -185,7 +190,7 @@ namespace SimConnector
           _winMsgForm.Show( );
         }
         catch (Exception ex) {
-          Debug.WriteLine( $"ERROR: Creating WinMsgForm  failed:\n{ex.Message}\n" );
+          Debug.WriteLine( $"{_myPidName}_ERROR: Creating WinMsgForm  failed:\n{ex.Message}\n" );
 
           return false; // cannot without Form
         }
@@ -194,31 +199,31 @@ namespace SimConnector
       // may fail?!
       try {
         instanceGUID = Guid.NewGuid( ).ToString( "D" );
-        Debug.WriteLine( "TRACE: .. establish connection with SimConnect.." );
+        Debug.WriteLine( $"{_myPidName}_TRACE: .. establish connection with SimConnect.." );
         // The constructor is similar to SimConnect_Open in the native API
         _state = SimConState.Connecting;
-        _simConnect = new FS.SimConnect( $"FacilityStreamLib<{instanceGUID}>", _winMsgForm.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
+        _simConnect = new FS.SimConnect( $"{c_myName}_<{instanceGUID}>", _winMsgForm.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
         AttachHandlers( );
 
         // Init SimConnect with defaults
         _version = _simConnect.Init( );
-        Debug.WriteLine( $"TRACE: Detected FSim Version: {_version}" );
+        Debug.WriteLine( $"{_myPidName}_TRACE: Detected FSim Version: {_version}" );
 
         if (_version == FS.FSVersion.Unknown) {
-          Debug.WriteLine( "INFO: No MSFS App seems running - shutting connection down" );
+          Debug.WriteLine( $"{_myPidName}_INFO: No MSFS App seems running - shutting connection down" );
         }
         else {
 
           // about to receive the Open msg from SimConnect now
           OnEstablishing( );
 
-          Debug.WriteLine( $"INFO: FS Title: {_simConnect.FSimWindowTitle} .. waiting for response" );
+          Debug.WriteLine( $"{_myPidName}_INFO: FS Title: {_simConnect.FSimWindowTitle} .. waiting for response" );
           return true;
         }
 
       }
       catch (COMException ex) {
-        Debug.WriteLine( $"ERROR: Connect failed with exception:\n{ex.Message}\n" );
+        Debug.WriteLine( $"{_myPidName}_ERROR: Connect failed with exception:\n{ex.Message}\n" );
       }
 
       _simConnect?.Dispose( );
@@ -231,7 +236,7 @@ namespace SimConnector
     // wire event handlers we care of
     private void AttachHandlers( )
     {
-      Debug.WriteLine( "TRACE: .. AttachHandlers .." );
+      Debug.WriteLine( $"{_myPidName}_TRACE: .. AttachHandlers .." );
       // sanity
       if (_simConnect == null) throw new InvalidOperationException( "_SC is null" );
 
@@ -244,7 +249,7 @@ namespace SimConnector
 
       }
       catch (Exception ex) {
-        Debug.WriteLine( $"ERROR: AttachHandlers: Failed with exception\n{ex.Message}" );
+        Debug.WriteLine( $"{_myPidName}_ERROR: AttachHandlers: Failed with exception\n{ex.Message}" );
         throw ex;
       }
     }
@@ -253,7 +258,7 @@ namespace SimConnector
     // Set true if SimConnect called it Quit (default is false)</param>
     private bool Disconnect_low( bool forceQuit = false )
     {
-      Debug.WriteLine( $"TRACE: Disconnect(force:{forceQuit})" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: Disconnect(force:{forceQuit})" );
 
       // add condition when normal disconnect should be prevented
       if (!forceQuit && (false)) {
@@ -273,7 +278,7 @@ namespace SimConnector
         return true; // not even connected
       }
       // proceed with disconnect
-      Debug.WriteLine( "TRACE: Disconnecting now" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: Disconnecting now" );
       _state = SimConState.Disconnected;
       OnDisconnected( ); // signal closed before the handle is disposed
       if (_simConnect != null) {
@@ -282,7 +287,7 @@ namespace SimConnector
         _simConnect = null;
       }
 
-      Debug.WriteLine( "INFO: Disconnected!" );
+      Debug.WriteLine( $"{_myPidName}_INFO: Disconnected!" );
 
       return true;
     }
@@ -291,7 +296,7 @@ namespace SimConnector
     // internal reset when the connection is closed, so we may start again
     private void ResetSimConHandler( )
     {
-      Debug.WriteLine( "TRACE: ResetSimConHandler()" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: ResetSimConHandler()" );
 
       // whatever would be needed
     }
@@ -302,7 +307,7 @@ namespace SimConnector
     {
       // only if not yet there...
       if (_state != SimConState.ConfirmedConnection) {
-        Debug.WriteLine( $"TRACE: SimClient {m_myPID:####0} - Connection confirmed" );
+        Debug.WriteLine( $"{_myPidName}_TRACE: Connection confirmed" );
         _state = SimConState.ConfirmedConnection;
         OnConnected( );
       }
@@ -334,12 +339,12 @@ namespace SimConnector
        */
       switch (_state) {
         case SimConState.Idle:
-          Debug.WriteLine( $"TRACE: SimCon {m_myPID:####0} - Connecting now" );
+          Debug.WriteLine( $"{_myPidName}_TRACE: Connecting now" );
           // try to connect
           if (Connect_low( )) {
             _scGracePeriod = c_scGracePeriodSet;
             // waiting to be connected
-            Debug.WriteLine( $"TRACE: SimCon {m_myPID:####0} - Success - waiting for confirmation" );
+            Debug.WriteLine( $"{_myPidName}_TRACE: Success - waiting for confirmation" );
           }
           else {
             // connect failed - will be retried through the pacer
@@ -359,9 +364,9 @@ namespace SimConnector
 
           // Disconnect and try to reconnect 
           if (_scGracePeriod <= 0) {
-            Debug.WriteLine( $"SimClient {m_myPID:####0} - Waiting for confirmation - grace period expired" );
+            Debug.WriteLine( $"{_myPidName}_INFO: Waiting for confirmation - grace period expired" );
             // grace period is expired !
-            Debug.WriteLine( $"TRACE: SimCon {m_myPID:####0} - Disconnecting now" );
+            Debug.WriteLine( $"{_myPidName}_TRACE: Disconnecting now" );
             Disconnect_low( );
             _state = SimConState.Idle; // restart trying during the next pace
           }
@@ -399,7 +404,7 @@ namespace SimConnector
       _fSAppVersion = $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}";
       _fSSimConnectVersion = $"SimConV{data.dwSimConnectVersionMajor}.{data.dwSimConnectVersionMinor}.{data.dwSimConnectBuildMajor}.{data.dwSimConnectBuildMinor}";
 
-      Debug.WriteLine( $"TRACE: SimConnect Open: ({_fSAppName} V{_fSAppVersion} ({_fSSimConnectVersion}))\n" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: SimConnect Open: ({_fSAppName} V{_fSAppVersion} ({_fSSimConnectVersion}))\n" );
 
       _state = SimConState.Connected; // only now we are connected, wait for confirmation
     }
@@ -409,7 +414,7 @@ namespace SimConnector
     /// </summary>
     private void SimConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
     {
-      Debug.WriteLine( $"TRACE: SimClient {m_myPID:####0} - SimConnect_OnRecvQuit" );
+      Debug.WriteLine( $"{_myPidName}_TRACE: SimConnect_OnRecvQuit" );
       Disconnect_low( true ); // Force it, even if users are still connected
 
       _state = SimConState.ConnectionClosed; // causes an attempt to reconnect

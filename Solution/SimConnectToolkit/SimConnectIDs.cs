@@ -1,4 +1,6 @@
 ﻿
+using System.Threading;
+
 namespace SimConnectToolkit
 {
   /// <summary>
@@ -138,15 +140,16 @@ namespace SimConnectToolkit
   /// </summary>
   public static class SimConnectIDs
   {
-    private static DEFINITION s_definitionID = DEFINITION.Dummy;
-    private static GroupID s_groupID = GroupID.Dummy;
-    private static EventID s_eventID = EventID.Dummy;
-    private static InputID s_inputID = InputID.Dummy;
-    private static REQUEST s_requestID = REQUEST.Dummy;
-    private static UserID s_userID = UserID.Dummy;
+    // need a long to use Interlocked.Increment
+    private static long s_definitionID = (long)DEFINITION.Dummy;
+    private static long s_groupID = (long)GroupID.Dummy;
+    private static long s_eventID = (long)EventID.Dummy;
+    private static long s_inputID = (long)InputID.Dummy;
+    private static long s_requestID = (long)REQUEST.Dummy;
+    private static long s_userID = (long)UserID.Dummy;
 
-    private static PrivateDEF s_privateDEF = PrivateDEF.Dummy;
-    private static PrivateID s_privateID = PrivateID.Dummy;
+    private static long s_privateDEF = (long)PrivateDEF.Dummy;
+    private static long s_privateID = (long)PrivateID.Dummy;
 
     #region Public IDs
 
@@ -156,7 +159,7 @@ namespace SimConnectToolkit
     /// <returns>A new DEFINITION ID</returns>
     public static DEFINITION GetDEFINITION( )
     {
-      return ++s_definitionID;
+      return (DEFINITION)Interlocked.Increment( ref s_definitionID );
     }
     /// <summary>
     /// Returns a new data REQUEST ID
@@ -164,7 +167,7 @@ namespace SimConnectToolkit
     /// <returns>A new data REQUEST ID</returns>
     public static REQUEST GetREQUEST( )
     {
-      return ++s_requestID;
+      return (REQUEST)Interlocked.Increment( ref s_requestID );
     }
     /// <summary>
     /// Returns a new GroupID 
@@ -172,7 +175,7 @@ namespace SimConnectToolkit
     /// <returns>A new GroupID</returns>
     public static GroupID GetGroupID( )
     {
-      return ++s_groupID;
+      return (GroupID)Interlocked.Increment( ref s_groupID );
     }
     /// <summary>
     /// Returns a new InputID 
@@ -180,7 +183,7 @@ namespace SimConnectToolkit
     /// <returns>A new InputID</returns>
     public static InputID GetInputID( )
     {
-      return ++s_inputID;
+      return (InputID)Interlocked.Increment( ref s_inputID );
     }
     /// <summary>
     /// Returns a new EventID 
@@ -188,7 +191,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static EventID GetEventID( )
     {
-      return ++s_eventID;
+      return (EventID)Interlocked.Increment( ref s_eventID );
     }
 
     /// <summary>
@@ -197,7 +200,7 @@ namespace SimConnectToolkit
     /// <returns>A new UserID</returns>
     public static UserID GetUserID( )
     {
-      return ++s_userID;
+      return (UserID)Interlocked.Increment( ref s_userID );
     }
 
     #endregion
@@ -212,7 +215,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static DEFINITION GetPrivateDEFINITION( )
     {
-      return (DEFINITION)(++s_privateDEF);
+      return (DEFINITION)Interlocked.Increment( ref s_privateDEF );
     }
 
     /// <summary>
@@ -221,7 +224,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static EventID GetPrivateEventID( )
     {
-      return (EventID)(++s_privateID);
+      return (EventID)Interlocked.Increment( ref s_privateID );
     }
     /// <summary>
     /// Returns a new internal GroupID 
@@ -229,7 +232,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static GroupID GetPrivateGroupID( )
     {
-      return (GroupID)(++s_privateID);
+      return (GroupID)Interlocked.Increment( ref s_privateID );
     }
     /// <summary>
     /// Returns a new internal InputID 
@@ -237,7 +240,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static InputID GetPrivateInputID( )
     {
-      return (InputID)(++s_privateID);
+      return (InputID)Interlocked.Increment( ref s_privateID );
     }
     /// <summary>
     /// Returns a new internal REQUEST 
@@ -245,7 +248,7 @@ namespace SimConnectToolkit
     /// <returns>A new EventID</returns>
     public static REQUEST GetPrivateREQUEST( )
     {
-      return (REQUEST)(++s_privateID);
+      return (REQUEST)Interlocked.Increment( ref s_privateID );
     }
 
     #endregion
