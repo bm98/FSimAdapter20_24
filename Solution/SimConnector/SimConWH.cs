@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
 using NLog;
 
 using FS = MSFSAdapter20_24;
+
+using SimConSupport;
+using static SimConSupport.WaitHandleExtensions;
 
 namespace SimConnector
 {
@@ -14,7 +18,7 @@ namespace SimConnector
   /// SimConnect Adapter Utility
   /// 
   ///   wraps the connection and disconnection with SimConnect via the Adapter
-  ///   handles the Windows message queue via a hidden WinForms form
+  ///   handles SimConnect Receive using a WaitHandle (instead of the WIN Message loop)
   ///   
   ///   After an initial Connect call it attempts to connect with a 5sec pacer 
   ///     until the connection is confirmed 
@@ -24,15 +28,18 @@ namespace SimConnector
   ///   Provides a reference to the connected SimConnect (Adapter)
   ///   
   /// </summary>
-  public class SimCon : ISimCon
+  public class SimConWH : ISimCon
   {
     private static readonly Logger LOG = LogManager.GetCurrentClassLogger( );
 
-    // used to ID and ref this class
-    private const string c_myName = "SimCon";
+    // used to ID Debug Out and ref to this class
+    private const string c_myName = "SimConWH";
 
     // Pacer to maintain the connection state
     private readonly DispatcherTimer _timer = new DispatcherTimer( );
+
+    private readonly SignalMonitor _signalMonitor;
+    private readonly ManualResetEvent _simConnectAccess = null;
 
     private readonly int _myPID = 0;
 
@@ -84,15 +91,14 @@ namespace SimConnector
     /// </summary>
     public SimConState SimConState => _state;
 
-
     // cTor: empty is private
-    private SimCon( ) { }
+    private SimConWH( ) { }
 
     /// <summary>
     /// cTor: may provide a monitor pace interval 2..20 sec (default=5)
     /// </summary>
     /// <param name="paceInterval_sec">Monitor Pace interval in seconds (default=5)</param>
-    public SimCon( uint paceInterval_sec = 5 )
+    public SimConWH( uint paceInterval_sec = 5 )
     {
       // sanity limit 2..20 sec
       paceInterval_sec = (paceInterval_sec < 2) ? 2 : (paceInterval_sec > 20) ? 20 : paceInterval_sec;
@@ -100,9 +106,15 @@ namespace SimConnector
       // track the PID in Console Writes to debug parallel running Libraries
       _myPID = Process.GetCurrentProcess( ).Id;
 
-      _timer.Stop( );
       _timer.Tick += timer1_Tick;
       _timer.Interval = new TimeSpan( 0, 0, (int)paceInterval_sec ); // default 5sec
+      _timer.Stop( );
+
+      // stuff for the Receiver Handling
+      _signalMonitor = new SignalMonitor( );
+
+      // Mutual exclusion for SimConnect - if needed 
+      _simConnectAccess = new ManualResetEvent( false ); // start waiting until established
 
       // start with Disconnected - will stay there
       _state = SimConState.Disconnected;
@@ -121,6 +133,7 @@ namespace SimConnector
       if (_state != SimConState.Disconnected) return false;
 
       _state = SimConState.Idle; // the pacer may init the connection
+
       _timer.Start( );
       return true;
     }
@@ -146,9 +159,6 @@ namespace SimConnector
     // SimConnectClient instance
     private FS.SimConnect _simConnect = null;
     private SimConState _state = SimConState.Idle;
-
-    // Form to receive Windows Messages for SimConnect
-    private MsgForm _winMsgForm = null;
 
     // number of periods to wait for data arrival after connect
     private const int c_scGracePeriodSet = 10; // N * 5 sec
@@ -184,30 +194,27 @@ namespace SimConnector
       _simConnect?.Dispose( );
       _state = SimConState.Disconnected;
 
-      // create if needed
-      if (_winMsgForm == null) {
-        try {
-          _winMsgForm = new MsgForm( this );
-          _winMsgForm.Show( );
-        }
-        catch (Exception ex) {
-          using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Error( ex, "Creating WinMsgForm failed with exception" );
-
-          return false; // cannot without Form
-        }
-      }
-
-      // may fail?!
+      // may fail when SimConnect is not yet or no longer running
       try {
         instanceGUID = Guid.NewGuid( ).ToString( "D" );
         using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Trace( ".. establish connection with SimConnect.." );
         // The constructor is similar to SimConnect_Open in the native API
         _state = SimConState.Connecting;
-        _simConnect = new FS.SimConnect( $"{c_myName}_<{instanceGUID}>", _winMsgForm.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
+        // instead of the WIN message handling use a WaitHandle 
+        _simConnect = new FS.SimConnect( $"{c_myName}_<{instanceGUID}>", IntPtr.Zero, 0, _signalMonitor.WaitForHandle, 0 );
         if (_simConnect == null) {
           // failed to create the simConnect obj - can it happen?? - should never happen anyway...
           throw new ApplicationException( "Could not create SimConnect object" );
         }
+        // if _simConnect is created, start waiting for responses
+        if (!_signalMonitor.StartSignalMonitor( SC_ReceiveAction )) {
+          // monitoring does not work - we will never get replies
+          throw new ApplicationException( "Starting the monitoring thread failed" );
+        }
+
+        // mutual exclusion handling - if needed and supported
+        _simConnectAccess.Set( ); // simConnect seems to be available
+
         AttachHandlers( );
 
         // Init SimConnect with defaults
@@ -238,6 +245,9 @@ namespace SimConnector
       _simConnect = null;
       _state = SimConState.ConnectionClosed; // causes to reconnect via pacer
 
+      // cancel the SignalMonitoring Thread
+      _signalMonitor?.CancelMonitoring( );
+
       return false; // wait until the FSim is available
     }
 
@@ -247,7 +257,7 @@ namespace SimConnector
       LOG.Trace( "PID<{0}>.AttachHandlers()", _myPID );
 
       // sanity
-      if (_simConnect == null) throw new ApplicationException( "_SC is null" );
+      if (_simConnect == null) throw new InvalidOperationException( "_SC is null" );
 
       try {
         // Listen to connect and quit msgs
@@ -307,6 +317,9 @@ namespace SimConnector
     {
       LOG.Trace( "PID<{0}>.ResetSimConHandler()", _myPID );
 
+      // cancel the SignalMonitoring Thread
+      _signalMonitor.CancelMonitoring( );
+
       // whatever would be needed
     }
 
@@ -318,6 +331,7 @@ namespace SimConnector
       if (_state != SimConState.ConfirmedConnection) {
         using (ScopeContext.PushNestedState( "ConfirmConnection" )) LOG.Trace( "Connection confirmed" );
         _state = SimConState.ConfirmedConnection;
+
         OnConnected( );
       }
     }
@@ -404,6 +418,45 @@ namespace SimConnector
 
     }
 
+    // wrapper around the Receive Message Action called from the SignalMonitor
+    private async void SC_ReceiveAction( )
+    {
+      // This is called from the SignalMonitor Thread
+
+      if (disposedValue) return;
+
+      // handle exceptions from SimConnect here as the Monitor will report and ignore them
+
+      bool access = true;
+      // wait for access if the handle is allocated
+      if (_simConnectAccess != null) {
+        // a looong timeout to not wait forever if something went wrong
+        access = await _simConnectAccess.WaitOneAsync( TimeSpan.FromSeconds( 60 ) );
+      }
+      // SimConnect Access is signaled or omitted
+      if (access) {
+        try {
+          _simConnect?.ReceiveMessage( ); // Triggers and executes registered callbacks
+        }
+        catch (COMException ex) {
+          // we may expect those if SimConnect is no longer available
+          using (ScopeContext.PushNestedState( "SC_ReceiveAction" )) LOG.Trace( ex, "COM exception" );
+        }
+        catch (Exception ex) {
+          // e.g. cross thread attempt when writing to WinForms controls within the callback without using an Invoker on the Form...
+          using (ScopeContext.PushNestedState( "SC_ReceiveAction" )) LOG.Error( ex, "Other exception" );
+        }
+        finally {
+          _simConnectAccess?.Set( ); // allow using _simConnect (if defined)
+        }
+      }
+      else {
+        // Access timeout - potiential deadlock situation
+        using (ScopeContext.PushNestedState( "SC_ReceiveAction" )) LOG.Error( "SimConnect Access timeout - potential deadlock situation" );
+        // we could Set the WaitHandle here if not cancelled but then the coding bug will persist...
+      }
+    }
+
 
     // FS confirms connection
     private void SimConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
@@ -421,6 +474,7 @@ namespace SimConnector
       _state = SimConState.Connected; // only now we are connected, wait for confirmation
     }
 
+
     /// <summary>
     /// The case where the user closes game
     /// </summary>
@@ -431,26 +485,6 @@ namespace SimConnector
       Disconnect_low( true ); // Force it, even if users are still connected
 
       _state = SimConState.ConnectionClosed; // causes an attempt to reconnect
-    }
-
-
-
-    /// <summary>
-    /// Utility: called by the MsgForms WndProc
-    /// 
-    /// Handle the complete Windows Message queue callback
-    /// 
-    /// </summary>
-    /// <param name="m">Message</param>
-    /// <returns>True when handled</returns>
-    internal bool SimConnectWndProc( ref Message m )
-    {
-      // sanity
-      if (disposedValue) return false; // already gone..
-      if (m.Msg != FS.SimConnect.WM_USER_SIMCONNECT) return false; // not for us anyway
-      if (_simConnect == null) return false; // cannot handle it
-
-      return _simConnect.WinMessageHandled( m.Msg ); // utility provided by the Adapter
     }
 
     #endregion
@@ -465,7 +499,7 @@ namespace SimConnector
         if (disposing) {
           // TODO: dispose managed state (managed objects)
           Disconnect( );
-          _winMsgForm?.Dispose( );
+          _signalMonitor?.Dispose( );
         }
 
         // TODO: free unmanaged resources (unmanaged objects) and override finalizer

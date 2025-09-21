@@ -17,6 +17,8 @@ namespace z_TEST_MinCompliance
       Application.EnableVisualStyles( );
       Application.SetCompatibleTextRenderingDefault( false );
       Application.Run( new Form1( ) );
+
+      NLog.LogManager.Shutdown();
     }
   }
 }

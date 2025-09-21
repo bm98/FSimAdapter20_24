@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace SimConnector
 {
   /// <summary>
@@ -49,7 +50,7 @@ namespace SimConnector
   /// <summary>
   /// SimCon interface for clients
   /// </summary>
-  public interface ISimCon
+  public interface ISimCon : IDisposable
   {
     /// <summary>
     /// Fired when the connection is about to be connected

@@ -7,7 +7,7 @@ namespace MSFSAdapter20_24
   /// Contains only SimConnect Structs from MSFS2024 in the main namespace
   /// 
   /// copy from SDK V1.1.2 Microsoft.FlightSimulator.SimConnect.dll
-  /// 
+  ///  updated for SDK V1.4.4 SU3 MSFS2024 Microsoft.FlightSimulator.SimConnect.dll
   ///</remarks>
 
 

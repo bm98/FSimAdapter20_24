@@ -27,7 +27,7 @@
     /// </summary>
     private void InitializeComponent( )
     {
-      this.btConnect = new System.Windows.Forms.Button();
+      this.btConnectAdapter = new System.Windows.Forms.Button();
       this.RTB = new System.Windows.Forms.RichTextBox();
       this.btConDiscon = new System.Windows.Forms.Button();
       this.btReqSome = new System.Windows.Forms.Button();
@@ -50,18 +50,19 @@
       this.btReqCamData = new System.Windows.Forms.Button();
       this.btSubSimEvents = new System.Windows.Forms.Button();
       this.btConnectSimCon = new System.Windows.Forms.Button();
+      this.btConnectSimConWH = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
-      // btConnect
+      // btConnectAdapter
       // 
-      this.btConnect.Location = new System.Drawing.Point(12, 45);
-      this.btConnect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-      this.btConnect.Name = "btConnect";
-      this.btConnect.Size = new System.Drawing.Size(124, 27);
-      this.btConnect.TabIndex = 0;
-      this.btConnect.Text = "Connect Adapter";
-      this.btConnect.UseVisualStyleBackColor = true;
-      this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
+      this.btConnectAdapter.Location = new System.Drawing.Point(12, 45);
+      this.btConnectAdapter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btConnectAdapter.Name = "btConnectAdapter";
+      this.btConnectAdapter.Size = new System.Drawing.Size(141, 27);
+      this.btConnectAdapter.TabIndex = 0;
+      this.btConnectAdapter.Text = "Connect Adapter";
+      this.btConnectAdapter.UseVisualStyleBackColor = true;
+      this.btConnectAdapter.Click += new System.EventHandler(this.btConnect_Click);
       // 
       // RTB
       // 
@@ -69,9 +70,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.RTB.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.RTB.Location = new System.Drawing.Point(15, 159);
+      this.RTB.Location = new System.Drawing.Point(15, 205);
       this.RTB.Name = "RTB";
-      this.RTB.Size = new System.Drawing.Size(909, 350);
+      this.RTB.Size = new System.Drawing.Size(909, 304);
       this.RTB.TabIndex = 1;
       this.RTB.Text = "";
       // 
@@ -80,7 +81,7 @@
       this.btConDiscon.Location = new System.Drawing.Point(12, 12);
       this.btConDiscon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btConDiscon.Name = "btConDiscon";
-      this.btConDiscon.Size = new System.Drawing.Size(124, 27);
+      this.btConDiscon.Size = new System.Drawing.Size(141, 27);
       this.btConDiscon.TabIndex = 2;
       this.btConDiscon.Text = "Minimum Connect";
       this.btConDiscon.UseVisualStyleBackColor = true;
@@ -88,7 +89,7 @@
       // 
       // btReqSome
       // 
-      this.btReqSome.Location = new System.Drawing.Point(144, 12);
+      this.btReqSome.Location = new System.Drawing.Point(179, 12);
       this.btReqSome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqSome.Name = "btReqSome";
       this.btReqSome.Size = new System.Drawing.Size(124, 27);
@@ -99,7 +100,7 @@
       // 
       // btSubSome
       // 
-      this.btSubSome.Location = new System.Drawing.Point(276, 12);
+      this.btSubSome.Location = new System.Drawing.Point(311, 12);
       this.btSubSome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSubSome.Name = "btSubSome";
       this.btSubSome.Size = new System.Drawing.Size(124, 27);
@@ -110,7 +111,7 @@
       // 
       // btSub1Hz
       // 
-      this.btSub1Hz.Location = new System.Drawing.Point(276, 45);
+      this.btSub1Hz.Location = new System.Drawing.Point(311, 45);
       this.btSub1Hz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSub1Hz.Name = "btSub1Hz";
       this.btSub1Hz.Size = new System.Drawing.Size(124, 27);
@@ -121,7 +122,7 @@
       // 
       // btReqInpEvents
       // 
-      this.btReqInpEvents.Location = new System.Drawing.Point(408, 45);
+      this.btReqInpEvents.Location = new System.Drawing.Point(443, 45);
       this.btReqInpEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqInpEvents.Name = "btReqInpEvents";
       this.btReqInpEvents.Size = new System.Drawing.Size(124, 27);
@@ -132,7 +133,7 @@
       // 
       // btReqAptList
       // 
-      this.btReqAptList.Location = new System.Drawing.Point(540, 12);
+      this.btReqAptList.Location = new System.Drawing.Point(575, 12);
       this.btReqAptList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqAptList.Name = "btReqAptList";
       this.btReqAptList.Size = new System.Drawing.Size(195, 27);
@@ -143,7 +144,7 @@
       // 
       // btRequFacWYP
       // 
-      this.btRequFacWYP.Location = new System.Drawing.Point(540, 45);
+      this.btRequFacWYP.Location = new System.Drawing.Point(575, 45);
       this.btRequFacWYP.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btRequFacWYP.Name = "btRequFacWYP";
       this.btRequFacWYP.Size = new System.Drawing.Size(195, 27);
@@ -154,7 +155,7 @@
       // 
       // btRequFacVOR
       // 
-      this.btRequFacVOR.Location = new System.Drawing.Point(540, 78);
+      this.btRequFacVOR.Location = new System.Drawing.Point(575, 78);
       this.btRequFacVOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btRequFacVOR.Name = "btRequFacVOR";
       this.btRequFacVOR.Size = new System.Drawing.Size(195, 27);
@@ -165,7 +166,7 @@
       // 
       // btRequFacNDB
       // 
-      this.btRequFacNDB.Location = new System.Drawing.Point(540, 111);
+      this.btRequFacNDB.Location = new System.Drawing.Point(575, 111);
       this.btRequFacNDB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btRequFacNDB.Name = "btRequFacNDB";
       this.btRequFacNDB.Size = new System.Drawing.Size(195, 27);
@@ -177,7 +178,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 131);
+      this.label1.Location = new System.Drawing.Point(12, 172);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(90, 15);
       this.label1.TabIndex = 11;
@@ -185,14 +186,14 @@
       // 
       // txLastReqID
       // 
-      this.txLastReqID.Location = new System.Drawing.Point(108, 128);
+      this.txLastReqID.Location = new System.Drawing.Point(108, 169);
       this.txLastReqID.Name = "txLastReqID";
       this.txLastReqID.Size = new System.Drawing.Size(100, 23);
       this.txLastReqID.TabIndex = 12;
       // 
       // btReqData
       // 
-      this.btReqData.Location = new System.Drawing.Point(757, 45);
+      this.btReqData.Location = new System.Drawing.Point(792, 45);
       this.btReqData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqData.Name = "btReqData";
       this.btReqData.Size = new System.Drawing.Size(124, 27);
@@ -205,7 +206,7 @@
       // 
       this.btClearRTB.BackColor = System.Drawing.Color.Gray;
       this.btClearRTB.ForeColor = System.Drawing.Color.WhiteSmoke;
-      this.btClearRTB.Location = new System.Drawing.Point(321, 124);
+      this.btClearRTB.Location = new System.Drawing.Point(321, 165);
       this.btClearRTB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btClearRTB.Name = "btClearRTB";
       this.btClearRTB.Size = new System.Drawing.Size(124, 29);
@@ -217,7 +218,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(214, 131);
+      this.label2.Location = new System.Drawing.Point(214, 172);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(26, 15);
       this.label2.TabIndex = 15;
@@ -225,14 +226,14 @@
       // 
       // txFPS
       // 
-      this.txFPS.Location = new System.Drawing.Point(246, 128);
+      this.txFPS.Location = new System.Drawing.Point(246, 169);
       this.txFPS.Name = "txFPS";
       this.txFPS.Size = new System.Drawing.Size(68, 23);
       this.txFPS.TabIndex = 16;
       // 
       // btSubFrame
       // 
-      this.btSubFrame.Location = new System.Drawing.Point(276, 78);
+      this.btSubFrame.Location = new System.Drawing.Point(311, 78);
       this.btSubFrame.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSubFrame.Name = "btSubFrame";
       this.btSubFrame.Size = new System.Drawing.Size(124, 27);
@@ -243,7 +244,7 @@
       // 
       // btReqSendData
       // 
-      this.btReqSendData.Location = new System.Drawing.Point(757, 78);
+      this.btReqSendData.Location = new System.Drawing.Point(792, 78);
       this.btReqSendData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqSendData.Name = "btReqSendData";
       this.btReqSendData.Size = new System.Drawing.Size(124, 27);
@@ -254,7 +255,7 @@
       // 
       // btSendKey
       // 
-      this.btSendKey.Location = new System.Drawing.Point(757, 110);
+      this.btSendKey.Location = new System.Drawing.Point(792, 110);
       this.btSendKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSendKey.Name = "btSendKey";
       this.btSendKey.Size = new System.Drawing.Size(124, 27);
@@ -265,7 +266,7 @@
       // 
       // btReqCamData
       // 
-      this.btReqCamData.Location = new System.Drawing.Point(757, 12);
+      this.btReqCamData.Location = new System.Drawing.Point(792, 12);
       this.btReqCamData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btReqCamData.Name = "btReqCamData";
       this.btReqCamData.Size = new System.Drawing.Size(124, 27);
@@ -276,7 +277,7 @@
       // 
       // btSubSimEvents
       // 
-      this.btSubSimEvents.Location = new System.Drawing.Point(408, 12);
+      this.btSubSimEvents.Location = new System.Drawing.Point(443, 12);
       this.btSubSimEvents.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btSubSimEvents.Name = "btSubSimEvents";
       this.btSubSimEvents.Size = new System.Drawing.Size(124, 27);
@@ -290,17 +291,29 @@
       this.btConnectSimCon.Location = new System.Drawing.Point(13, 78);
       this.btConnectSimCon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.btConnectSimCon.Name = "btConnectSimCon";
-      this.btConnectSimCon.Size = new System.Drawing.Size(124, 27);
+      this.btConnectSimCon.Size = new System.Drawing.Size(141, 27);
       this.btConnectSimCon.TabIndex = 22;
       this.btConnectSimCon.Text = "Connect SimCon";
       this.btConnectSimCon.UseVisualStyleBackColor = true;
       this.btConnectSimCon.Click += new System.EventHandler(this.btConnectSimCon_Click);
+      // 
+      // btConnectSimConWH
+      // 
+      this.btConnectSimConWH.Location = new System.Drawing.Point(12, 110);
+      this.btConnectSimConWH.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.btConnectSimConWH.Name = "btConnectSimConWH";
+      this.btConnectSimConWH.Size = new System.Drawing.Size(141, 27);
+      this.btConnectSimConWH.TabIndex = 23;
+      this.btConnectSimConWH.Text = "Connect SimConWH";
+      this.btConnectSimConWH.UseVisualStyleBackColor = true;
+      this.btConnectSimConWH.Click += new System.EventHandler(this.btConnectSimConWH_Click);
       // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(933, 519);
+      this.Controls.Add(this.btConnectSimConWH);
       this.Controls.Add(this.btConnectSimCon);
       this.Controls.Add(this.btSubSimEvents);
       this.Controls.Add(this.btReqCamData);
@@ -323,7 +336,7 @@
       this.Controls.Add(this.btReqSome);
       this.Controls.Add(this.btConDiscon);
       this.Controls.Add(this.RTB);
-      this.Controls.Add(this.btConnect);
+      this.Controls.Add(this.btConnectAdapter);
       this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.Name = "Form1";
@@ -336,7 +349,7 @@
 
     #endregion
 
-    private System.Windows.Forms.Button btConnect;
+    private System.Windows.Forms.Button btConnectAdapter;
     private System.Windows.Forms.RichTextBox RTB;
     private System.Windows.Forms.Button btConDiscon;
     private System.Windows.Forms.Button btReqSome;
@@ -359,6 +372,7 @@
     private System.Windows.Forms.Button btReqCamData;
     private System.Windows.Forms.Button btSubSimEvents;
     private System.Windows.Forms.Button btConnectSimCon;
+    private System.Windows.Forms.Button btConnectSimConWH;
   }
 }
 

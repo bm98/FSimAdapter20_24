@@ -23,6 +23,9 @@ namespace z_TEST_MinCompliance
     private ISimCon _simCon = null;
     private bool _usingSimCon = false;
 
+    private ISimCon _simConWH = null;
+    private bool _usingSimConWH = false;
+
 
     private FS.FSVersion _version = FS.FSVersion.Unknown;
     private bool _connected = false;
@@ -53,6 +56,7 @@ namespace z_TEST_MinCompliance
     {
       // sanity
       if (_usingAdapter) return false;
+      if (_usingSimConWH) return false;
 
       if (_simCon != null) {
         RTB.Text += $"SimCon:  Is already in use - will disconnect\n";
@@ -66,6 +70,7 @@ namespace z_TEST_MinCompliance
 
       RTB.Text += $"SimCon:  Create and use SimCon utility\n";
 
+      _simCon?.Dispose( );
       _simCon = new SimCon( );
       _simCon.Establishing += _SimCon_Establishing;
       _simCon.Connected += _SimCon_Connected;
@@ -98,6 +103,7 @@ namespace z_TEST_MinCompliance
           RTB.Text += $"SimCon:  Detected: {_version}\n";
           RTB.Text += "SimCon:  Attach Eventhandlers\n";
           AttachHandlers( );
+          MarkButton( btConnectSimCon, true );
 
           if (_version == FS.FSVersion.Unknown) {
             RTB.Text += $"SimCon:  No MSFS App seems running\n";
@@ -130,7 +136,104 @@ namespace z_TEST_MinCompliance
         _simCon.Connected -= _SimCon_Connected;
         _simCon.Disconnected -= _SimCon_Disconnected;
         _usingSimCon = false;
+        _simCon?.Dispose( );
         _simCon = null;
+        MarkButton( btConnectSimCon, false );
+      } );
+    }
+
+
+    #endregion
+
+    #region Via SimConWH
+
+    private bool ConnectSimConWH( )
+    {
+      // sanity
+      if (_usingAdapter) return false;
+      if (_usingSimCon) return false;
+
+      if (_simConWH != null) {
+        RTB.Text += $"SimConWH:  Is already in use - will disconnect\n";
+        _simConWH.Disconnect( );
+        return false;
+      }
+
+      _usingSimConWH = true;
+
+      bool ret = true; // set false on error !!
+
+      RTB.Text += $"SimConWH:  Create and use SimConWH utility\n";
+
+      _simConWH?.Dispose( );
+      _simConWH = new SimConWH( );
+      _simConWH.Establishing += _SimConWH_Establishing;
+      _simConWH.Connected += _SimConWH_Connected;
+      _simConWH.Disconnected += _SimConWH_Disconnected;
+
+      _usingSimConWH = _simConWH.Connect( );
+      // wait for the Events
+      return ret;
+    }
+
+    private void _SimConWH_Establishing( object sender, EventArgs e )
+    {
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += $"SimConWH:  Establishing - wait until Connected ...\n";
+      } );
+    }
+
+    private void _SimConWH_Connected( object sender, EventArgs e )
+    {
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += $"SimConWH:  Connected\n";
+        // test, only now SC is valid
+        if (_simConWH.IsConnected) {
+          RTB.Text += $"SimConWH:  IsConnected: {_simConWH.IsConnected}\n";
+          _SC = _simConWH.SimConnectRef; // get the SC ref for use
+          _connected = true;
+          _version = _SC.FSimVersion;
+          RTB.Text += $"SimConWH:  Detected: {_version}\n";
+          RTB.Text += "SimConWH:  Attach Eventhandlers\n";
+          AttachHandlers( );
+          MarkButton( btConnectSimConWH, true );
+
+          if (_version == FS.FSVersion.Unknown) {
+            RTB.Text += $"SimConWH:  No MSFS App seems running\n";
+            RTB.Text += $"SimConWH:  FS Title: {_SC.FSimWindowTitle}";
+            RTB.Text += $"SimConWH:  Shutdown\n";
+            _simConWH.Disconnect( );
+            _SC = null;
+            RTB.Text += $"SimConWH:  Done...\n";
+            _usingSimConWH = false;
+          }
+          else {
+            // OK..
+            RTB.Text += $"SimConWH:  FS Title: {_SC.FSimWindowTitle} is alive\n";
+          }
+        }
+        else {
+          RTB.Text += $"SimConWH:  ???? Replies IsConnected=false ???\n";
+        }
+      } );
+
+    }
+
+    private void _SimConWH_Disconnected( object sender, EventArgs e )
+    {
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += $"SimConWH:  Disconnected\n";
+        _SC = null;
+        _simConWH.Establishing -= _SimCon_Establishing;
+        _simConWH.Connected -= _SimCon_Connected;
+        _simConWH.Disconnected -= _SimCon_Disconnected;
+        _usingSimConWH = false;
+        _simConWH?.Dispose( );
+        _simConWH = null;
+        MarkButton( btConnectSimConWH, false );
       } );
     }
 
@@ -144,6 +247,7 @@ namespace z_TEST_MinCompliance
     {
       // sanity
       if (_usingSimCon) return false;
+      if (_usingSimConWH) return false;
 
       _usingAdapter = true;
 
@@ -191,6 +295,8 @@ namespace z_TEST_MinCompliance
 
       try {
         _SC?.Dispose( );
+        MarkButton( btConnectAdapter, false );
+
         // create an instance without using callbacks
         RTB.Text = "Create SimConnect with Callbacks\n";
         // using this Form as WIN MSG receiver and the provided Message ID
@@ -198,6 +304,7 @@ namespace z_TEST_MinCompliance
 
         RTB.Text += "Attach Eventhandlers\n";
         AttachHandlers( ); // may throw Exceptions
+        MarkButton( btConnectAdapter, true );
 
         RTB.Text += "Init Adapter\n";
         _version = _SC.Init( ); // Init default
@@ -222,6 +329,7 @@ namespace z_TEST_MinCompliance
       catch (Exception ex) {
         RTB.Text += $"Connect: Failed with Exception\n{ex.Message}";
         _usingAdapter = false;
+        MarkButton( btConnectAdapter, false );
         ret = false;
       }
 
@@ -234,7 +342,7 @@ namespace z_TEST_MinCompliance
     private void AttachHandlers( )
     {
       // sanity
-      if (_SC == null) throw new InvalidOperationException( "_SC is null" );
+      if (_SC == null) throw new ApplicationException( "_SC is null" );
 
       // Init the Subscription and Request Catalog for this SC instance
       _eventCat = SysStateHandler.DefaultSysStateCatalog( _SC );
@@ -298,11 +406,9 @@ namespace z_TEST_MinCompliance
 
     private void Form1_FormClosing( object sender, FormClosingEventArgs e )
     {
-      if (_usingSimCon) _simCon.Disconnect( );
-
-      if (_usingAdapter) {
-        _SC?.Dispose( );
-      }
+      _simCon?.Dispose( );
+      _simConWH?.Dispose( );
+      _SC?.Dispose( );
     }
 
     private void btClearRTB_Click( object sender, EventArgs e )
@@ -323,6 +429,11 @@ namespace z_TEST_MinCompliance
     private void btConnectSimCon_Click( object sender, EventArgs e )
     {
       ConnectSimCon( );
+    }
+
+    private void btConnectSimConWH_Click( object sender, EventArgs e )
+    {
+      ConnectSimConWH( );
     }
 
 
@@ -560,10 +671,11 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}" );
       _sb.AppendLine( $"SimConV{data.dwSimConnectVersionMajor}.{data.dwSimConnectVersionMinor}.{data.dwSimConnectBuildMajor}.{data.dwSimConnectBuildMinor}" );
       _connected = true;
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
 
       _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
         // create some monitored events
         var se = SimEventCat.AddOrGetEvent( "PARKING_BRAKES" ); _sGetKeyEvent.RegisterWithSimConnect( _SC, se );
         se = SimEventCat.AddOrGetEvent( "AP_MASTER" ); _sGetKeyEvent.RegisterWithSimConnect( _SC, se );
@@ -590,8 +702,12 @@ namespace z_TEST_MinCompliance
         } );
       }
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // Handle SimConnect Exception
@@ -601,8 +717,13 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( "_simConnect_OnRecvException" );
       FS.SIMCONNECT_EXCEPTION eException = (FS.SIMCONNECT_EXCEPTION)data.dwException;
       _sb.AppendLine( $"{eException.ToString( )}" );
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // Handle SimConnect Reply for System State Requests
@@ -632,8 +753,12 @@ namespace z_TEST_MinCompliance
       else {
         _sb.AppendLine( $"Other Request with ID:{data.dwRequestID} " );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect Reply for System State Event Subscription
@@ -711,8 +836,12 @@ namespace z_TEST_MinCompliance
         }
       }
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect Reply for FileName Subscriptions or Requests
@@ -745,8 +874,12 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"Other Event with ID: evtId<{data.uEventID}>" );
       }
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect Frame event arrived
@@ -754,7 +887,10 @@ namespace z_TEST_MinCompliance
     {
       // cannot monitor in RTB - too fast...
       _ = data.fFrameRate;
-      txFPS.Text = $"{data.fFrameRate:##0}";
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        txFPS.Text = $"{data.fFrameRate:##0}";
+      } );
       _ = data.fSimSpeed;
     }
 
@@ -764,13 +900,17 @@ namespace z_TEST_MinCompliance
     {
       _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvSimobjectData" );
-
+      string text;
       var handled = _sVarGetData?.HandleSimObjectType( data );
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a SimVar Get Data Update:" );
         _sb.Append( _sVarGetData.GetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
       // next try
@@ -778,8 +918,12 @@ namespace z_TEST_MinCompliance
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a SimVar Set Data Update:" );
         _sb.Append( _sVarSetData.SetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
       // next try
@@ -787,14 +931,22 @@ namespace z_TEST_MinCompliance
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a CamVar Get Data Update:" );
         _sb.Append( _camVarGetData.GetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
 
 
-      RTB.Text += _sb.ToString( );
+      text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect reply for request obj by type
@@ -803,12 +955,17 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvSimobjectDataBytype" );
 
+      string text;
       var handled = _sVarGetData?.HandleSimObjectType( data );
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a SimVar Get Data Update:" );
         _sb.Append( _sVarGetData.GetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
       // next try
@@ -816,8 +973,12 @@ namespace z_TEST_MinCompliance
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a SimVar Set Data Update:" );
         _sb.Append( _sVarSetData.SetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
       // next try
@@ -825,14 +986,22 @@ namespace z_TEST_MinCompliance
       if (handled.HasValue && handled.Value) {
         _sb.AppendLine( " Got a CamVar Get Data Update:" );
         _sb.Append( _camVarGetData.GetStruct.ToString( ) );
-        RTB.Text += _sb.ToString( );
+        text = _sb.ToString( );
         _sb.Clear( );
+        // invoke this on the Form not in the callback..
+        _invoker.HandleEvent( ( ) => {
+          RTB.Text += text;
+        } );
         return;
       }
 
 
-      RTB.Text += _sb.ToString( );
+      text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect Client data arrived
@@ -841,8 +1010,12 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( $"_simConnect_OnRecvClientData: RqID<{data.dwRequestID}> DID<{data.dwDefineID}> msgIndex:{data.dwentrynumber} #msgs:{data.dwoutof} #DWORDs:{data.dwDefineCount}" );
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect Enum InputEvents Data arrived
@@ -855,8 +1028,12 @@ namespace z_TEST_MinCompliance
         var item = (FS.SIMCONNECT_INPUT_EVENT_DESCRIPTOR)data.rgData[i];
         _sb.AppendLine( $"<{i:##0}>:  (0x{item.Hash,-20:X}) \ttype({item.eType}) \t{item.Name} " );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect returns data 
@@ -865,8 +1042,12 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvEnumerateInputEventParams" );
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect returns data for a single InputEvent 
@@ -875,8 +1056,12 @@ namespace z_TEST_MinCompliance
       _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
       _sb.AppendLine( "_simConnect_OnRecvGetInputEvent" );
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     // SimConnect returns data for an InputEvent subscription
@@ -894,8 +1079,12 @@ namespace z_TEST_MinCompliance
           break;
       }
 
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
 
@@ -927,8 +1116,12 @@ namespace z_TEST_MinCompliance
         var item = (FS.SIMCONNECT_DATA_FACILITY_AIRPORT)data.rgData[i];
         _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0})" );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     /// <summary>
@@ -945,8 +1138,12 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"            f({item.fFrequency})" );
         _sb.AppendLine( $"            flags({item.Flags}), LOC({item.fLocalizer}), GsLLA({item.GlideLat:00.0000},{item.GlideLon:000.0000}, {item.GlideAlt:##,##0}), GsAng({item.fGlideSlopeAngle})" );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     /// <summary>
@@ -962,8 +1159,12 @@ namespace z_TEST_MinCompliance
         _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0}) mv({item.fMagVar:0#.00})" );
         _sb.AppendLine( $"            f({item.fFrequency})" );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     /// <summary>
@@ -978,8 +1179,12 @@ namespace z_TEST_MinCompliance
         var item = (FS.SIMCONNECT_DATA_FACILITY_WAYPOINT)data.rgData[i];
         _sb.AppendLine( $"<{i:##0}>:  {item.Ident}({item.Region}) LLA({item.Latitude:00.0000},{item.Longitude:000.0000},{item.Altitude:##,##0}) mv({item.fMagVar:0#.00})" );
       }
-      RTB.Text += _sb.ToString( );
+      string text = _sb.ToString( );
       _sb.Clear( );
+      // invoke this on the Form not in the callback..
+      _invoker.HandleEvent( ( ) => {
+        RTB.Text += text;
+      } );
     }
 
     #endregion

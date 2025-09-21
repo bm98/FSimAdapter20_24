@@ -17,6 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z_TEST_Decomposer", "z_TEST
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z_TEST_MinCompliance", "z_TEST_MinCompliance\z_TEST_MinCompliance.csproj", "{B7A4B673-2939-4B56-A524-227340DA3C96}"
 	ProjectSection(ProjectDependencies) = postProject
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC} = {08705073-8F3D-411A-A8DA-D2C4A6199BFC}
 		{A34267CC-C7EB-4B6A-8865-D1F0C1CBE8A4} = {A34267CC-C7EB-4B6A-8865-D1F0C1CBE8A4}
 		{AD5C412D-23BE-4D7C-B7D4-89EA267D0359} = {AD5C412D-23BE-4D7C-B7D4-89EA267D0359}
 	EndProjectSection
@@ -40,6 +41,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConnectToolkit", "SimConnectToolkit\SimConnectToolkit.csproj", "{478989D4-BB73-4B80-9E1E-C74B79CCA1A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConnector", "SimConnector\SimConnector.csproj", "{632EA581-5937-4EC9-8B83-09082D50EC32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConSupport", "SimConSupport\SimConSupport.csproj", "{08705073-8F3D-411A-A8DA-D2C4A6199BFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +116,14 @@ Global
 		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|x64.ActiveCfg = Release|x64
 		{632EA581-5937-4EC9-8B83-09082D50EC32}.Release|x64.Build.0 = Release|x64
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Debug|x64.ActiveCfg = Debug|x64
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Debug|x64.Build.0 = Debug|x64
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Release|x64.ActiveCfg = Release|x64
+		{08705073-8F3D-411A-A8DA-D2C4A6199BFC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

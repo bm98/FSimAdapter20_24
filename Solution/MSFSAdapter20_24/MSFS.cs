@@ -43,10 +43,12 @@ namespace MSFSAdapter20_24
       string fsWindowTitle = "";
 
       // check if it is running
-      IEnumerable<Process> processes = Process.GetProcesses( ).Where( p => p.MainWindowHandle != IntPtr.Zero ); // only processes with WindowHandles
+      // only processes with WindowHandles
+      IEnumerable<Process> processes = Process.GetProcesses( ).Where( p => p.MainWindowHandle != IntPtr.Zero );
       foreach (Process p in processes) {
         try {
-          // may trigger access violation on certain modules
+          // some may trigger access violation to get e.g. the ModuleName (or Module at all) on certain modules
+          // don't know how to query to we see Exceptions for those
           if (!string.IsNullOrEmpty( p.MainModule.ModuleName )) {
             if ((p.MainModule.ModuleName == exeName) && p.MainWindowTitle.StartsWith( windowName )) {
               fsWindowTitle = p.MainWindowTitle;

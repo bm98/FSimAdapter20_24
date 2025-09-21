@@ -21,41 +21,41 @@ namespace SimConnectToolkit.SystemState
     {
       var scat = new SysStateHandlerCat( );
 
-      // Init the Subscription and Request Catalog
-      scat.Add( scat.EVENT_SIM_1SEC, new SysStateHandler( simConnect, scat.EVENT_SIM_1SEC, "1sec", true, false ) );
-      scat.Add( scat.EVENT_SIM_4SEC, new SysStateHandler( simConnect, scat.EVENT_SIM_4SEC, "4sec", true, false ) );
-      scat.Add( scat.EVENT_SIM_6HZ, new SysStateHandler( simConnect, scat.EVENT_SIM_6HZ, "6Hz", true, false ) );
-      scat.Add( scat.EVENT_SIM_FRAME, new SysStateHandler( simConnect, scat.EVENT_SIM_FRAME, "Frame", true, false ) );
+      // Init the Subscription
+      scat.Add( scat.EVENT_SIM_1SEC, new SysStateHandler( simConnect, scat.EVENT_SIM_1SEC, "1sec", canSub: true ) );
+      scat.Add( scat.EVENT_SIM_4SEC, new SysStateHandler( simConnect, scat.EVENT_SIM_4SEC, "4sec", canSub: true ) );
+      scat.Add( scat.EVENT_SIM_6HZ, new SysStateHandler( simConnect, scat.EVENT_SIM_6HZ, "6Hz", canSub: true ) );
+      scat.Add( scat.EVENT_SIM_FRAME, new SysStateHandler( simConnect, scat.EVENT_SIM_FRAME, "Frame", canSub: true ) );
 
-      scat.Add( scat.EVENT_ACFT_LOAD, new SysStateHandler( simConnect, scat.EVENT_ACFT_LOAD, "AircraftLoaded", true, false ) ); // reply FILENAME
-      scat.Add( scat.EVENT_ACFT_CRASH, new SysStateHandler( simConnect, scat.EVENT_ACFT_CRASH, "Crashed", true, false ) ); // reply FILENAME
+      scat.Add( scat.EVENT_ACFT_LOAD, new SysStateHandler( simConnect, scat.EVENT_ACFT_LOAD, "AircraftLoaded", canSub: true ) ); // reply FILENAME
+      scat.Add( scat.EVENT_ACFT_CRASH, new SysStateHandler( simConnect, scat.EVENT_ACFT_CRASH, "Crashed", canSub: true ) ); // reply FILENAME
 
-      scat.Add( scat.EVENT_FLIGHT_LOAD, new SysStateHandler( simConnect, scat.EVENT_FLIGHT_LOAD, "FlightLoaded", true, false ) ); // reply FILENAME
-      scat.Add( scat.EVENT_FLIGHT_SAVE, new SysStateHandler( simConnect, scat.EVENT_FLIGHT_SAVE, "FlightSaved", true, false ) );  // reply FILENAME
+      scat.Add( scat.EVENT_FLIGHT_LOAD, new SysStateHandler( simConnect, scat.EVENT_FLIGHT_LOAD, "FlightLoaded", canSub: true ) ); // reply FILENAME
+      scat.Add( scat.EVENT_FLIGHT_SAVE, new SysStateHandler( simConnect, scat.EVENT_FLIGHT_SAVE, "FlightSaved", canSub: true ) );  // reply FILENAME
 
-      scat.Add( scat.EVENT_FPLAN_ACTIVATE, new SysStateHandler( simConnect, scat.EVENT_FPLAN_ACTIVATE, "FlightPlanActivated", true, false ) );     // reply FILENAME
-      scat.Add( scat.EVENT_FPLAN_DEACTIVATE, new SysStateHandler( simConnect, scat.EVENT_FPLAN_DEACTIVATE, "FlightPlanDeactivated", true, false ) ); // reply FILENAME
+      scat.Add( scat.EVENT_FPLAN_ACTIVATE, new SysStateHandler( simConnect, scat.EVENT_FPLAN_ACTIVATE, "FlightPlanActivated", canSub: true ) );     // reply FILENAME
+      scat.Add( scat.EVENT_FPLAN_DEACTIVATE, new SysStateHandler( simConnect, scat.EVENT_FPLAN_DEACTIVATE, "FlightPlanDeactivated", canSub: true ) ); // reply FILENAME
 
-      scat.Add( scat.EVENT_AI_ADDED, new SysStateHandler( simConnect, scat.EVENT_AI_ADDED, "ObjectAdded", true, false ) );
-      scat.Add( scat.EVENT_AI_REMOVED, new SysStateHandler( simConnect, scat.EVENT_AI_REMOVED, "ObjectRemoved", true, false ) );
+      scat.Add( scat.EVENT_AI_ADDED, new SysStateHandler( simConnect, scat.EVENT_AI_ADDED, "ObjectAdded", canSub: true ) );
+      scat.Add( scat.EVENT_AI_REMOVED, new SysStateHandler( simConnect, scat.EVENT_AI_REMOVED, "ObjectRemoved", canSub: true ) );
 
-      scat.Add( scat.EVENT_POS_CHANGED, new SysStateHandler( simConnect, scat.EVENT_POS_CHANGED, "PositionChanged", true, false ) );
+      scat.Add( scat.EVENT_POS_CHANGED, new SysStateHandler( simConnect, scat.EVENT_POS_CHANGED, "PositionChanged", canSub: true ) );
 
-      scat.Add( scat.EVENT_SIM_STATE, new SysStateHandler( simConnect, scat.EVENT_SIM_STATE, "Sim", true, false ) );
-      scat.Add( scat.EVENT_SIM_START, new SysStateHandler( simConnect, scat.EVENT_SIM_START, "SimStart", true, false ) ); // multiple SimStart, SimStop sequ are usual before entering a flight
-      scat.Add( scat.EVENT_SIM_STOP, new SysStateHandler( simConnect, scat.EVENT_SIM_STOP, "SimStop", true, false ) );
+      scat.Add( scat.EVENT_SIM_STATE, new SysStateHandler( simConnect, scat.EVENT_SIM_STATE, "Sim", canSub: true ) );
+      scat.Add( scat.EVENT_SIM_START, new SysStateHandler( simConnect, scat.EVENT_SIM_START, "SimStart", canSub: true ) ); // multiple SimStart, SimStop sequ are usual before entering a flight
+      scat.Add( scat.EVENT_SIM_STOP, new SysStateHandler( simConnect, scat.EVENT_SIM_STOP, "SimStop", canSub: true ) );
 
-      scat.Add( scat.EVENT_SIM_PAUSE, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSE, "Pause", true, false ) ); // state in dwData (1=paused, 0=not paused)
-      scat.Add( scat.EVENT_SIM_PAUSE_EX1, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSE_EX1, "Pause_EX1", true, false ) ); // detailed state in dwData
-      scat.Add( scat.EVENT_SIM_PAUSED, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSED, "Paused", true, false ) );
-      scat.Add( scat.EVENT_SIM_UNPAUSED, new SysStateHandler( simConnect, scat.EVENT_SIM_UNPAUSED, "Unpaused", true, false ) );
+      scat.Add( scat.EVENT_SIM_PAUSE, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSE, "Pause", canSub: true ) ); // state in dwData (1=paused, 0=not paused)
+      scat.Add( scat.EVENT_SIM_PAUSE_EX1, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSE_EX1, "Pause_EX1", canSub: true ) ); // detailed state in dwData
+      scat.Add( scat.EVENT_SIM_PAUSED, new SysStateHandler( simConnect, scat.EVENT_SIM_PAUSED, "Paused", canSub: true ) );
+      scat.Add( scat.EVENT_SIM_UNPAUSED, new SysStateHandler( simConnect, scat.EVENT_SIM_UNPAUSED, "Unpaused", canSub: true ) );
 
       // SystemState Requests
-      scat.Add( scat.REQUEST_ACFT_LOADED, new SysStateHandler( simConnect, scat.REQUEST_ACFT_LOADED, "AircraftLoaded", false, true ) ); // reply FILENAME
-      scat.Add( scat.REQUEST_FLIGHT_LOADED, new SysStateHandler( simConnect, scat.REQUEST_FLIGHT_LOADED, "FlightLoaded", false, true ) ); // reply FILENAME
-      scat.Add( scat.REQUEST_FLIGHT_PLAN, new SysStateHandler( simConnect, scat.REQUEST_FLIGHT_PLAN, "FlightPlan", false, true ) ); // reply FILENAME
-      scat.Add( scat.REQUEST_SIM_STATE, new SysStateHandler( simConnect, scat.REQUEST_SIM_STATE, "Sim", false, true ) );
-      scat.Add( scat.REQUEST_SIM_DIALOG, new SysStateHandler( simConnect, scat.REQUEST_SIM_DIALOG, "DialogMode", false, true ) );
+      scat.Add( scat.REQUEST_ACFT_LOADED, new SysStateHandler( simConnect, scat.REQUEST_ACFT_LOADED, "AircraftLoaded", canReq: true ) ); // reply FILENAME
+      scat.Add( scat.REQUEST_FLIGHT_LOADED, new SysStateHandler( simConnect, scat.REQUEST_FLIGHT_LOADED, "FlightLoaded", canReq: true ) ); // reply FILENAME
+      scat.Add( scat.REQUEST_FLIGHT_PLAN, new SysStateHandler( simConnect, scat.REQUEST_FLIGHT_PLAN, "FlightPlan", canReq: true ) ); // reply FILENAME
+      scat.Add( scat.REQUEST_SIM_STATE, new SysStateHandler( simConnect, scat.REQUEST_SIM_STATE, "Sim", canReq: true ) );
+      scat.Add( scat.REQUEST_SIM_DIALOG, new SysStateHandler( simConnect, scat.REQUEST_SIM_DIALOG, "DialogMode", canReq: true ) );
 
       return scat;
     }
@@ -103,7 +103,7 @@ namespace SimConnectToolkit.SystemState
     /// <param name="name">The item name string</param>
     /// <param name="canSub">Set true for Sub/Unsub item</param>
     /// <param name="canReq">Set true for Request item</param>
-    public SysStateHandler( FS.SimConnect simConnect, EventID eId, string name, bool canSub, bool canReq )
+    public SysStateHandler( FS.SimConnect simConnect, EventID eId, string name, bool canSub = false, bool canReq = false )
     {
       _SC = simConnect;
       EId = eId;

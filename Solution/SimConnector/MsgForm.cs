@@ -8,7 +8,7 @@ namespace SimConnector
 {
   public partial class MsgForm : Form
   {
-    private SimCon _parent;
+    private SimCon _parent=null;
 
     public MsgForm( SimCon parent )
     {
