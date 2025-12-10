@@ -6,9 +6,11 @@ using System.Windows.Threading;
 
 using NLog;
 
-using FS = MSFSAdapter20_24;
+using FS = Microsoft.FlightSimulator.SimConnect;
 
-namespace SimConnector
+using SimConShared;
+
+namespace SimConPrivate
 {
   /// <summary>
   /// SimConnect Adapter Utility
@@ -24,19 +26,63 @@ namespace SimConnector
   ///   Provides a reference to the connected SimConnect (Adapter)
   ///   
   /// </summary>
-  public class SimCon : ISimCon
+  public abstract class SimCon : IDisposable
   {
     private static readonly Logger LOG = LogManager.GetCurrentClassLogger( );
 
     // used to ID and ref this class
-    private const string c_myName = "SimCon";
+    protected readonly string c_myName = "SimCon2020";
 
     // Pacer to maintain the connection state
-    private readonly DispatcherTimer _timer = new DispatcherTimer( );
+    protected readonly DispatcherTimer _timer = new DispatcherTimer( );
 
-    private readonly int _myPID = 0;
+    protected readonly int _myPID = 0;
 
-    #region API
+    // last Window Title of the detected Sim
+    protected string _fsWindowTitle = "";
+
+    #region SimConnect Xtended API
+
+    /// <summary>
+    /// User-defined Win32 event for SimConnect
+    ///   can be used as UserEventWin32 when creating the instance
+    /// </summary>
+    public const int WM_USER_SIMCONNECT = 0x0402;
+
+    /// <summary>
+    /// User-defined Win32 event for SimConnect NONE
+    ///   can be used as UserEventWin32 when creating the instance and the Win MsgQueue is no used
+    /// </summary>
+    public const int WM_USER_NONE = 0x0;
+
+    /// <summary>
+    /// The SimVersion set from SimConnect Open call
+    /// </summary>
+    public FSVersion SimVersion { get; protected set; } = FSVersion.Unknown;
+
+    /// <summary>
+    /// The last detected WindowTitle (which incl version info as of today)
+    /// </summary>
+    public string FSimWindowTitle => _fsWindowTitle;
+
+    /// <summary>
+    /// Init just tries to detect a running Sim and returns it,
+    /// </summary>
+    /// <returns>The detected Sim running or Unknown if no sim found running</returns>
+    public FSVersion DetectRunningSim( )
+    {
+      // get running processes and find the one of either MSFS Sim Exe
+      _fsWindowTitle = MSFS.MSFS2024running( );
+      if (!string.IsNullOrEmpty( _fsWindowTitle )) return FSVersion.V2024;
+
+      _fsWindowTitle = MSFS.MSFS2020running( );
+      if (!string.IsNullOrEmpty( _fsWindowTitle )) return FSVersion.V2020;
+
+      // none
+      _fsWindowTitle = "<FS App not found>";
+      return FSVersion.Unknown;
+    }
+
 
     /// <summary>
     /// Fired when the connection is about to be connected
@@ -91,9 +137,11 @@ namespace SimConnector
     /// <summary>
     /// cTor: may provide a monitor pace interval 2..20 sec (default=5)
     /// </summary>
-    /// <param name="paceInterval_sec">Monitor Pace interval in seconds (default=5)</param>
-    public SimCon( uint paceInterval_sec = 5 )
+    /// <param name="paceInterval_sec">Monitor Pace interval in seconds</param>
+    public SimCon( string idName, uint paceInterval_sec )
     {
+      c_myName = idName;
+
       // sanity limit 2..20 sec
       paceInterval_sec = (paceInterval_sec < 2) ? 2 : (paceInterval_sec > 20) ? 20 : paceInterval_sec;
 
@@ -111,10 +159,11 @@ namespace SimConnector
           _winMsgForm.Show( ); // show hidden and out of displays - most at least
         }
         catch (Exception ex) {
-          using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Error( ex, "Creating WinMsgForm failed with exception" );
+          using (ScopeContext.PushNestedState( "SimCon.cTor" )) LOG.Error( ex, "Creating WinMsgForm failed with exception" );
         }
         // cannot without Form - will fail later...
       }
+
 
       // start with Disconnected - will stay there
       _state = SimConState.Disconnected;
@@ -156,34 +205,34 @@ namespace SimConnector
     #region SimConnectClient chores
 
     // SimConnectClient instance
-    private FS.SimConnect _simConnect = null;
-    private SimConState _state = SimConState.Idle;
+    protected FS.SimConnect _simConnect = null;
+    protected SimConState _state = SimConState.Idle;
 
     // Form to receive Windows Messages for SimConnect
-    private MsgForm _winMsgForm = null;
+    protected MsgForm _winMsgForm = null;
 
     // number of periods to wait for data arrival after connect
-    private const int c_scGracePeriodSet = 10; // N * 5 sec
+    protected const int c_scGracePeriodSet = 10; // N * 5 sec
 
     // Monitor the Sim Event Handler after Connection
-    private int _scGracePeriod = -1;    // grace period count down
+    protected int _scGracePeriod = -1;    // grace period count down
 
-    private string instanceGUID = "";
+    protected string instanceGUID = "";
 
-    private FS.FSVersion _version;
+    protected FSVersion _version;
 
     // True when connecting 2024
-    private bool _is2024 = false;
+    protected bool _is2024 = false;
     // The connected FSim Application name from SIMCONNECT_RECV_OPEN
-    private string _fSAppName = "";
+    protected string _fSAppName = "";
     // The connected FSim Application version string from SIMCONNECT_RECV_OPEN
-    private string _fSAppVersion = "";
+    protected string _fSAppVersion = "";
     // The connected FSim SimConnect version string from SIMCONNECT_RECV_OPEN
-    private string _fSSimConnectVersion = "";
+    protected string _fSSimConnectVersion = "";
 
 
     // Connect to SimConnect
-    private bool Connect_low( )
+    protected bool Connect_low( )
     {
       LOG.Trace( "PID<{0}>.Connect_low()", _myPID );
 
@@ -215,7 +264,7 @@ namespace SimConnector
         using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Trace( ".. establish connection with SimConnect.." );
         // The constructor is similar to SimConnect_Open in the native API
         _state = SimConState.Connecting;
-        _simConnect = new FS.SimConnect( $"{c_myName}_<{instanceGUID}>", _winMsgForm.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
+        _simConnect = new FS.SimConnect( $"{c_myName}_<{instanceGUID}>", _winMsgForm.Handle, WM_USER_SIMCONNECT, null, 0 );
         if (_simConnect == null) {
           // failed to create the simConnect obj - can it happen?? - should never happen anyway...
           throw new ApplicationException( "Could not create SimConnect object" );
@@ -223,9 +272,9 @@ namespace SimConnector
         AttachHandlers( );
 
         // Init SimConnect with defaults
-        _version = _simConnect.Init( );
+        _version = DetectRunningSim( );
 
-        if (_version == FS.FSVersion.Unknown) {
+        if (_version == FSVersion.Unknown) {
           using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Info( "No MSFS App seems running - shutting connection down" );
         }
         else {
@@ -234,7 +283,7 @@ namespace SimConnector
           // about to receive the Open msg from SimConnect now
           OnEstablishing( );
 
-          using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Info( "FS Title: {0} .. waiting for response", _simConnect.FSimWindowTitle );
+          using (ScopeContext.PushNestedState( "Connect_low" )) LOG.Info( "FS Title: {0} .. waiting for response", FSimWindowTitle );
           return true;
         }
 
@@ -254,7 +303,7 @@ namespace SimConnector
     }
 
     // wire event handlers we care of
-    private void AttachHandlers( )
+    protected void AttachHandlers( )
     {
       LOG.Trace( "PID<{0}>.AttachHandlers()", _myPID );
 
@@ -277,7 +326,7 @@ namespace SimConnector
 
     // Disconnect from SimConnect - will really disconnect once the last user disconnects
     // Set true if SimConnect called it Quit (default is false)</param>
-    private bool Disconnect_low( bool forceQuit = false )
+    protected bool Disconnect_low( bool forceQuit = false )
     {
       LOG.Trace( "PID<{0}>.Disconnect_low(force:{1})", _myPID, forceQuit.ToString( ) );
 
@@ -315,16 +364,18 @@ namespace SimConnector
 
 
     // internal reset when the connection is closed, so we may start again
-    private void ResetSimConHandler( )
+    protected void ResetSimConHandler( )
     {
       LOG.Trace( "PID<{0}>.ResetSimConHandler()", _myPID );
+
+      SimVersion = FSVersion.Unknown;
 
       // whatever would be needed
     }
 
 
     // to confirm the connection
-    private void ConfirmConnection( )
+    protected void ConfirmConnection( )
     {
       // only if not yet there...
       if (_state != SimConState.ConfirmedConnection) {
@@ -338,7 +389,7 @@ namespace SimConnector
     /// <summary>
     /// Timer Event
     /// </summary>
-    private void timer1_Tick( object sender, EventArgs e )
+    protected void timer1_Tick( object sender, EventArgs e )
     {
       // Call SimConnectPacer
       SimConnectPacer( );
@@ -348,7 +399,7 @@ namespace SimConnector
     /// SimConnect chores on a timer, mostly reconnecting and monitoring the connection status
     /// Intended to be called about every 5 seconds
     /// </summary>
-    private void SimConnectPacer( )
+    protected void SimConnectPacer( )
     {
       /*
        * Idle:          Try to Reconnect
@@ -418,7 +469,7 @@ namespace SimConnector
 
 
     // FS confirms connection
-    private void SimConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
+    protected void SimConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
     {
       LOG.Trace( "PID<{0}>.SimConnect_OnRecvOpen()", _myPID );
 
@@ -426,6 +477,8 @@ namespace SimConnector
       _fSAppName = data.szApplicationName;
       _fSAppVersion = $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}";
       _fSSimConnectVersion = $"SimConV{data.dwSimConnectVersionMajor}.{data.dwSimConnectVersionMinor}.{data.dwSimConnectBuildMajor}.{data.dwSimConnectBuildMinor}";
+
+      SimVersion = _is2024 ? FSVersion.V2024 : FSVersion.V2020;
 
       using (ScopeContext.PushNestedState( "SimConnect_OnRecvOpen" ))
         LOG.Trace( $"Opened with: ({_fSAppName} V{_fSAppVersion} ({_fSSimConnectVersion}))" );
@@ -436,7 +489,7 @@ namespace SimConnector
     /// <summary>
     /// The case where the user closes game
     /// </summary>
-    private void SimConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
+    protected void SimConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
     {
       LOG.Trace( "PID<{0}>.SimConnect_OnRecvQuit()", _myPID );
 
@@ -459,10 +512,40 @@ namespace SimConnector
     {
       // sanity
       if (disposedValue) return false; // already gone..
-      if (m.Msg != FS.SimConnect.WM_USER_SIMCONNECT) return false; // not for us anyway
+      if (m.Msg != WM_USER_SIMCONNECT) return false; // not for us anyway
       if (_simConnect == null) return false; // cannot handle it
 
-      return _simConnect.WinMessageHandled( m.Msg ); // utility provided by the Adapter
+      return WinMessageHandled( m.Msg ); // utility provided by the Adapter
+    }
+
+    #endregion
+
+    #region WinMSG Handler
+
+    /// <summary>
+    /// Windows Message Handling Model when using the provided WM_USER_SIMCONNECT message ID
+    /// 
+    /// Provide the Message from the Main Message Loop to check and handle SimConnect events
+    /// Propagate if not handled here (returned false)
+    /// </summary>
+    /// <param name="msg">The message ID</param>
+    /// <returns>True if handled</returns>
+    internal bool WinMessageHandled( int msg )
+    {
+      // sanity
+
+      // seems legit to handle it
+      try {
+        if (msg == WM_USER_SIMCONNECT) {
+          _simConnect.ReceiveMessage( ); // handle if it seems connected
+          return true;
+        }
+      }
+      catch (Exception ex) {
+        _ = ex; // DEBUG
+      }
+
+      return false;
     }
 
     #endregion
@@ -504,3 +587,6 @@ namespace SimConnector
 
   }
 }
+
+
+

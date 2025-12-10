@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{632EA581-5937-4EC9-8B83-09082D50EC32}</ProjectGuid>
+    <ProjectGuid>{D246B9D3-0DC7-4EE2-BD65-91DC857FA1DD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimConnector</RootNamespace>
-    <AssemblyName>SimConnector</AssemblyName>
+    <RootNamespace>SimConTool2020</RootNamespace>
+    <AssemblyName>SimConTool2020</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,48 +49,29 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.FlightSimulator.SimConnect">
+      <HintPath>..\..\..\Redist\MS2020\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs">
       <Link>SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="ISimCon.cs" />
-    <Compile Include="MsgForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MsgForm.Designer.cs">
-      <DependentUpon>MsgForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimCon.cs" />
-    <Compile Include="SimConWH.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MSFSAdapter20_24\MSFSAdapter20_24.csproj">
-      <Project>{628e3918-c16d-4d5a-a68d-6960fbb28d1e}</Project>
-      <Name>MSFSAdapter20_24</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimConSupport\SimConSupport.csproj">
-      <Project>{08705073-8f3d-411a-a8da-d2c4a6199bfc}</Project>
-      <Name>SimConSupport</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MsgForm.resx">
-      <DependentUpon>MsgForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog">
       <Version>6.0.5</Version>
     </PackageReference>
   </ItemGroup>
+  <Import Project="..\SimConShared\SimConShared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>REM copy from Release to Deployment

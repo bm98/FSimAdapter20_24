@@ -184,10 +184,8 @@ namespace SimConSupport
 
           // Wait for signal or timeout or cancelled
           if (await _monitoredEvent?.WaitOneAsync( TimeSpan.FromSeconds( c_waitTimeout_sec ), _cancelToken )) {
-            _monitoredEvent?.Reset( ); // Wait for next signal
-
             try {
-              handleAction?.Invoke( ); // Executes the submitted Action when signaled
+              handleAction?.Invoke( );  // Executes the submitted Action when signaled
             }
             catch (Exception ex) {
               // e.g. cross thread attempt when writing to WinForms controls within the callback without using an Invoker on the Form...
@@ -196,7 +194,11 @@ namespace SimConSupport
               ; // Debug stop
 #endif
             }
+            finally {
+              _monitoredEvent?.Reset( ); // Wait for next signal
+            }
           }
+
           else {
             // Signal timeout or cancelled
             // timeout is legit if the handle is not signaled within the timeout period

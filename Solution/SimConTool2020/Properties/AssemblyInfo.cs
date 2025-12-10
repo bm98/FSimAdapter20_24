@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SimConnector")]
-[assembly: AssemblyDescription("Utility SimConnection wrapper")]
+[assembly: AssemblyTitle("SimConTool2020")]
+[assembly: AssemblyDescription( "Utility SimConnection wrapper MSFS2020" )]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct( "FSimAdapter20_24" )]
+[assembly: AssemblyProduct("SimConTool2020")]
 [assembly: AssemblyCopyright( "Copyright © 2025 M.Burri" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("632ea581-5937-4ec9-8b83-09082d50ec32")]
+[assembly: Guid("d246b9d3-0dc7-4ee2-bd65-91dc857fa1dd")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,6 +29,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// USING Solution Info
+// Using SolutionInfo.cs
 //[assembly: AssemblyVersion("1.0.0.0")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]

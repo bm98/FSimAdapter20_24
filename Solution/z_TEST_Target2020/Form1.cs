@@ -1,31 +1,25 @@
 ﻿using System;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.Drawing;
 
-using FS = MSFSAdapter20_24;
+using FS = Microsoft.FlightSimulator.SimConnect;
 
-using SimConnector;
-using SimConnectToolkit;
-using SimConnectToolkit.SystemState;
+using SimConShared;
+using SimConShared.SystemState;
+using SimConTool2020;
 
-namespace z_TEST_MinCompliance
+namespace z_TEST_Target2020
 {
   public partial class Form1 : Form
   {
     // static only because it's easier...
     private static FS.SimConnect _SC = null;
-    private bool _usingAdapter = false;
 
     // SimConnector
-    private ISimCon _simCon = null;
-    private bool _usingSimCon = false;
+    private SimCon _simCon = null;
 
-    private ISimCon _simConWH = null;
-    private bool _usingSimConWH = false;
-
-
-    private FS.FSVersion _version = FS.FSVersion.Unknown;
+    private FSVersion _version = FSVersion.Unknown;
     private bool _connected = false;
 
     // define and Init RequestIDs for planned Requests
@@ -53,20 +47,15 @@ namespace z_TEST_MinCompliance
     private bool ConnectSimCon( )
     {
       // sanity
-      if (_usingAdapter) return false;
-      if (_usingSimConWH) return false;
-
       if (_simCon != null) {
         RTB.Text += $"SimCon:  Is already in use - will disconnect\n";
         _simCon.Disconnect( );
         return false;
       }
 
-      _usingSimCon = true;
-
       bool ret = true; // set false on error !!
 
-      RTB.Text += $"SimCon:  Create and use SimCon utility\n";
+      RTB.Text += $"SimCon:  Create and use SimCon MSFS2020 utility\n";
 
       _simCon?.Dispose( );
       _simCon = new SimCon( );
@@ -74,7 +63,7 @@ namespace z_TEST_MinCompliance
       _simCon.Connected += _SimCon_Connected;
       _simCon.Disconnected += _SimCon_Disconnected;
 
-      _usingSimCon = _simCon.Connect( );
+      _simCon.Connect( );
       // wait for the Events
       return ret;
     }
@@ -97,24 +86,23 @@ namespace z_TEST_MinCompliance
           RTB.Text += $"SimCon:  IsConnected: {_simCon.IsConnected}\n";
           _SC = _simCon.SimConnectRef; // get the SC ref for use
           _connected = true;
-          _version = _SC.FSimVersion;
+          _version = _simCon.SimVersion;
           RTB.Text += $"SimCon:  Detected: {_version}\n";
           RTB.Text += "SimCon:  Attach Eventhandlers\n";
           AttachHandlers( );
           MarkButton( btConnectSimCon, true );
 
-          if (_version == FS.FSVersion.Unknown) {
+          if (_version == FSVersion.Unknown) {
             RTB.Text += $"SimCon:  No MSFS App seems running\n";
-            RTB.Text += $"SimCon:  FS Title: {_SC.FSimWindowTitle}";
+            RTB.Text += $"SimCon:  FS Title: {_simCon.FSimWindowTitle}";
             RTB.Text += $"SimCon:  Shutdown\n";
             _simCon.Disconnect( );
             _SC = null;
             RTB.Text += $"SimCon:  Done...\n";
-            _usingSimCon = false;
           }
           else {
             // OK..
-            RTB.Text += $"SimCon:  FS Title: {_SC.FSimWindowTitle} is alive\n";
+            RTB.Text += $"SimCon:  FS Title: {_simCon.FSimWindowTitle} is alive\n";
           }
         }
         else {
@@ -133,206 +121,12 @@ namespace z_TEST_MinCompliance
         _simCon.Establishing -= _SimCon_Establishing;
         _simCon.Connected -= _SimCon_Connected;
         _simCon.Disconnected -= _SimCon_Disconnected;
-        _usingSimCon = false;
         _simCon?.Dispose( );
         _simCon = null;
         MarkButton( btConnectSimCon, false );
       } );
     }
 
-
-    #endregion
-
-    #region Via SimConWH
-
-    private bool ConnectSimConWH( )
-    {
-      // sanity
-      if (_usingAdapter) return false;
-      if (_usingSimCon) return false;
-
-      if (_simConWH != null) {
-        RTB.Text += $"SimConWH:  Is already in use - will disconnect\n";
-        _simConWH.Disconnect( );
-        return false;
-      }
-
-      _usingSimConWH = true;
-
-      bool ret = true; // set false on error !!
-
-      RTB.Text += $"SimConWH:  Create and use SimConWH utility\n";
-
-      _simConWH?.Dispose( );
-      _simConWH = new SimConWH( );
-      _simConWH.Establishing += _SimConWH_Establishing;
-      _simConWH.Connected += _SimConWH_Connected;
-      _simConWH.Disconnected += _SimConWH_Disconnected;
-
-      _usingSimConWH = _simConWH.Connect( );
-      // wait for the Events
-      return ret;
-    }
-
-    private void _SimConWH_Establishing( object sender, EventArgs e )
-    {
-      // invoke this on the Form not in the callback..
-      _invoker.HandleEvent( ( ) => {
-        RTB.Text += $"SimConWH:  Establishing - wait until Connected ...\n";
-      } );
-    }
-
-    private void _SimConWH_Connected( object sender, EventArgs e )
-    {
-      // invoke this on the Form not in the callback..
-      _invoker.HandleEvent( ( ) => {
-        RTB.Text += $"SimConWH:  Connected\n";
-        // test, only now SC is valid
-        if (_simConWH.IsConnected) {
-          RTB.Text += $"SimConWH:  IsConnected: {_simConWH.IsConnected}\n";
-          _SC = _simConWH.SimConnectRef; // get the SC ref for use
-          _connected = true;
-          _version = _SC.FSimVersion;
-          RTB.Text += $"SimConWH:  Detected: {_version}\n";
-          RTB.Text += "SimConWH:  Attach Eventhandlers\n";
-          AttachHandlers( );
-          MarkButton( btConnectSimConWH, true );
-
-          if (_version == FS.FSVersion.Unknown) {
-            RTB.Text += $"SimConWH:  No MSFS App seems running\n";
-            RTB.Text += $"SimConWH:  FS Title: {_SC.FSimWindowTitle}";
-            RTB.Text += $"SimConWH:  Shutdown\n";
-            _simConWH.Disconnect( );
-            _SC = null;
-            RTB.Text += $"SimConWH:  Done...\n";
-            _usingSimConWH = false;
-          }
-          else {
-            // OK..
-            RTB.Text += $"SimConWH:  FS Title: {_SC.FSimWindowTitle} is alive\n";
-          }
-        }
-        else {
-          RTB.Text += $"SimConWH:  ???? Replies IsConnected=false ???\n";
-        }
-      } );
-
-    }
-
-    private void _SimConWH_Disconnected( object sender, EventArgs e )
-    {
-      // invoke this on the Form not in the callback..
-      _invoker.HandleEvent( ( ) => {
-        RTB.Text += $"SimConWH:  Disconnected\n";
-        _SC = null;
-        _simConWH.Establishing -= _SimConWH_Establishing;
-        _simConWH.Connected -= _SimConWH_Connected;
-        _simConWH.Disconnected -= _SimConWH_Disconnected;
-        _usingSimConWH = false;
-        _simConWH?.Dispose( );
-        _simConWH = null;
-        MarkButton( btConnectSimConWH, false );
-      } );
-    }
-
-
-    #endregion
-
-    #region Via Adapter
-
-    // primitive connect and dispose
-    private bool ConnectAndDisposeAdapter( )
-    {
-      // sanity
-      if (_usingSimCon) return false;
-      if (_usingSimConWH) return false;
-
-      _usingAdapter = true;
-
-      bool ret = true; // set false on error !!
-
-      _SC?.Dispose( );
-      // create an instance without using callbacks
-      RTB.Text = "Create SimConnectX without Callbacks\n";
-
-      _SC = new FS.SimConnect( "ADAPTER_TEST_APP", IntPtr.Zero, FS.SimConnect.WM_USER_NONE, null, 0 );
-
-      RTB.Text += "Init Adapter\n";
-      _version = _SC.Init( ); // Init default
-      RTB.Text += $"Detected: {_version}\n";
-
-      if (_version == FS.FSVersion.Unknown) {
-        RTB.Text += $"No MSFS App seems running\n";
-        ret = false; // could not connect...
-      }
-      RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
-
-      // Dispose
-      RTB.Text += $"Adapter Shutdown\n";
-      _SC?.Dispose( );
-      _SC = null;
-      RTB.Text += $"Done...\n";
-
-      _usingAdapter = false;
-
-      return ret;
-    }
-
-
-    // Connect for use with Callbacks
-    // Note: true only means that a running FSim was found and a new SimConnect(2020 or 2024) instance was created
-    //       monitor the Open Callback and further events to see if it is really up and running correctly
-    private bool ConnectAdapter( )
-    {
-      // sanity
-      if (_usingSimCon) return false;
-
-      _usingAdapter = true;
-
-      bool ret = true; // set false on error !!
-
-      try {
-        _SC?.Dispose( );
-        MarkButton( btConnectAdapter, false );
-
-        // create an instance without using callbacks
-        RTB.Text = "Create SimConnect with Callbacks\n";
-        // using this Form as WIN MSG receiver and the provided Message ID
-        _SC = new FS.SimConnect( "ADAPTER_TEST_APP", this.Handle, FS.SimConnect.WM_USER_SIMCONNECT, null, 0 );
-
-        RTB.Text += "Attach Eventhandlers\n";
-        AttachHandlers( ); // may throw Exceptions
-        MarkButton( btConnectAdapter, true );
-
-        RTB.Text += "Init Adapter\n";
-        _version = _SC.Init( ); // Init default
-        RTB.Text += $"Detected: {_version}\n";
-
-        if (_version == FS.FSVersion.Unknown) {
-          RTB.Text += $"No MSFS App seems running\n";
-          RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
-          RTB.Text += $"Adapter Shutdown\n";
-          _SC?.Dispose( );
-          _SC = null;
-          RTB.Text += $"Done...\n";
-          _usingAdapter = false;
-          ret = false;
-        }
-        else {
-          // OK..
-          RTB.Text += $"FS Title: {_SC.FSimWindowTitle}";
-          RTB.Text += $"Adapter is alive\n";
-        }
-      }
-      catch (Exception ex) {
-        RTB.Text += $"Connect: Failed with Exception\n{ex.Message}";
-        _usingAdapter = false;
-        MarkButton( btConnectAdapter, false );
-        ret = false;
-      }
-
-      return ret;
-    }
 
     #endregion
 
@@ -346,12 +140,7 @@ namespace z_TEST_MinCompliance
       _eventCat = SysStateHandler.DefaultSysStateCatalog( _SC );
 
       try {
-        // Using the Adapter we need to know the connect state directly from SC
-        if (_usingAdapter) {
-          // must be safe to connect even before the SC replied with Open
-          _SC.OnRecvOpen += new FS.SimConnect.RecvOpenEventHandler( _simConnect_OnRecvOpen );
-          _SC.OnRecvQuit += new FS.SimConnect.RecvQuitEventHandler( _simConnect_OnRecvQuit );
-        }
+
         _SC.OnRecvException += new FS.SimConnect.RecvExceptionEventHandler( _simConnect_OnRecvException );
 
         // events and request replies
@@ -391,6 +180,7 @@ namespace z_TEST_MinCompliance
     }
 
 
+
     #region FORM
 
     public Form1( )
@@ -399,41 +189,27 @@ namespace z_TEST_MinCompliance
 
       _invoker = new WinFormInvoker( this );
 
-      _sGetKeyEvent = new SimEventGetModule( );
+    }
+
+    private void Form1_Load( object sender, EventArgs e )
+    {
+
     }
 
     private void Form1_FormClosing( object sender, FormClosingEventArgs e )
     {
       _simCon?.Dispose( );
-      _simConWH?.Dispose( );
-      _SC?.Dispose( );
-    }
 
+    }
     private void btClearRTB_Click( object sender, EventArgs e )
     {
       RTB.Text = "";
-    }
-
-    private void btConDiscon_Click( object sender, EventArgs e )
-    {
-      ConnectAndDisposeAdapter( );
-    }
-
-    private void btConnect_Click( object sender, EventArgs e )
-    {
-      ConnectAdapter( );
     }
 
     private void btConnectSimCon_Click( object sender, EventArgs e )
     {
       ConnectSimCon( );
     }
-
-    private void btConnectSimConWH_Click( object sender, EventArgs e )
-    {
-      ConnectSimConWH( );
-    }
-
 
     private void btReqSome_Click( object sender, EventArgs e )
     {
@@ -659,54 +435,6 @@ namespace z_TEST_MinCompliance
     // usually just forward the callback to internal subscribers
 
     private StringBuilder _sb = new StringBuilder( );
-
-    // Handle SimConnect Open Reply
-    private void _simConnect_OnRecvOpen( FS.SimConnect sender, FS.SIMCONNECT_RECV_OPEN data )
-    {
-      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
-      _sb.AppendLine( "_simConnect_OnRecvOpen" );
-      _sb.AppendLine( data.szApplicationName );
-      _sb.AppendLine( $"V{data.dwApplicationVersionMajor}.{data.dwApplicationVersionMinor}.{data.dwApplicationBuildMajor}.{data.dwApplicationBuildMinor}" );
-      _sb.AppendLine( $"SimConV{data.dwSimConnectVersionMajor}.{data.dwSimConnectVersionMinor}.{data.dwSimConnectBuildMajor}.{data.dwSimConnectBuildMinor}" );
-      _connected = true;
-      string text = _sb.ToString( );
-      _sb.Clear( );
-
-      _invoker.HandleEvent( ( ) => {
-        RTB.Text += text;
-        // create some monitored events
-        var se = SimEventCat.AddOrGetEvent( "PARKING_BRAKES" ); _sGetKeyEvent.RegisterWithSimConnect( _SC, se );
-        se = SimEventCat.AddOrGetEvent( "AP_MASTER" ); _sGetKeyEvent.RegisterWithSimConnect( _SC, se );
-        se = SimEventCat.AddOrGetEvent( "ELEVATOR_TRIM_SET" ); _sGetKeyEvent.RegisterWithSimConnect( _SC, se );
-
-      } );
-    }
-
-    // Handle SimConnect Quit Event
-    private void _simConnect_OnRecvQuit( FS.SimConnect sender, FS.SIMCONNECT_RECV data )
-    {
-      _sb.AppendLine( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
-      _sb.AppendLine( "_simConnect_OnRecvQuit" );
-      _connected = false;
-
-      if (_usingAdapter) {
-        _sb.AppendLine( "Disposing SimConnect object" );
-
-        // invoke this on the Form not in the callback..
-        _invoker.HandleEvent( ( ) => {
-          _SC?.Dispose( ); // should?? unwire handlers
-          _SC = null;
-          RTB.Text += "SimConnect object is now Disposed\n";
-        } );
-      }
-
-      string text = _sb.ToString( );
-      _sb.Clear( );
-      // invoke this on the Form not in the callback..
-      _invoker.HandleEvent( ( ) => {
-        RTB.Text += text;
-      } );
-    }
 
     // Handle SimConnect Exception
     private void _simConnect_OnRecvException( FS.SimConnect sender, FS.SIMCONNECT_RECV_EXCEPTION data )
@@ -1184,33 +912,6 @@ namespace z_TEST_MinCompliance
         RTB.Text += text;
       } );
     }
-
-    #endregion
-
-    #region WinProc 
-
-    /// <summary>
-    /// Windows Message Handler Override 
-    /// - must handle messages from SimConnect otherwise SimConnect does not provide events and callbacks
-    /// Using the Adapter provided MessageHandler
-    /// </summary>
-    protected override void DefWndProc( ref Message m )
-    {
-      if (_usingAdapter) {
-        // only with Adapter Connect, else it's handled via SimCon
-        if ((_SC != null) && (_version != FS.FSVersion.Unknown)) {
-          try {
-            // catch MSFS exits in the worst moment
-            if (_SC.WinMessageHandled( m.Msg )) return; // Event was handled
-          }
-          catch { }
-        }
-      }
-      // everything else goes here
-      base.DefWndProc( ref m ); // default handling for this Window
-    }
-
-
 
 
     #endregion
