@@ -125,8 +125,12 @@ namespace MSFSAdapter20_24
     NOT_AN_ACTION,
     INCORRECT_ACTION_PARAMS,
     GET_INPUT_EVENT_FAILED,
-    SET_INPUT_EVENT_FAILED,
-    INTERNAL  // added in 2024 SDK 1.1.2
+    SET_INPUT_EVENT_FAILED = 43,
+    // INTERNAL = 44,  // added in 2024 SDK 1.1.2
+    // added, changed in 2024 SDK 1.6.9 SU5
+    EVENT_NAME_RESERVED = 44,
+    INTERNAL = 45,
+    CAMERA_AP = 46,
   }
 
   public enum SIMCONNECT_FACILITY_DATA_TYPE
@@ -234,8 +238,12 @@ namespace MSFSAdapter20_24
     SUBSCRIBE_INPUT_EVENT,
     ENUMERATE_INPUT_EVENT_PARAMS,
     ENUMERATE_SIMOBJECT_AND_LIVERY_LIST, // added in 2024 SDK 1.1.2
-    FLOW_EVENT = 39 // added in 2024 SDK 1.4.4
-
+    FLOW_EVENT = 39, // added in 2024 SDK 1.4.4
+    CAMERA_DATA = 40, // added in 2024 SDK 1.6.9 SU5
+    CAMERA_STATUS = 41, // added in 2024 SDK 1.6.9 SU5
+    CAMERA_DEFINITION_LIST = 42, // added in 2024 SDK 1.6.9 SU5
+    COMM_BUS = 43, // added in 2024 SDK 1.6.9 SU5
+    CAMERA_WORLD_LOCKER = 44, // added in 2024 SDK 1.6.9 SU5
   }
 
   public enum SIMCONNECT_SIMOBJECT_TYPE
@@ -358,5 +366,56 @@ namespace MSFSAdapter20_24
     FLIGHT_END = 15,
     PLANE_CRASH = 16
   }
+
+  // added in 2024 SDK 1.6.9 - SU5
+  public enum SIMCONNECT_POSITION_REFERENTIAL
+  {
+    NONE,
+    SIMOBJECT,
+    WORLD,
+    EYEPOINT,
+    SIMOBJECT_DATUM
+  }
+  public enum SIMCONNECT_CAMERA_WORLD_LOCKER_STATUS
+  {
+    NONE,
+    START,
+    SUCCESS,
+    CANCEL,
+    FAIL
+  }
+  public enum SIMCONNECT_CAMERA_AVAILABILITY
+  {
+    NOT_ACQUIRED,
+    ACQUIRED,
+    ACQUIRED_BY_OTHER,
+    USER_DISABLED
+  }
+  public enum SIMCONNECT_COMM_BUS_BROADCAST_TO
+  {
+    JS = 1,
+    WASM = 2,
+    SIMCONNECT = 8,
+    SIMCONNECT_SELF_CALL = 16,
+    DEFAULT = 11,
+    ALL_SIMCONNECT = 24,
+    ALL = 27
+  }
+  public enum SIMCONNECT_CAMERA_DATA_MASK
+  {
+    NONE = 0,
+    POSITION = 1,
+    ROTATION = 2,
+    TARGETED = 4,
+    FOV = 8,
+    ALL_ROTATION = 11,
+    ALL_TARGETED = 13
+  }
+  public enum SIMCONNECT_CAMERA_FLAG
+  {
+    INTERACTION = 1,
+    ABOVE_GROUND
+  }
+
 
 }

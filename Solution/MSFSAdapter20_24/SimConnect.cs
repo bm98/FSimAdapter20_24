@@ -134,7 +134,14 @@ namespace MSFSAdapter20_24
     public delegate void RecvEnumerateSimobjectAndLiveryListEventHandler( SimConnect sender, SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data );
     // added in 2024 SDK 1.4.4 SU3
     public delegate void RecvFlowEventEventHandler( SimConnect sender, SIMCONNECT_RECV_FLOW_EVENT data );
+    // added in 2024 SDK 1.6.9 SU5
+    public delegate void RecvCameraDataEventHandler( SimConnect sender, SIMCONNECT_RECV_CAMERA_DATA data );
+    public delegate void RecvCameraStatusEventHandler( SimConnect sender, SIMCONNECT_RECV_CAMERA_STATUS data );
+    public delegate void RecvCameraDefinitionListEventHandler( SimConnect sender, SIMCONNECT_RECV_CAMERA_DEFINITION_LIST data );
+    public delegate void RecvCommBusEventHandler( SimConnect sender, SIMCONNECT_RECV_COMM_BUS data );
+    public delegate void RecvCameraWorldLockerEventHandler( SimConnect sender, SIMCONNECT_RECV_CAMERA_WORLD_LOCKER data );
 
+    // EVENTS
 
     public event RecvEnumerateInputEventParamsEventHandler OnRecvEnumerateInputEventParams;
     public event RecvSubscribeInputEventEventHandler OnRecvSubscribeInputEvent;
@@ -178,7 +185,15 @@ namespace MSFSAdapter20_24
     public event RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
     // added in 2024 SDK 1.4.4 SU3
     public event RecvFlowEventEventHandler OnRecvFlowEvent;
+    // added in 2024 SDK 1.6.9 SU5
+    public event RecvCameraDataEventHandler OnRecvCameraData;
+    public event RecvCameraStatusEventHandler OnRecvCameraStatus;
+    public event RecvCameraDefinitionListEventHandler OnRecvCameraDefinitionList;
+    public event RecvCommBusEventHandler OnRecvCommBus;
+    public event RecvCameraWorldLockerEventHandler OnRecvCameraWorldLocker;
 
+
+    // CONSTS
     public static uint SIMCONNECT_UNUSED = uint.MaxValue;
     public static uint SIMCONNECT_OBJECT_ID_USER = 0u;
     public static float SIMCONNECT_CAMERA_IGNORE_FIELD = float.MaxValue;
@@ -419,6 +434,45 @@ namespace MSFSAdapter20_24
     public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
       => _plug?.RequestAllFacilities( (SIMCONNECT_FACILITY_LIST_TYPE)type, RequestID );
 
+    // added in 2024 SDK 1.6.9 SU5
+    public void CameraAcquire( string ClientId )
+      => _plug?.CameraAcquire( ClientId );
+    public void CameraDisableFlag( uint Flag )
+      => _plug?.CameraDisableFlag( Flag );
+    public void CameraEnableFlag( uint Flag )
+      => _plug?.CameraEnableFlag( Flag );
+    public void CameraGet( uint Referential )
+      => _plug?.CameraGet( Referential );
+    public void CameraGetStatus( )
+      => _plug?.CameraGetStatus( );
+    public void CameraRelease( string CameraDefName )
+      => _plug?.CameraRelease( CameraDefName );
+    public void CameraSet( SIMCONNECT_DATA_CAMERA CameraData, uint DataMask )
+      => _plug?.CameraSet( CameraData, DataMask );
+    public void CameraSetUsingCameraDefinition( string cameraDefinition )
+      => _plug?.CameraSetUsingCameraDefinition( cameraDefinition );
+    public void DeleteCameraWorldLocker( )
+      => _plug?.DeleteCameraWorldLocker( );
+    public void EnumerateCameraDefinitions( )
+      => _plug?.EnumerateCameraDefinitions( );
+    public void RequestCameraWorldLocker( SIMCONNECT_DATA_XYZ lockerPosition, SIMCONNECT_POSITION_REFERENTIAL referential, uint objectId )
+      => _plug?.RequestCameraWorldLocker( lockerPosition, referential, objectId );
+    public void SubscribeToCameraWorldLockerStatusUpdate( )
+      => _plug?.SubscribeToCameraWorldLockerStatusUpdate( );
+    public void SubscribeToCameraStatusUpdate( )
+      => _plug?.SubscribeToCameraStatusUpdate( );
+    public void UnsubscribeToCameraWorldLockerStatusUpdate( )
+      => _plug?.UnsubscribeToCameraWorldLockerStatusUpdate( );
+    public void UnsubscribeToCameraStatusUpdate( )
+      => _plug?.UnsubscribeToCameraStatusUpdate( );
+
+    public void CallCommBusEvent( string EventName, SIMCONNECT_COMM_BUS_BROADCAST_TO BroadcastTo, object Data )
+      => _plug?.CallCommBusEvent( EventName, BroadcastTo, Data );
+    public void SubscribeToCommBusEvent( Enum EventID, string EventName )
+      => _plug?.SubscribeToCommBusEvent( EventID, EventName );
+    public void UnsubscribeToCommBusEvent( Enum EventID )
+      => _plug?.UnsubscribeToCommBusEvent( EventID );
+
     #endregion // Call Forwarder
 
 
@@ -595,6 +649,13 @@ namespace MSFSAdapter20_24
       _plug.OnRecvEnumerateSimobjectAndLiveryList += ( SimConnect sender, SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST data ) => { OnRecvEnumerateSimobjectAndLiveryList?.Invoke( this, data ); };
       // added in 2024 SDK 1.4.4 SU3
       _plug.OnRecvFlowEvent += ( SimConnect sender, SIMCONNECT_RECV_FLOW_EVENT data ) => { OnRecvFlowEvent?.Invoke( this, data ); };
+      // added in 2024 SDK 1.6.9 SU5
+      _plug.OnRecvCameraData += ( SimConnect sender, SIMCONNECT_RECV_CAMERA_DATA data ) => { OnRecvCameraData?.Invoke( this, data ); };
+      _plug.OnRecvCameraStatus += ( SimConnect sender, SIMCONNECT_RECV_CAMERA_STATUS data ) => { OnRecvCameraStatus?.Invoke( this, data ); };
+      _plug.OnRecvCameraDefinitionList += ( SimConnect sender, SIMCONNECT_RECV_CAMERA_DEFINITION_LIST data ) => { OnRecvCameraDefinitionList?.Invoke( this, data ); };
+      _plug.OnRecvCommBus += ( SimConnect sender, SIMCONNECT_RECV_COMM_BUS data ) => { OnRecvCommBus?.Invoke( this, data ); };
+      _plug.OnRecvCameraWorldLocker += ( SimConnect sender, SIMCONNECT_RECV_CAMERA_WORLD_LOCKER data ) => { OnRecvCameraWorldLocker?.Invoke( this, data ); };
+
     }
 
     #endregion

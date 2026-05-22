@@ -179,7 +179,6 @@ namespace MSFSAdapter20_24
     public double z;
   }
 
-
   [StructLayout( LayoutKind.Sequential, Pack = 1 )]
   public class SIMCONNECT_FACILITY_MINIMAL
   {
@@ -758,10 +757,67 @@ namespace MSFSAdapter20_24
   public class SIMCONNECT_RECV_FLOW_EVENT : SIMCONNECT_RECV
   {
     public SIMCONNECT_FLOW_EVENT FlowEvent;
-
     [MarshalAs( UnmanagedType.ByValTStr, SizeConst = 256 )]
     public string FltPath;
   }
 
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public struct SIMCONNECT_DATA_CAMERA
+  {
+    public SIMCONNECT_DATA_XYZ Position;
+    public SIMCONNECT_POSITION_REFERENTIAL PositionReferential;
+    public uint PositionReferentialObjectId;
+    public SIMCONNECT_DATA_XYZ TargetedPos;
+    public SIMCONNECT_DATA_PBH Pbh;
+    public SIMCONNECT_POSITION_REFERENTIAL RotationReferential;
+    public uint RotationReferentialObjectId;
+    public double Fov;
+  }
 
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_CAMERA_DEFINITION_ITEM
+  {
+    [MarshalAs( UnmanagedType.ByValTStr, SizeConst = 256 )]
+    public string Str;
+  }
+
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_CAMERA_DATA : SIMCONNECT_RECV
+  {
+    public SIMCONNECT_DATA_CAMERA CameraData;
+  }
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_CAMERA_WORLD_LOCKER : SIMCONNECT_RECV
+  {
+    public SIMCONNECT_CAMERA_WORLD_LOCKER_STATUS Status;
+  }
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_CAMERA_STATUS : SIMCONNECT_RECV
+  {
+    public uint acquiredState = 0u;
+    public int bGameControlled = 0;
+  }
+
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_CAMERA_DEFINITION_LIST : SIMCONNECT_RECV_LIST_TEMPLATE
+  {
+    [MarshalAs( UnmanagedType.ByValArray, SizeConst = 1, ArraySubType = UnmanagedType.Struct )]
+    [VariableSize( FixedType = typeof( SIMCONNECT_CAMERA_DEFINITION_ITEM ), CountMember = "dwArraySize" )]
+    public object[] rgData;
+  }
+  // added in 2024 SDK 1.6.9 - SU5
+  [StructLayout( LayoutKind.Sequential, Pack = 1 )]
+  public class SIMCONNECT_RECV_COMM_BUS : SIMCONNECT_RECV_LIST_TEMPLATE
+  {
+    public uint uEventID;
+    [MarshalAs( UnmanagedType.ByValTStr, SizeConst = 1 )]
+    [VariableSize]
+    public string rgData;
+  }
 }

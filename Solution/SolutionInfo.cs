@@ -7,5 +7,5 @@ using System.Reflection;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion( "0.6.12.3" )] // MSFS2024 - SU4
-[assembly: AssemblyFileVersion( "0.6.12.3" )]
+[assembly: AssemblyVersion( "0.6.13.4" )] // MSFS2024 - SU5
+[assembly: AssemblyFileVersion( "0.6.13.4" )]

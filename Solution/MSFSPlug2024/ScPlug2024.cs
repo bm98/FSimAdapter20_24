@@ -101,6 +101,12 @@ namespace MSFSPlug2024
     public event SimConnect.RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
     // added in 2024 SDK 1.4.4 SU3
     public event SimConnect.RecvFlowEventEventHandler OnRecvFlowEvent;
+    // added in 2024 SDK 1.6.9 SU5
+    public event SimConnect.RecvCameraDataEventHandler OnRecvCameraData;
+    public event SimConnect.RecvCameraStatusEventHandler OnRecvCameraStatus;
+    public event SimConnect.RecvCameraDefinitionListEventHandler OnRecvCameraDefinitionList;
+    public event SimConnect.RecvCommBusEventHandler OnRecvCommBus;
+    public event SimConnect.RecvCameraWorldLockerEventHandler OnRecvCameraWorldLocker;
 
     #endregion
 
@@ -589,6 +595,53 @@ namespace MSFSPlug2024
           };
           OnRecvFlowEvent?.Invoke( null, dataX );
         };
+
+      // added in 2024 SDK 1.6.9 SU5
+      _simConnect.OnRecvCameraData += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CAMERA_DATA data )
+        => {
+          var dataX = new SIMCONNECT_RECV_CAMERA_DATA( ) {
+            dwSize = data.dwSize,
+            dwID = data.dwID,
+            dwVersion = data.dwVersion,
+            CameraData = new SIMCONNECT_DATA_CAMERA( ) {
+              Fov = data.CameraData.Fov,
+              Pbh = GetFrom( data.CameraData.Pbh ),
+              Position = GetFrom( data.CameraData.Position ),
+              PositionReferential = (SIMCONNECT_POSITION_REFERENTIAL)data.CameraData.PositionReferential,
+              PositionReferentialObjectId = data.CameraData.PositionReferentialObjectId,
+              RotationReferential = (SIMCONNECT_POSITION_REFERENTIAL)data.CameraData.RotationReferential,
+              RotationReferentialObjectId = data.CameraData.RotationReferentialObjectId,
+              TargetedPos = GetFrom( data.CameraData.TargetedPos ),
+            }
+          };
+          OnRecvCameraData?.Invoke( null, dataX );
+        };
+      _simConnect.OnRecvCameraStatus += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CAMERA_STATUS data )
+        => {
+          var dataX = new SIMCONNECT_RECV_CAMERA_STATUS( ) {
+            dwSize = data.dwSize,
+            dwID = data.dwID,
+            dwVersion = data.dwVersion,
+            acquiredState = data.acquiredState,
+            bGameControlled = data.bGameControlled,
+          };
+          OnRecvCameraStatus?.Invoke( null, dataX );
+        };
+      _simConnect.OnRecvCameraDefinitionList += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CAMERA_DEFINITION_LIST data )
+        => { OnRecvCameraDefinitionList?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvCommBus += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_COMM_BUS data )
+        => { OnRecvCommBus?.Invoke( null, GetFrom( data ) ); };
+      _simConnect.OnRecvCameraWorldLocker += ( FS.SimConnect sender, FS.SIMCONNECT_RECV_CAMERA_WORLD_LOCKER data )
+        => {
+          var dataX = new SIMCONNECT_RECV_CAMERA_WORLD_LOCKER( ) {
+            dwSize = data.dwSize,
+            dwID = data.dwID,
+            dwVersion = data.dwVersion,
+            Status = (SIMCONNECT_CAMERA_WORLD_LOCKER_STATUS)data.Status,
+          };
+          OnRecvCameraWorldLocker?.Invoke( null, dataX );
+        };
+
     }
 
     #endregion
@@ -860,6 +913,60 @@ namespace MSFSPlug2024
       => _simConnect?.UnsubscribeToFlowEvent( );
     public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
       => _simConnect?.RequestAllFacilities( (FS.SIMCONNECT_FACILITY_LIST_TYPE)type, RequestID );
+
+
+    // added in 2024 SDK 1.6.9 SU5
+    public void CameraAcquire( string ClientId )
+      => _simConnect?.CameraAcquire( ClientId );
+    public void CameraDisableFlag( uint Flag )
+      => _simConnect?.CameraDisableFlag( Flag );
+    public void CameraEnableFlag( uint Flag )
+      => _simConnect?.CameraEnableFlag( Flag );
+    public void CameraGet( uint Referential )
+      => _simConnect?.CameraGet( Referential );
+    public void CameraGetStatus( )
+      => _simConnect?.CameraGetStatus( );
+    public void CameraRelease( string CameraDefName )
+      => _simConnect?.CameraRelease( CameraDefName );
+    public void CameraSet( SIMCONNECT_DATA_CAMERA CameraData, uint DataMask )
+    {
+      var camData = new FS.SIMCONNECT_DATA_CAMERA( ) {
+        Fov = CameraData.Fov,
+        Pbh = GetFrom( CameraData.Pbh ),
+        Position = GetFrom( CameraData.Position ),
+        PositionReferential = (FS.SIMCONNECT_POSITION_REFERENTIAL)CameraData.PositionReferential,
+        PositionReferentialObjectId = CameraData.PositionReferentialObjectId,
+        RotationReferential = (FS.SIMCONNECT_POSITION_REFERENTIAL)CameraData.RotationReferential,
+        RotationReferentialObjectId = CameraData.RotationReferentialObjectId,
+        TargetedPos = GetFrom( CameraData.TargetedPos ),
+      };
+      _simConnect?.CameraSet( camData, DataMask );
+    }
+
+    public void CameraSetUsingCameraDefinition( string cameraDefinition )
+      => _simConnect?.CameraSetUsingCameraDefinition( cameraDefinition );
+    public void DeleteCameraWorldLocker( )
+      => _simConnect?.DeleteCameraWorldLocker( );
+    public void EnumerateCameraDefinitions( )
+      => _simConnect?.EnumerateCameraDefinitions( );
+    public void RequestCameraWorldLocker( SIMCONNECT_DATA_XYZ lockerPosition, SIMCONNECT_POSITION_REFERENTIAL referential, uint objectId )
+      => _simConnect?.RequestCameraWorldLocker( GetFrom( lockerPosition ), (FS.SIMCONNECT_POSITION_REFERENTIAL)referential, objectId );
+    public void SubscribeToCameraWorldLockerStatusUpdate( )
+      => _simConnect?.SubscribeToCameraWorldLockerStatusUpdate( );
+    public void SubscribeToCameraStatusUpdate( )
+      => _simConnect?.SubscribeToCameraStatusUpdate( );
+    public void UnsubscribeToCameraWorldLockerStatusUpdate( )
+      => _simConnect?.UnsubscribeToCameraWorldLockerStatusUpdate( );
+    public void UnsubscribeToCameraStatusUpdate( )
+      => _simConnect?.UnsubscribeToCameraStatusUpdate( );
+
+    public void CallCommBusEvent( string EventName, SIMCONNECT_COMM_BUS_BROADCAST_TO BroadcastTo, object Data )
+      => _simConnect?.CallCommBusEvent( EventName, (FS.SIMCONNECT_COMM_BUS_BROADCAST_TO)BroadcastTo, Data );
+    public void SubscribeToCommBusEvent( Enum EventID, string EventName )
+      => _simConnect?.SubscribeToCommBusEvent( EventID, EventName );
+    public void UnsubscribeToCommBusEvent( Enum EventID )
+      => _simConnect?.UnsubscribeToCommBusEvent( EventID );
+
 
     #endregion // Call Forwarder
 

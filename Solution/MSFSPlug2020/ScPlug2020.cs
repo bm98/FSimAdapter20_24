@@ -136,6 +136,12 @@ namespace MSFSPlug2020
     public event SimConnect.RecvEnumerateSimobjectAndLiveryListEventHandler OnRecvEnumerateSimobjectAndLiveryList;
     // added in 2024 SDK 1.4.4 SU3 not supported in FS2020 but here to complete
     public event SimConnect.RecvFlowEventEventHandler OnRecvFlowEvent;
+    // added in 2024 SDK 1.6.9 SU5not supported in FS2020 but here to complete
+    public event SimConnect.RecvCameraDataEventHandler OnRecvCameraData;
+    public event SimConnect.RecvCameraStatusEventHandler OnRecvCameraStatus;
+    public event SimConnect.RecvCameraDefinitionListEventHandler OnRecvCameraDefinitionList;
+    public event SimConnect.RecvCommBusEventHandler OnRecvCommBus;
+    public event SimConnect.RecvCameraWorldLockerEventHandler OnRecvCameraWorldLocker;
 #pragma warning restore CS0067 // Variable is declared but never used
 
     #endregion
@@ -973,6 +979,245 @@ namespace MSFSPlug2020
         } );
 
     public void RequestAllFacilities( SIMCONNECT_FACILITY_LIST_TYPE type, Enum RequestID )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+
+    // added in 2024 SDK 1.6.9 SU5
+    public void CameraAcquire( string ClientId )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraDisableFlag( uint Flag )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraEnableFlag( uint Flag )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraGet( uint Referential )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraGetStatus( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraRelease( string CameraDefName )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void CameraSet( SIMCONNECT_DATA_CAMERA CameraData, uint DataMask )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void CameraSetUsingCameraDefinition( string cameraDefinition )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void DeleteCameraWorldLocker( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void EnumerateCameraDefinitions( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void RequestCameraWorldLocker( SIMCONNECT_DATA_XYZ lockerPosition, SIMCONNECT_POSITION_REFERENTIAL referential, uint objectId )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void SubscribeToCameraWorldLockerStatusUpdate( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void SubscribeToCameraStatusUpdate( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void UnsubscribeToCameraWorldLockerStatusUpdate( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void UnsubscribeToCameraStatusUpdate( )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+
+    public void CallCommBusEvent( string EventName, SIMCONNECT_COMM_BUS_BROADCAST_TO BroadcastTo, object Data )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void SubscribeToCommBusEvent( Enum EventID, string EventName )
+            => OnRecvException(
+        null,
+        new CX.SIMCONNECT_RECV_EXCEPTION( ) {
+          // SIMCONNECT_RECV
+          dwSize = (uint)8 * sizeof( uint ), // not really but good enough..
+          dwVersion = 0, // don't know...
+          dwID = (uint)SIMCONNECT_RECV_ID.EXCEPTION,
+          // SIMCONNECT_RECV_EXCEPTION
+          dwException = (uint)SIMCONNECT_EXCEPTION.ILLEGAL_OPERATION,
+          dwSendID = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_SENDID, // don't know the current send ID, so return 0
+          dwIndex = SIMCONNECT_RECV_EXCEPTION.UNKNOWN_INDEX,   // error is not an arg
+        } );
+    public void UnsubscribeToCommBusEvent( Enum EventID )
             => OnRecvException(
         null,
         new CX.SIMCONNECT_RECV_EXCEPTION( ) {

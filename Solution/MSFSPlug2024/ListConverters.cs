@@ -28,17 +28,42 @@ namespace MSFSPlug2024
     {
       return new CX.SIMCONNECT_DATA_XYZ( ) { x = orig.x, y = orig.y, z = orig.z };
     }
+    public static FS.SIMCONNECT_DATA_XYZ GetFrom( CX.SIMCONNECT_DATA_XYZ orig )
+    {
+      return new FS.SIMCONNECT_DATA_XYZ( ) { x = orig.x, y = orig.y, z = orig.z };
+    }
+
     public static CX.SIMCONNECT_DATA_LATLONALT GetFrom( FS.SIMCONNECT_DATA_LATLONALT orig )
     {
       return new CX.SIMCONNECT_DATA_LATLONALT( ) { Latitude = orig.Latitude, Longitude = orig.Longitude, Altitude = orig.Altitude };
     }
+    public static FS.SIMCONNECT_DATA_LATLONALT GetFrom( CX.SIMCONNECT_DATA_LATLONALT orig )
+    {
+      return new FS.SIMCONNECT_DATA_LATLONALT( ) { Latitude = orig.Latitude, Longitude = orig.Longitude, Altitude = orig.Altitude };
+    }
+
     public static CX.SIMCONNECT_DATA_PBH GetFrom( FS.SIMCONNECT_DATA_PBH orig )
     {
       return new CX.SIMCONNECT_DATA_PBH( ) { Pitch = orig.Pitch, Bank = orig.Bank, Heading = orig.Heading };
     }
+    public static FS.SIMCONNECT_DATA_PBH GetFrom( CX.SIMCONNECT_DATA_PBH orig )
+    {
+      return new FS.SIMCONNECT_DATA_PBH( ) { Pitch = orig.Pitch, Bank = orig.Bank, Heading = orig.Heading };
+    }
+
+
     public static CX.SIMCONNECT_ICAO GetFrom( FS.SIMCONNECT_ICAO orig )
     {
       return new CX.SIMCONNECT_ICAO( ) {
+        Airport = orig.Airport,
+        Ident = orig.Ident,
+        Region = orig.Region,
+        Type = orig.Type
+      };
+    }
+    public static FS.SIMCONNECT_ICAO GetFrom( CX.SIMCONNECT_ICAO orig )
+    {
+      return new FS.SIMCONNECT_ICAO( ) {
         Airport = orig.Airport,
         Ident = orig.Ident,
         Region = orig.Region,
@@ -382,6 +407,62 @@ namespace MSFSPlug2024
         ret.rgData[i] = GetFrom( (FS.SIMCONNECT_ENUMERATE_SIMOBJECT_LIVERY)orig.rgData[i] );
       }
 
+      return ret;
+    }
+
+    #endregion
+
+    #region SIMCONNECT_RECV_CAMERA_DEFINITION_LIST (FS2024 only SU5) 
+
+    // used by SIMCONNECT_RECV_CAMERA_DEFINITION_LIST
+    public static CX.SIMCONNECT_CAMERA_DEFINITION_ITEM GetFrom( FS.SIMCONNECT_CAMERA_DEFINITION_ITEM orig )
+    {
+      var ret = new CX.SIMCONNECT_CAMERA_DEFINITION_ITEM( ) {
+        Str = orig.Str,
+      };
+      return ret;
+    }
+    public static CX.SIMCONNECT_RECV_CAMERA_DEFINITION_LIST GetFrom( FS.SIMCONNECT_RECV_CAMERA_DEFINITION_LIST orig )
+    {
+      var ret = new CX.SIMCONNECT_RECV_CAMERA_DEFINITION_LIST( ) {
+        // SIMCONNECT_RECV
+        dwID = orig.dwID,
+        dwVersion = orig.dwVersion,
+        dwSize = orig.dwSize,
+        // SIMCONNECT_RECV_LIST_TEMPLATE 
+        dwRequestID = orig.dwRequestID,
+        dwArraySize = orig.dwArraySize,
+        dwEntryNumber = orig.dwEntryNumber,
+        dwOutOf = orig.dwOutOf,
+      };
+      Array.Resize( ref ret.rgData, (int)orig.dwArraySize );
+      for (int i = 0; i < (int)orig.dwArraySize; i++) {
+        ret.rgData[i] = GetFrom( (FS.SIMCONNECT_CAMERA_DEFINITION_ITEM)orig.rgData[i] );
+      }
+
+      return ret;
+    }
+
+    #endregion
+
+    #region SIMCONNECT_RECV_COMM_BUS (FS2024 only SU5) 
+
+    public static CX.SIMCONNECT_RECV_COMM_BUS GetFrom( FS.SIMCONNECT_RECV_COMM_BUS orig )
+    {
+      var ret = new CX.SIMCONNECT_RECV_COMM_BUS( ) {
+        // SIMCONNECT_RECV
+        dwID = orig.dwID,
+        dwVersion = orig.dwVersion,
+        dwSize = orig.dwSize,
+        // SIMCONNECT_RECV_LIST_TEMPLATE 
+        dwRequestID = orig.dwRequestID,
+        dwArraySize = orig.dwArraySize,
+        dwEntryNumber = orig.dwEntryNumber,
+        dwOutOf = orig.dwOutOf,
+        //
+        uEventID = orig.uEventID,
+        rgData = orig.rgData,
+      };
       return ret;
     }
 

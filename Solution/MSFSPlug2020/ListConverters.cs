@@ -35,20 +35,42 @@ namespace MSFSPlug2020
     {
       return new CX.SIMCONNECT_DATA_XYZ( ) { x = orig.x, y = orig.y, z = orig.z };
     }
+    public static FS.SIMCONNECT_DATA_XYZ GetFrom( CX.SIMCONNECT_DATA_XYZ orig )
+    {
+      return new FS.SIMCONNECT_DATA_XYZ( ) { x = orig.x, y = orig.y, z = orig.z };
+    }
+
     public static CX.SIMCONNECT_DATA_LATLONALT GetFrom( FS.SIMCONNECT_DATA_LATLONALT orig )
     {
       return new CX.SIMCONNECT_DATA_LATLONALT( ) { Latitude = orig.Latitude, Longitude = orig.Longitude, Altitude = orig.Altitude };
     }
+    public static FS.SIMCONNECT_DATA_LATLONALT GetFrom( CX.SIMCONNECT_DATA_LATLONALT orig )
+    {
+      return new FS.SIMCONNECT_DATA_LATLONALT( ) { Latitude = orig.Latitude, Longitude = orig.Longitude, Altitude = orig.Altitude };
+    }
+
     public static CX.SIMCONNECT_DATA_PBH GetFrom( FS.SIMCONNECT_DATA_PBH orig )
     {
       return new CX.SIMCONNECT_DATA_PBH( ) { Pitch = orig.Pitch, Bank = orig.Bank, Heading = orig.Heading };
     }
+    public static FS.SIMCONNECT_DATA_PBH GetFrom( CX.SIMCONNECT_DATA_PBH orig )
+    {
+      return new FS.SIMCONNECT_DATA_PBH( ) { Pitch = orig.Pitch, Bank = orig.Bank, Heading = orig.Heading };
+    }
 
-    // needs Ident adjustment
-    // used by SIMCONNECT_RECV_FACILITY_MINIMAL_LIST
+
     public static CX.SIMCONNECT_ICAO GetFrom( FS.SIMCONNECT_ICAO orig )
     {
       return new CX.SIMCONNECT_ICAO( ) {
+        Airport = orig.Airport,
+        Ident = orig.Ident,
+        Region = orig.Region,
+        Type = orig.Type
+      };
+    }
+    public static FS.SIMCONNECT_ICAO GetFrom( CX.SIMCONNECT_ICAO orig )
+    {
+      return new FS.SIMCONNECT_ICAO( ) {
         Airport = orig.Airport,
         Ident = orig.Ident,
         Region = orig.Region,
